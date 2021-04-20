@@ -1,0 +1,12 @@
+operativo|tabla_datos     |tiene                   |que_es  |mimsa_pk|tabla_relacionada|a_veces_siempre|max        
+repsic211|comunas         |grupo_personas          |        |        |                 |               |           
+repsic211|supervision     |supervision_calculada   |        | true   |                 |               |1          
+repsic211|recorridos      |grupo_personas          |        |        |                 |               |           
+repsic211|supervision     |grupo_personas          |        |        |                 |               |           
+repsic211|grupo_personas  |grupo_personas_calculada|        | true   |                 |               |1          
+repsic211|profesion       |personas                |        |        |                 |               |           
+repsic211|grupo_personas  |personas                |        |        |                 |               |           
+repsic211|personas        |personas_calculada      |        | true   |                 |               |1          
+repsic211|grupo_personas  |referente               |personas|        |                 |               |1          
+repsic211|grupo_personas  |jefe                    |personas|        |                 |               |1          
+repsic211|persona         |padreo2madre            |personas|        |                 |               |1          

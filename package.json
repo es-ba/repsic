@@ -1,0 +1,46 @@
+{
+  "name": "repsic211",
+  "description": "Relevamiento de personas en situación de calle",
+  "version": "0.1.5",
+  "private": true,
+  "author": "Codenautas <codenautas@googlegroups.com>",
+  "license": "MIT",
+  "main": "dist/server/server-repsic.js",
+  "types": "dist/server/app-repsic.d.ts",
+  "files": [
+    "dist",
+    "install",
+    "unlogged"
+  ],
+  "dependencies": {
+    "yazl": "~2.5.1",
+    "guijarro": "~0.2.15",
+    "meta-enc": "~0.7.17",
+    "procesamiento": "~0.7.2"
+  },
+  "devDependencies": {
+    "@types/mocha": "~5.2.7",
+    "@types/yazl": "~2.4.1",
+    "types.d.ts": "~0.4.4",
+    "mixin-patch": "~0.2.0"
+  },
+  "engines": {
+    "node": ">= 8.0.0"
+  },
+  "scripts": {
+    "prepublish": "npm run build",
+    "test": "mocha --reporter spec --bail --check-leaks test/",
+    "prepare": "npm run build",
+    "build": "(tsc -p tsconfig-client.json || echo \"continue w/error\") && (tsc -p tsconfig-server.json  || echo \"continue w/error\") && mixin-patch",
+    "build-when-no-errors": "tsc -p tsconfig-client.json && tsc -p tsconfig-server.json && mixin-patch",
+    "start": "node dist/server/server-repsic.js"
+  },
+  "qa-control": {
+    "package-version": "0.3.0",
+    "coverage": 90,
+    "run-in": "server",
+    "stability": "extending",
+    "type": "app",
+    "ecmaVersion": 6
+  }
+}

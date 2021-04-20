@@ -1,0 +1,9 @@
+permiso      |accion    |predeterminado
+campo        |editar    |true
+campo        |ver       |true
+configurar   |editar    |true
+configurar   |ver       |true
+encuestas    |ingresar  |true
+encuestas    |procesar  |true
+encuestas    |justificar|true
+consistencias|editar    |true 
