@@ -6,7 +6,7 @@ import {html} from "js-to-html";
 
 import * as myOwn from "myOwn";
 
-import * as likeAr from "like-ar";
+import {coalesce, changing} from "best-globals";
 
 import {guijarro, Nodo} from "guijarro";
 
@@ -15,6 +15,8 @@ var my = myOwn;
 interface AddrParams extends myOwn.AddrParams{
     fullscreen?:boolean
     recorrido?:number
+    position?:string
+    zoom?:number
 }
 
 var loadOpenLayer=function(){
@@ -53,8 +55,15 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         idLayout='map-layout';
         let buttonCambiar=html.button({id:'cambiar'},'cambiar').create();
         var inputRecorrido=html.input({style:'width:40px',id:'recorrido',type:'number',value:addrParams.recorrido||0}).create();
+        var refreshMap = function refreshMap(keepPositionAndZoom: boolean){
+            if(keepPositionAndZoom){
+                location.href='menu#w=mapa&recorrido='+inputRecorrido.value+"&position="+JSON.stringify(mapa.getCenter())+"&zoom="+mapa.getZoom();
+            }else{
+                location.href='menu#w=mapa&recorrido='+inputRecorrido.value;
+            }
+        }
         buttonCambiar.onclick=function(){
-            location.href='menu#w=mapa&recorrido='+inputRecorrido.value;
+            refreshMap(true);
         }
         let buttonInstalar=html.button({id:'instalar'},'instalar').create();
         let divInstalando=html.div().create();
@@ -109,19 +118,21 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                 divProbarGPS.textContent='sin soporte GPS';
             }
         }
+        let resetMapButton=html.button({id:'center-map-button'},'Centrar').create();
+        resetMapButton.onclick=function(){
+            refreshMap(false);
+        }
         let hidePointsChecked = localStorage.getItem('hide-points') == 'true';
         let hidePointsCheckBox=html.input({type:'checkbox',id:'hide-points', checked:hidePointsChecked}).create();
         hidePointsCheckBox.onchange=function(){
             localStorage.setItem('hide-points',hidePointsCheckBox.checked.toString());
-            let recorrido = inputRecorrido.value || 0
-            location.href='menu#w=mapa&recorrido='+ recorrido;
+            refreshMap(true);
         }
         let animatePointsChecked = localStorage.getItem('animate-points') == 'true';
         let animatePointsCheckBox=html.input({type:'checkbox',id:'animate-points', checked:animatePointsChecked}).create();
         animatePointsCheckBox.onchange=function(){
             localStorage.setItem('animate-points',animatePointsCheckBox.checked.toString());
-            let recorrido = inputRecorrido.value || 0
-            location.href='menu#w=mapa&recorrido='+ recorrido;
+            refreshMap(true);
         }
         let barLayout = html.div({class:'bar-layout'},[
             html.div('Recorrido '+addrParams.recorrido),
@@ -129,6 +140,9 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
             html.br(),
             html.hr(),
             html.br(),
+            html.div([
+                resetMapButton,
+            ]),
             html.div([
                 html.label({for:'hide-points'},'ocultar puntos'),
                 hidePointsCheckBox,
@@ -161,8 +175,12 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
     var leaveTrace = addrParams.fullscreen;
     var granularidadPuntos;
     if(addrParams.fullscreen){
-        granularidadPuntos = 25;
+        granularidadPuntos = 10;
     }else{
+        window.onbeforeunload = function(e) {
+            sessionStorage.setItem('zoom', mapa.getZoom());
+            sessionStorage.setItem('position', JSON.stringify(mapa.getCenter()));
+          };
         var parametros = await my.ajax.table_data({
             table:'parametros',
             fixedFields: [{fieldName: 'unico_registro', value:true}]
@@ -170,7 +188,11 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         parametros = parametros[0];
         granularidadPuntos = (parseInt(inputRecorrido.value) || 0)?parametros['gra_puntos_por_recorrido']:parametros['gra_puntos_todos_recorridos'];
     }
-    let mapa = guijarro(idLayout,leaveTrace,null,granularidadPuntos);
+    let myPosition=coalesce(JSON.parse(sessionStorage.getItem('position')),JSON.parse(addrParams.position||null));
+    let myZoom=coalesce(sessionStorage.getItem('zoom'),addrParams.zoom,null);
+    sessionStorage.removeItem('position');
+    sessionStorage.removeItem('zoom');
+    let mapa = guijarro(idLayout,leaveTrace,granularidadPuntos,myPosition, myZoom);
     function recorrido(addrParams:AddrParams){
         return AjaxBestPromise.get({
             url:'datos/recorrido',
@@ -283,25 +305,27 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                     var cantPerInput = html.input({id:'cant-personas', type:'number'}).create();
                     var saveButton={
                         label:'Grabar',
-                        attributes:{'save-button':true, 'enter-clicks':true}
+                        attributes:{id:'save-button','save-button':true, 'enter-clicks':true}
                     };
                     Object.defineProperty(saveButton, 'value', { get: function(){ 
                         return {cantCues:cantCuesInput.value, cantPer:cantPerInput.value}; 
                     }});
-                    return simpleFormPromise({elementsList:[
-                        html.h2('Ingrese cantidades').create(),
-                        html.label('Cant. cuestionarios ').create(),
-                        cantCuesInput,
-                        html.br().create(),
-                        html.label('Cant. de personas ').create(),
-                        cantPerInput,
-                        html.br({}).create(),
-                        saveButton,
-                        {label:'Cancelar', value:false, attributes:{delete:true, 'enter-clicks':true}}
-                    ],reject:false, 
+                    return simpleFormPromise({
+                        elementsList:[
+                            html.h1('Ingrese cantidades').create(),
+                            html.label({for:'cant-cuestionarios', id:'cant-cuestionarios-label'},'Cant. cuestionarios ').create(),
+                            cantCuesInput,
+                            html.br().create(),
+                            html.label({for:'cant-personas', id:'cant-personas-label'},'Cant. de personas ').create(),
+                            cantPerInput,
+                            html.br({}).create(),
+                            saveButton,
+                            {label:'Cancelar', value:false, attributes:{id: 'cancel-button', delete:true, 'enter-clicks':true}}
+                        ],
+                        reject:false, 
                         withCloseButton: true
                     }).then(function(respuesta){
-                        if(respuesta){
+                        if(respuesta.cantCues && respuesta.cantPer){
                             localStorage.setItem('punto-pedido',puntoPedido.toString());
                             var moreInfo = {
                                 punto_pedido: puntoPedido,
@@ -309,7 +333,12 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                                 cant_personas: respuesta.cantPer
                             }
                             var nuevoNodo = changing(nodo,{timestamp:new Date().getTime(), secuencial: mapa.posiciones.length ,more_info:moreInfo});
+                            mapa.colocarNodo(nuevoNodo, null)
                             mapa.addNodo(nuevoNodo);
+                        }else{
+                            if(respuesta){
+                                alertPromise("Falta ingresar cantidades, no se guardó el punto")
+                            }
                         };
                     })
                 }
@@ -341,7 +370,8 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                     let nodo:Nodo = {
                         posicion: [punto.p_longitud, punto.p_latitud],
                         coordinates: [punto.c_longitud, punto.c_latitud],
-                        timestamp: punto.timestamp
+                        timestamp: punto.timestamp,
+                        more_info: punto.more_info
                     }
                     var colocarFun = function colocarFun(){
                         ultimoNodo = mapa.colocarNodo(nodo, ultimoNodo);
@@ -376,4 +406,13 @@ myOwn.clientSides.openMap = {
 
 window.addEventListener('load',function(){
     // myOwn.autoSetup();
+    var newHash;
+    if(!location.hash){
+        newHash=sessionStorage.getItem('backend-plus-hash-redirect');
+        sessionStorage.removeItem('backend-plus-hash-redirect');
+        if(newHash){
+            // alert(location.origin+location.pathname+location.search+newHash)
+            history.replaceState(null, null, location.origin+location.pathname+location.search+newHash);
+        }
+    }
 });

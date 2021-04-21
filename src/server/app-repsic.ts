@@ -181,7 +181,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         });
         this.app.get('/file', async function(req:Request,res:Response){
             let result = await be.inTransaction(req, 
-                (client:pg.Client)=>
+                async (client:pg.Client)=>
                 client.query("select ruta from adjuntos where id_adjunto = $1",[req.query.id_adjunto])
                 .fetchUniqueValue()
             );
