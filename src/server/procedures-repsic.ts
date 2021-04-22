@@ -157,7 +157,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
                        as p(secuencial integer, p_latitud decimal, p_longitud decimal, timestamp bigint, c_latitud decimal, c_longitud decimal, more_info jsonb);
                 `,
                 [parameters.recorrido, context.session.install||be.getMachineId(), JSON.stringify(parameters.puntos)]
-            ).fetchOneRowIfExists();
+            ).fetchAll();
             return result.rowCount;
         }
     },

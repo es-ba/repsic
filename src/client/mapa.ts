@@ -287,9 +287,9 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                         secuencial:transmitidoDesde+i
                     }
                 })
-                if(transmitirHasta>transmitidoDesde){
+                if(transmitirHasta>transmitidoDesde && Number(addrParams.recorrido)>0){
                     await my.ajax.subir_puntos({
-                        recorrido:addrParams.recorrido||0,
+                        recorrido:addrParams.recorrido,
                         puntos:tiraPuntos
                     })
                     transmitidoDesde=transmitirHasta
@@ -405,7 +405,8 @@ myOwn.clientSides.openMap = {
 }
 
 window.addEventListener('load',function(){
-    // myOwn.autoSetup();
+    console.log(myOwn);
+    myOwn.autoSetup();
     var newHash;
     if(!location.hash){
         newHash=sessionStorage.getItem('backend-plus-hash-redirect');
