@@ -190,16 +190,20 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
     }
     let myPosition=coalesce(JSON.parse(my.getSessionVar('position')),JSON.parse(addrParams.position||null));
     let myZoom=coalesce(my.getSessionVar('zoom'),addrParams.zoom,null);
-    sessionStorage.removeItem('position');
-    sessionStorage.removeItem('zoom');
+    my.removeSessionVar('position');
+    my.removeSessionVar('zoom');
     var opts: GuijarroOpts = {
         epsilonShow:granularidadPuntos,
-        centerZone:myPosition,
-        currentZoom:myZoom,
         storePointsFunctions:{
             get:async (storageKey:string)=>my.getLocalVar(storageKey),
             set:async (storageKey:string, posiciones:Nodo[])=>my.setLocalVar(storageKey,posiciones)
         }
+    }
+    if(myPosition){
+        opts.centerZone=myPosition;
+    }
+    if(myZoom){
+        opts.currentZoom=myZoom;
     }
     let mapa = await guijarro(idLayout,leaveTrace,opts);
     function recorrido(addrParams:AddrParams){
@@ -419,7 +423,7 @@ window.addEventListener('load',function(){
     var newHash;
     if(!location.hash){
         newHash=my.getSessionVar('backend-plus-hash-redirect');
-        sessionStorage.removeItem('backend-plus-hash-redirect');
+        my.removeSessionVar('backend-plus-hash-redirect');
         if(newHash){
             // alert(location.origin+location.pathname+location.search+newHash)
             history.replaceState(null, null, location.origin+location.pathname+location.search+newHash);
