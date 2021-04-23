@@ -8,7 +8,7 @@ import * as myOwn from "myOwn";
 
 import {coalesce, changing} from "best-globals";
 
-import {guijarro, Nodo} from "guijarro";
+import {guijarro, Nodo, GuijarroOpts} from "guijarro";
 
 var my = myOwn;
 
@@ -122,16 +122,16 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         resetMapButton.onclick=function(){
             refreshMap(false);
         }
-        let hidePointsChecked = localStorage.getItem('hide-points') == 'true';
+        let hidePointsChecked = my.getLocalVar('hide-points') == 'true';
         let hidePointsCheckBox=html.input({type:'checkbox',id:'hide-points', checked:hidePointsChecked}).create();
         hidePointsCheckBox.onchange=function(){
-            localStorage.setItem('hide-points',hidePointsCheckBox.checked.toString());
+            my.setLocalVar('hide-points',hidePointsCheckBox.checked.toString());
             refreshMap(true);
         }
-        let animatePointsChecked = localStorage.getItem('animate-points') == 'true';
+        let animatePointsChecked = my.getLocalVar('animate-points') == 'true';
         let animatePointsCheckBox=html.input({type:'checkbox',id:'animate-points', checked:animatePointsChecked}).create();
         animatePointsCheckBox.onchange=function(){
-            localStorage.setItem('animate-points',animatePointsCheckBox.checked.toString());
+            my.setLocalVar('animate-points',animatePointsCheckBox.checked.toString());
             refreshMap(true);
         }
         let barLayout = html.div({class:'bar-layout'},[
@@ -178,8 +178,8 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         granularidadPuntos = 10;
     }else{
         window.onbeforeunload = function(e) {
-            sessionStorage.setItem('zoom', mapa.getZoom());
-            sessionStorage.setItem('position', JSON.stringify(mapa.getCenter()));
+            my.setSessionVar('zoom', mapa.getZoom());
+            my.setSessionVar('position', JSON.stringify(mapa.getCenter()));
           };
         var parametros = await my.ajax.table_data({
             table:'parametros',
@@ -188,11 +188,20 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         parametros = parametros[0];
         granularidadPuntos = (parseInt(inputRecorrido.value) || 0)?parametros['gra_puntos_por_recorrido']:parametros['gra_puntos_todos_recorridos'];
     }
-    let myPosition=coalesce(JSON.parse(sessionStorage.getItem('position')),JSON.parse(addrParams.position||null));
-    let myZoom=coalesce(sessionStorage.getItem('zoom'),addrParams.zoom,null);
+    let myPosition=coalesce(JSON.parse(my.getSessionVar('position')),JSON.parse(addrParams.position||null));
+    let myZoom=coalesce(my.getSessionVar('zoom'),addrParams.zoom,null);
     sessionStorage.removeItem('position');
     sessionStorage.removeItem('zoom');
-    let mapa = guijarro(idLayout,leaveTrace,granularidadPuntos,myPosition, myZoom);
+    var opts: GuijarroOpts = {
+        epsilonShow:granularidadPuntos,
+        centerZone:myPosition,
+        currentZoom:myZoom,
+        storePointsFunctions:{
+            get:async (storageKey:string)=>my.getLocalVar(storageKey),
+            set:async (storageKey:string, posiciones:Nodo[])=>my.setLocalVar(storageKey,posiciones)
+        }
+    }
+    let mapa = await guijarro(idLayout,leaveTrace,opts);
     function recorrido(addrParams:AddrParams){
         return AjaxBestPromise.get({
             url:'datos/recorrido',
@@ -298,7 +307,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         },5000)
         var buttonPFun=function(){
             if(mapa.posiciones.length){
-                var puntoPedido: number = parseInt((localStorage.getItem('punto-pedido') || 0)) + 1;
+                var puntoPedido: number = parseInt((my.getLocalVar('punto-pedido') || 0)) + 1;
                 var nodo:Nodo = mapa.posiciones[mapa.posiciones.length-1];
                 var buttonSecFun=function(){
                     var cantCuesInput = html.input({id:'cant-cuestionarios', type:'number'}).create();
@@ -326,7 +335,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                         withCloseButton: true
                     }).then(function(respuesta){
                         if(respuesta.cantCues && respuesta.cantPer){
-                            localStorage.setItem('punto-pedido',puntoPedido.toString());
+                            my.setLocalVar('punto-pedido',puntoPedido.toString());
                             var moreInfo = {
                                 punto_pedido: puntoPedido,
                                 cant_cues: respuesta.cantCues,
@@ -358,7 +367,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         }
         mapa.addButton({letter:'P', position:'current' , zoom:null  , handler:buttonPFun});
     }else{
-        let hidePoints = localStorage.getItem('hide-points') == 'true';
+        let hidePoints = my.getLocalVar('hide-points') == 'true';
         if(!hidePoints){
             let miRecorrido:number = parseInt(inputRecorrido.value)||0;
             var executionSec = 0;
@@ -376,7 +385,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                     var colocarFun = function colocarFun(){
                         ultimoNodo = mapa.colocarNodo(nodo, ultimoNodo);
                     }
-                    let animatePoints = localStorage.getItem('animate-points') == 'true';
+                    let animatePoints = my.getLocalVar('animate-points') == 'true';
                     if(animatePoints){
                         setTimeout(function(){
                             colocarFun();
@@ -409,7 +418,7 @@ window.addEventListener('load',function(){
     myOwn.autoSetup();
     var newHash;
     if(!location.hash){
-        newHash=sessionStorage.getItem('backend-plus-hash-redirect');
+        newHash=my.getSessionVar('backend-plus-hash-redirect');
         sessionStorage.removeItem('backend-plus-hash-redirect');
         if(newHash){
             // alert(location.origin+location.pathname+location.search+newHash)

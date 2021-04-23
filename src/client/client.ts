@@ -9,7 +9,7 @@ var savesClientRepsic={
 formStructure.SurveyManager.prototype.saveSurvey = function saveSurvey(){
     var self = this;
     return Promise.resolve().then(function(){
-        localStorage.setItem(
+        my.setLocalVar(
             self.surveyMetadata.operative +'_survey_'+self.surveyId, 
             JSON.stringify(self.surveyData)
         );
@@ -65,12 +65,12 @@ formStructure.FormManager.prototype.completeCalculatedVars = function completeCa
         ];
         recordables.forEach(function(recordableDef){
             var varName=recordableDef.variable;
-            var recordableStorage = localStorage.getItem('recordable_'+varName);
+            var recordableStorage = my.getLocalVar('recordable_'+varName);
             if(recordableStorage && !row[varName] && (!recordableDef.previa || row[recordableDef.previa])){
                 row[varName] = JSON.parse(recordableStorage);
             }
             controls[varName].addEventListener('update',function(){
-                localStorage.setItem('recordable_'+varName, JSON.stringify(this.getTypedValue()));
+                my.setLocalVar('recordable_'+varName, JSON.stringify(this.getTypedValue()));
             });
         });
         // row.cant14 = Number(row.cant11)+Number(row.cant12)+Number(row.cant13)||null;
@@ -170,7 +170,7 @@ myOwn.wScreens.ingresarFormulario = async function(addrParams:myOwn.AddrParams){
     let my=myOwn;
     let layout = document.getElementById('main_layout');
     layout.innerHTML="";
-    let casoAnterior=sessionStorage.getItem('surveyId');
+    let casoAnterior=my.getSessionVar('surveyId');
     let resultDiv=html.div({id:'result-div'}).create();
     var consistirFun=async function consistirFun(id_caso){
         resultDiv.textContent='consistiendo...';
