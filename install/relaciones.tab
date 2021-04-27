@@ -1,4 +1,4 @@
-operativo|tabla_datos     |tiene                   |que_es  |misma_pk|max        
+operativo|tabla_datos     |tiene                   |que_es  |misma_pk|aridad        
 repsic211|recorridos      |grupo_personas          |        |        |           
 repsic211|supervision     |grupo_personas          |        |        |           
 repsic211|supervision     |supervision_calculada   |        |  true  |1          
