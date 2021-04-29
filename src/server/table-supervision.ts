@@ -10,7 +10,7 @@ export function supervision(context:TableContext):TableDefinition {
         editable: autorizado,
         fields: [
             { name: "recorrido"          , typeName: "integer" },
-            { name: "relevador"          , typeName: "text"    },
+            { name: "relevador"          , typeName: "text"    , editable:false, inTable:false},
             { name: "cant_cues"          , typeName: "integer" , aggregate:'sum'},
             { name: "cant_pers"          , typeName: "integer" , aggregate:'sum'},
             { name: "salida"             , typeName: "interval", aggregate:'count'},
@@ -49,6 +49,13 @@ export function supervision(context:TableContext):TableDefinition {
                         select string_agg(nombre,', ' order by barrio) 
                                 from recorridos_barrios 
                                     left join barrios using (barrio) 
+                                where recorrido=supervision.recorrido
+                    )`
+                },
+                relevador:{
+                    expr:`(
+                        select string_agg(concat_ws(' ',nombre,apellido), ', ' order by nombre, apellido) 
+                                from usuarios 
                                 where recorrido=supervision.recorrido
                     )`
                 },
