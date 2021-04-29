@@ -3,6 +3,8 @@ import {html} from "js-to-html";
 import * as myOwn from "myOwn";
 import * as TypedControls from "typed-controls";
 
+var my = myOwn;
+
 var savesClientRepsic={
     validateDepot:formStructure.FormManager.prototype.validateDepot
 }
