@@ -392,6 +392,15 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 {name:'velocidad_animacion_puntos_ms' , typeName:'integer'   , label:'vel. animación puntos (ms)'           , editable: true, nullable: false, defaultDbValue:10  }
             );
         })
+        be.appendToTableDefinition('usuarios', function (tableDef,context) {
+            tableDef.fields.push(
+                {name:'recorrido'  , typeName:'integer',  editable:true}
+            );
+            tableDef.foreignKeys=tableDef.foreignKeys || [];
+            tableDef.foreignKeys.push(
+                {references:'recorridos'    , fields: ['recorrido'] },
+            )
+        });
     }
   }
 }
