@@ -316,43 +316,42 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                 var buttonSecFun=function(){
                     var cantCuesInput = html.input({id:'cant-cuestionarios', type:'number'}).create();
                     var cantPerInput = html.input({id:'cant-personas', type:'number'}).create();
+                    var obsInput = html.input({id:'observaciones', type:'text'}).create();
                     var saveButton={
-                        label:'Grabar',
+                        label:'guardar',
                         attributes:{id:'save-button','save-button':true, 'enter-clicks':true}
                     };
                     Object.defineProperty(saveButton, 'value', { get: function(){ 
-                        return {cantCues:cantCuesInput.value, cantPer:cantPerInput.value}; 
+                        return {cantCues:cantCuesInput.value, cantPer:cantPerInput.value, obs: obsInput.value}; 
                     }});
                     return simpleFormPromise({
                         elementsList:[
-                            html.h1('Ingrese cantidades').create(),
-                            html.label({for:'cant-cuestionarios', id:'cant-cuestionarios-label'},'Cant. cuestionarios ').create(),
+                            html.h1('información del punto').create(),
+                            html.label({for:'cant-cuestionarios', id:'cant-cuestionarios-label'},'cant. cuestionarios ').create(),
                             cantCuesInput,
                             html.br().create(),
-                            html.label({for:'cant-personas', id:'cant-personas-label'},'Cant. de personas ').create(),
+                            html.label({for:'cant-personas', id:'cant-personas-label'},'cant. de personas ').create(),
                             cantPerInput,
                             html.br({}).create(),
+                            html.label({for:'observaciones', id:'obs-label'},'obsevaciones ').create(),
+                            obsInput,
+                            html.br({}).create(),
                             saveButton,
-                            {label:'Cancelar', value:false, attributes:{id: 'cancel-button', delete:true, 'enter-clicks':true}}
+                            {label:'cancelar', value:false, attributes:{id: 'cancel-button', delete:true, 'enter-clicks':true}}
                         ],
                         reject:false, 
                         withCloseButton: true
                     }).then(function(respuesta){
-                        if(respuesta.cantCues && respuesta.cantPer){
-                            my.setLocalVar('punto-pedido',puntoPedido.toString());
-                            var moreInfo = {
-                                punto_pedido: puntoPedido,
-                                cant_cues: respuesta.cantCues,
-                                cant_personas: respuesta.cantPer
-                            }
-                            var nuevoNodo = changing(nodo,{timestamp:new Date().getTime(), secuencial: mapa.posiciones.length ,more_info:moreInfo});
-                            mapa.colocarNodo(nuevoNodo, null)
-                            mapa.addNodo(nuevoNodo);
-                        }else{
-                            if(respuesta){
-                                alertPromise("Falta ingresar cantidades, no se guardó el punto")
-                            }
-                        };
+                        my.setLocalVar('punto-pedido',puntoPedido.toString());
+                        var moreInfo = {
+                            punto_pedido: puntoPedido,
+                            cant_cues: respuesta.cantCues,
+                            cant_personas: respuesta.cantPer,
+                            observaciones: respuesta.obs
+                        }
+                        var nuevoNodo = changing(nodo,{timestamp:new Date().getTime(), secuencial: mapa.posiciones.length ,more_info:moreInfo});
+                        mapa.colocarNodo(nuevoNodo, null)
+                        mapa.addNodo(nuevoNodo);
                     })
                 }
                 var borrarPedidosDePuntosFun = function(){
