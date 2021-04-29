@@ -142,7 +142,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                     throw new Error("Error en el numero de recorrido");
                 }
                 if (req.session) { req.session.recorrido=recorrido; }
-                res.cookie('recorrido',recorrido.toString(), { maxAge: 1000*60*60*24*30, httpOnly: true });
+                res.cookie('recorrido',recorrido.toString(), { maxAge: 1000*60*60*24*30});
                 console.log('/token/recorrido',recorrido)
                 res.send('ok')
                 res.end()
@@ -156,7 +156,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                     throw new Error("Unauthorized");
                 }
                 if (req.session) { req.session.recorrido=0; }
-                res.cookie('recorrido','0', { maxAge: 1000*60*60*24*30, httpOnly: true });
+                res.cookie('recorrido','0', { maxAge: 1000*60*60*24*30 });
                 console.log('/token/limpiar')
                 res.send('ok')
                 res.end()

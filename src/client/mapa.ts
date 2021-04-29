@@ -73,7 +73,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                 url:'token/recorrido',
                 data:{recorrido:inputRecorrido.value||0}
             }).then(function(){
-                location.href='mapa#recorrido='+inputRecorrido.value;
+                location.href='mapa';
             }).catch(function(err:Error){
                 divInstalando.textContent=err.message;
             });
@@ -85,7 +85,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                 url:'token/limpiar',
                 data:{}
             }).then(function(){
-                location.href='mapa#recorrido=0';
+                location.href='mapa';
             }).catch(function(err:Error){
                 divInstalando.textContent=err.message;
             });
