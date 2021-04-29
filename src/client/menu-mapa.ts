@@ -16,7 +16,11 @@ window.addEventListener('load', function(){
     if(recorrido && Number(recorrido)){
         myOwn.wScreens.mapa({fullscreen:true, recorrido});
     }else{
-        tl.innerHTML='<div id=main_layout>sin recorrido <a href="menu#i=mapa">volver<a/></div>';
+        tl.innerHTML='<div id=main_layout>sin recorrido, espere a ser redirigido...</div>';
+        setTimeout(()=>{
+            history.replaceState(null, null, location.origin+location.pathname+'/../menu#i=mapa');
+            location.reload();
+        },2000)
     }
     myOwn.autoSetup();
 });
