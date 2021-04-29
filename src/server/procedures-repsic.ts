@@ -84,7 +84,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
         coreFunction:function(context, parameters, files){
             let be=context.be;
             let client=context.client;
-            context.informProgress(be.messages.fileUploaded);
+            context.informProgress({message:be.messages.fileUploaded});
             let file = (<UploadedFileInfo[]>files)[0]
             let ext = path.extname(file.path).substr(1);
             let originalFilename = file.originalFilename.slice(0,-(ext.length+1));
