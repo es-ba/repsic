@@ -97,10 +97,10 @@ formStructure.FormManager.prototype.completeCalculatedVars = function completeCa
     }
     if(fm.formId=='F:F2'){
         row.p0 = fm.iPosition;
-        calculatedVars = [ 'p0' ];
+        calculatedVars = [ 'p0' ]; //aqui verificar si esta ok que le asociemos parentesco 1
         if(fm.iPosition == 1){
-            row.p1 = 1;
-            calculatedVars.push('p1');
+            row.sc2 = 1;
+            calculatedVars.push('sc2');
         }
     }
     calculatedVars.forEach(function(varName){
