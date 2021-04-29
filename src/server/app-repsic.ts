@@ -39,6 +39,8 @@ import { tipos_recorrido     } from "./table-tipos_recorrido";
 import {defConfig} from "./def-config"
 import { Request } from "rel-enc";
 
+import * as cookieParser from 'cookie-parser';
+
 interface Context extends procesamiento.Context{
   puede:object
   superuser?:true
@@ -95,6 +97,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
     addSchrödingerServices(mainApp:procesamiento.Express, baseUrl:string){
         let be=this;
         super.addSchrödingerServices(mainApp, baseUrl);
+        mainApp.use(cookieParser());
         mainApp.use(function(req:Request,res:Response, next:NextFunction){
             if(req.session && !req.session.install){
                 req.session.install=Math.random().toString().replace('.','');
@@ -174,6 +177,11 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         be.app.get('/mapa', async function(req:Request, res:Response, next:NextFunction){
             try{
                 await be.controlLoggedOrTokenDevolverRecorrido(req);
+                let hayRecorridoCookie = !!Number(req.cookies.recorrido);
+                let context = be.getContext(req);
+                if(!hayRecorridoCookie && context.user.rol == 'relevador' && context.user.recorrido){
+                    res.cookie('recorrido',context.user.recorrido.toString(), { maxAge: 1000*60*60*24*30});
+                }
                 miniTools.serveFile('dist/client/mapa.html',{})(req,res);
             }catch(err){
                 miniTools.serveErr(req,res,next)(err)

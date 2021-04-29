@@ -46,6 +46,7 @@ install:
       - estados_permisos_trg.sql
       - proximo_estado_posible.sql
 login:
+  infoFieldList: [usuario, recorrido, rol]
   plus:
     maxAge-5-sec: 5000    
     maxAge: 864000000
