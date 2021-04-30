@@ -54,7 +54,7 @@ export function supervision(context:TableContext):TableDefinition {
                 },
                 relevador:{
                     expr:`(
-                        select string_agg(coalesce(concat_ws(' ', nombre, apellido), usuario), ', ' order by usuario) 
+                        select string_agg(coalesce(nullif(concat_ws(' ', nombre, apellido),''), usuario), ', ' order by usuario) 
                                 from usuarios 
                                 where recorrido=supervision.recorrido
                     )`
