@@ -24,3 +24,12 @@ procesamiento|encuestas    |procesar  |true
 procesamiento|consistencias|editar    |true
 procesamiento|configurar   |ver       |true
 procesamiento|configurar   |editar    |false
+relevador    |campo        |editar    |false
+relevador    |campo        |ver       |false
+relevador    |configurar   |editar    |false
+relevador    |configurar   |ver       |false
+relevador    |encuestas    |ingresar  |false
+relevador    |encuestas    |procesar  |false
+relevador    |encuestas    |justificar|false
+relevador    |consistencias|editar    |false
+relevador    |puntos       |transmitir|true

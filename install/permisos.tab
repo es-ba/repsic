@@ -6,4 +6,5 @@ configurar   |ver       |true
 encuestas    |ingresar  |true
 encuestas    |procesar  |true
 encuestas    |justificar|true
-consistencias|editar    |true 
+consistencias|editar    |true
+puntos       |transmitir|true
