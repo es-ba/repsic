@@ -179,7 +179,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
     }else{
         window.onbeforeunload = function(e) {
             my.setSessionVar('zoom', mapa.getZoom());
-            my.setSessionVar('position', JSON.stringify(mapa.getCenter()));
+            my.setSessionVar('position', mapa.getCenter());
           };
         var parametros = await my.ajax.table_data({
             table:'parametros',
@@ -188,7 +188,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         parametros = parametros[0];
         granularidadPuntos = (parseInt(inputRecorrido.value) || 0)?parametros['gra_puntos_por_recorrido']:parametros['gra_puntos_todos_recorridos'];
     }
-    let myPosition=coalesce(JSON.parse(my.getSessionVar('position')),JSON.parse(addrParams.position||null));
+    let myPosition=coalesce(my.getSessionVar('position'),JSON.parse(addrParams.position||null));
     let myZoom=coalesce(my.getSessionVar('zoom'),addrParams.zoom,null);
     my.removeSessionVar('position');
     my.removeSessionVar('zoom');

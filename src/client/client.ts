@@ -13,7 +13,7 @@ formStructure.SurveyManager.prototype.saveSurvey = function saveSurvey(){
     return Promise.resolve().then(function(){
         my.setLocalVar(
             self.surveyMetadata.operative +'_survey_'+self.surveyId, 
-            JSON.stringify(self.surveyData)
+            self.surveyData
         );
         myOwn.ajax.caso_guardar({
             operativo:self.surveyMetadata.operative, 
@@ -69,10 +69,10 @@ formStructure.FormManager.prototype.completeCalculatedVars = function completeCa
             var varName=recordableDef.variable;
             var recordableStorage = my.getLocalVar('recordable_'+varName);
             if(recordableStorage && !row[varName] && (!recordableDef.previa || row[recordableDef.previa])){
-                row[varName] = JSON.parse(recordableStorage);
+                row[varName] = recordableStorage;
             }
             controls[varName].addEventListener('update',function(){
-                my.setLocalVar('recordable_'+varName, JSON.stringify(this.getTypedValue()));
+                my.setLocalVar('recordable_'+varName, this.getTypedValue());
             });
         });
         // row.cant14 = Number(row.cant11)+Number(row.cant12)+Number(row.cant13)||null;
