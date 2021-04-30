@@ -98,7 +98,7 @@ repsic211|O5/4|O5|O|opción|4|4|✔|La persona está durmiendo||||||||||||10;70;
 repsic211|O5/5|O5|O|opción|5|5|✔|Otra||||especificar||||||||10;70;20;5|F:F1||||||||||
 repsic211|O5_esp|O5/5|P|pregunta|O5_esp|1|✔||texto|pagina||||||true|solo_variable|-||10;70;20;5;1|F:F1||o5_esp||||||||
 repsic211|O5/777|O5|O|opción|777|6|✔|S/D||||||||||||10;70;20;6|F:F1||||||||||
-repsic211|F2|F:F1|BF|Botón para formulario|F2|80|✔|Personas||||||personas|24|true||||10;80|F:F1||||||||||
+repsic211|F2|F:F1|BF|Botón para formulario|F2|80|✔|Personas||||||personas|12|true||||10;80|F:F1||||||||||
 repsic211|Totalpers|F:F1|P|pregunta|Totalpers|82|✔|Total de Personas Observadas|numero|2||||||true||||10;82|F:F1||totalpers||||||||
 repsic211|OB|F:F1|B|bloque|OB|85|✔|Observaciones||||||||true||-||10;85|F:F1||||||||||
 repsic211|obs|OB|P|pregunta|obs|10|✔|Observaciones|texto|pagina||||||true|solo_variable||true|10;85;10|F:F1||obs||||||||
@@ -246,9 +246,10 @@ repsic211|SC17/4/2|SC17/4|O|opción|2|2|✔|No||||||||||||20;110;120;400;4;2|F:F
 repsic211|SC17/4/88|SC17/4|O|opción|88|3|✔|NS||||||||||||20;110;120;400;4;3|F:F2||||||||||
 repsic211|SC17/4/99|SC17/4|O|opción|99|4|✔|NC||||||||||||20;110;120;400;4;4|F:F2||||||||||
 repsic211|SC17/4/777|SC17/4|O|opción|777|5|✔|S/D||||||||||||20;110;120;400;4;5|F:F2||||||||||
+repsic211|MG/pers10|MG|TEXTO|texto aclaratorio sin pregunta|pers10|420|⛔|Sólo para las personas de 10 años o más. Para el resto, fin del cuestionario||||||||||-||20;110;120;420|F:F2||||||||||
 repsic211|SC18|MG|P|pregunta|SC18|430|✔|¿Realizó la semana pasada alguna actividad para obtener dinero?|si_no|||||||true||||20;110;120;430|F:F2||sc18||sc4 >=10  && sc4 <>888 && sc4 <>999 && sc4 <>777||||||
 repsic211|SC18/1|SC18|O|opción|1|1|✔|Sí||||||||||||20;110;120;430;1|F:F2||||||||||
-repsic211|SC18/2|SC18|O|opción|2|2|✔|No|||||SC19/1|||||||20;110;120;430;2|F:F2||||||||||
+repsic211|SC18/2|SC18|O|opción|2|2|✔|No|||||SC20/1|||||||20;110;120;430;2|F:F2||||||||||
 repsic211|SC18/777|SC18|O|opción|777|3|✔|S/D||||||||||||20;110;120;430;3|F:F2||||||||||
 repsic211|SC19|MG|P|pregunta|SC19|450|✔|¿Qué actividad realizó?|||G-M|Recuerde leer todas las opciones y registrar sólo lo que efectivamente realizó la semana pasada||||true||||20;110;120;450|F:F2||||||||||
 repsic211|SC19/1|SC19|OM|opción múltiple|1|1|!opciones|Cartoneo|si_no_nn|||||||||||20;110;120;450;1|F:F2||sc19_1||sc4 >=10  && sc4 <>888 && sc4 <>999 && sc4 <>777||||||
