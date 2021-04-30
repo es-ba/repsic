@@ -274,7 +274,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
                     session, 
                     id_punto/(select gra_tx_puntos from parametros where unico_registro) as grupo, 
                     min(timestamp) as start, 
-                    --(max(timestamp)-min(timestamp) || 'microseconds')::interval as duracion, 
+                    max(timestamp)-min(timestamp) as duracion, 
                     count(*) as cantidad, 
                     json_agg(json_build_object('p_latitud', p_latitud, 'p_longitud', p_longitud, 'c_latitud', c_latitud, 'c_longitud', c_longitud, 'more_info', more_info) order by timestamp) as puntos
                 from recorridos_puntos ` +
