@@ -103,9 +103,10 @@ repsic211|Totalpers|F:F1|P|pregunta|Totalpers|82|✔|Total de Personas Observada
 repsic211|OB|F:F1|B|bloque|OB|85|✔|Observaciones||||||||true||-||10;85|F:F1||||||||||
 repsic211|obs|OB|P|pregunta|obs|10|✔|Observaciones|texto|pagina||||||true|solo_variable||true|10;85;10|F:F1||obs||||||||
 repsic211|F:F2||F|formulario|F2|20|✔|||||||personas||||||20|F:F2||||||||||
-repsic211|CGrup|F:F2|B|bloque|CGrup|110|✔|Componentes del grupo||||Complete por observación||||true||-||20;110|F:F2||||||||||
+repsic211|CGrup|F:F2|B|bloque|CGrup|110|✔|Datos Individuales||||Complete por observación||||true||-||20;110|F:F2||||||||||
 repsic211|MG|CGrup|MATRIZ|matriz (de varias preguntas)|MG|120|✔|||||||||true||-||20;110;120|F:F2||||||||||
-repsic211|SC0|MG|P|pregunta|SC0|100|✔|Número de persona observada|numero|3||||||true|calculada|||20;110;120;100|F:F2||p0|p0|||||||
+repsic211|MG/persgral|MG|TEXTO|texto aclaratorio sin pregunta|persgral|98|⛔|Para todas las personas||||||||||-||20;110;120;98|F:F2||||||||||
+repsic211|SC0|MG|P|pregunta|SC0|100|✔|N° de persona observada|numero|3||||||true|calculada|||20;110;120;100|F:F2||p0|p0|||||||
 repsic211|SC1|MG|P|pregunta|SC1|110|✔|¿Cuál es su nombre?|texto|pagina||Registre nombre o apodo||||true||||20;110;120;110|F:F2||sc1|sc1|||||||
 repsic211|SC2|MG|P|pregunta|SC2|120|✔|¿Qué parentesco tiene con el respondiente?|opciones|||Anote código||||true||||20;110;120;120|F:F2||sc2|sc2|||||||
 repsic211|SC2/1|SC2|O|opción|1|1|✔|Respondiente||||||||||||20;110;120;120;1|F:F2||||||||||
@@ -115,14 +116,14 @@ repsic211|SC2/4|SC2|O|opción|4|4|✔|Hijo/a, hijastro/a||||||||||||20;110;120;1
 repsic211|SC2/5|SC2|O|opción|5|5|✔|Hermano/a||||||||||||20;110;120;120;5|F:F2||||||||||
 repsic211|SC2/6|SC2|O|opción|6|6|✔|Otro familiar||||||||||||20;110;120;120;6|F:F2||||||||||
 repsic211|SC2/7|SC2|O|opción|7|7|✔|Otro no familiar||||||||||||20;110;120;120;7|F:F2||||||||||
-repsic211|SC2/88|SC2|O|opción|88|14|✔|No sabe||||||||||||20;110;120;120;14|F:F2||||||||||
-repsic211|SC2/99|SC2|O|opción|99|15|✔|No contesta||||||||||||20;110;120;120;15|F:F2||||||||||
+repsic211|SC2/88|SC2|O|opción|88|14|✔|NS||||||||||||20;110;120;120;14|F:F2||||||||||
+repsic211|SC2/99|SC2|O|opción|99|15|✔|NC||||||||||||20;110;120;120;15|F:F2||||||||||
 repsic211|SC2/777|SC2|O|opción|777|16|✔|S/D||||||||||||20;110;120;120;16|F:F2||||||||||
 repsic211|SC3|MG|P|pregunta|SC3|140|✔|Sexo|opciones|||Anote código||||true||||20;110;120;140|F:F2||sc3||||||||
 repsic211|SC3/1|SC3|O|opción|1|1|✔|Varón||||||||||||20;110;120;140;1|F:F2||||||||||
 repsic211|SC3/2|SC3|O|opción|2|2|✔|Mujer||||||||||||20;110;120;140;2|F:F2||||||||||
-repsic211|SC3/88|SC3|O|opción|88|3|✔|No sabe||||||||||||20;110;120;140;3|F:F2||||||||||
-repsic211|SC3/99|SC3|O|opción|99|4|✔|No contesta||||||||||||20;110;120;140;4|F:F2||||||||||
+repsic211|SC3/88|SC3|O|opción|88|3|✔|NS||||||||||||20;110;120;140;3|F:F2||||||||||
+repsic211|SC3/99|SC3|O|opción|99|4|✔|NC||||||||||||20;110;120;140;4|F:F2||||||||||
 repsic211|SC3/777|SC3|O|opción|777|5|✔|S/D||||||||||||20;110;120;140;5|F:F2||||||||||
 repsic211|SC4|MG|P|pregunta|SC4|150|✔|¿Cuántos años cumplidos tiene?|numero|3||Si tiene menos de un año, anote 0 (cero),888-NS, 999 NC,777 S/D||||true||||20;110;120;150|F:F2||sc4||||||||
 repsic211|SC5|MG|P|pregunta|SC5|160|✔|¿Donde Nació ?|opciones|||Anote código||||true||||20;110;120;160|F:F2||sc5||||||||
@@ -130,15 +131,15 @@ repsic211|SC5/1|SC5|O|opción|1|1|✔|En esta ciudad||||||||||||20;110;120;160;1
 repsic211|SC5/2|SC5|O|opción|2|2|✔|En la Provincia de Bs. As.||||||||||||20;110;120;160;2|F:F2||||||||||
 repsic211|SC5/3|SC5|O|opción|3|3|✔|En otra provincia||||||||||||20;110;120;160;3|F:F2||||||||||
 repsic211|SC5/4|SC5|O|opción|4|4|✔|En otro país||||||||||||20;110;120;160;4|F:F2||||||||||
-repsic211|SC5/88|SC5|O|opción|88|5|✔|No sabe||||||||||||20;110;120;160;5|F:F2||||||||||
-repsic211|SC5/99|SC5|O|opción|99|6|✔|No contesta||||||||||||20;110;120;160;6|F:F2||||||||||
+repsic211|SC5/88|SC5|O|opción|88|5|✔|NS||||||||||||20;110;120;160;5|F:F2||||||||||
+repsic211|SC5/99|SC5|O|opción|99|6|✔|NC||||||||||||20;110;120;160;6|F:F2||||||||||
 repsic211|SC5/777|SC5|O|opción|777|7|✔|S/D||||||||||||20;110;120;160;7|F:F2||||||||||
-repsic211|SC6|MG|P|pregunta|SC6|170|✔|¿Asiste o asistió a algún establecimiento educativo?|opciones||E-S|Anote código||||true||||20;110;120;170|F:F2||sc6||||||||
+repsic211|SC6|MG|P|pregunta|SC6|170|✔|¿Asiste o asistió a algún establecimiento educativo?|opciones||G-S|Anote código||||true||||20;110;120;170|F:F2||sc6||||||||
 repsic211|SC6/1|SC6|O|opción|1|1|✔|Asiste||||||||||||20;110;120;170;1|F:F2||||||||||
 repsic211|SC6/2|SC6|O|opción|2|2|✔|No asiste pero asistió||||||||||||20;110;120;170;2|F:F2||||||||||
 repsic211|SC6/3|SC6|O|opción|3|3|✔|Nunca asistió|||||SC9|||||||20;110;120;170;3|F:F2||||||||||
-repsic211|SC6/88|SC6|O|opción|88|4|✔|No sabe|||||SC9|||||||20;110;120;170;4|F:F2||||||||||
-repsic211|SC6/99|SC6|O|opción|99|5|✔|No contesta|||||SC9|||||||20;110;120;170;5|F:F2||||||||||
+repsic211|SC6/88|SC6|O|opción|88|4|✔|NS|||||SC9|||||||20;110;120;170;4|F:F2||||||||||
+repsic211|SC6/99|SC6|O|opción|99|5|✔|NC|||||SC9|||||||20;110;120;170;5|F:F2||||||||||
 repsic211|SC6/777|SC6|O|opción|777|6|✔|S/D||||||||||||20;110;120;170;6|F:F2||||||||||
 repsic211|SC7|MG|P|pregunta|SC7|180|✔|¿Qué nivel educativo cursa o cursó?|opciones||G-S|Anote código||||true||||20;110;120;180|F:F2||sc7||||||||
 repsic211|SC7/1|SC7|O|opción|1|1|✔|Centro de Primera Infancia / CDI|||||SC9|||||||20;110;120;180;1|F:F2||||||||||
@@ -150,22 +151,22 @@ repsic211|SC7/6|SC7|O|opción|6|6|✔|Polimodal||||||||||||20;110;120;180;6|F:F2
 repsic211|SC7/7|SC7|O|opción|7|7|✔|Primario especial||||||||||||20;110;120;180;7|F:F2||||||||||
 repsic211|SC7/8|SC7|O|opción|8|8|✔|Terciario/Superior no universitario||||||||||||20;110;120;180;8|F:F2||||||||||
 repsic211|SC7/9|SC7|O|opción|9|9|✔|Universitario y más||||||||||||20;110;120;180;9|F:F2||||||||||
-repsic211|SC7/88|SC7|O|opción|88|13|✔|No sabe|||||SC9|||||||20;110;120;180;13|F:F2||||||||||
-repsic211|SC7/99|SC7|O|opción|99|14|✔|No contesta|||||SC9|||||||20;110;120;180;14|F:F2||||||||||
+repsic211|SC7/88|SC7|O|opción|88|13|✔|NS|||||SC9|||||||20;110;120;180;13|F:F2||||||||||
+repsic211|SC7/99|SC7|O|opción|99|14|✔|NC|||||SC9|||||||20;110;120;180;14|F:F2||||||||||
 repsic211|SC7/777|SC7|O|opción|777|15|✔|S/D||||||||||||20;110;120;180;15|F:F2||||||||||
 repsic211|SC8|MG|P|pregunta|SC8|190|✔|¿Completó ese nivel?|opciones|||Anote código||||true||||20;110;120;190|F:F2||sc8||||||||
 repsic211|SC8/1|SC8|O|opción|1|1|✔|Sí||||||||||||20;110;120;190;1|F:F2||||||||||
 repsic211|SC8/2|SC8|O|opción|2|2|✔|No||||||||||||20;110;120;190;2|F:F2||||||||||
-repsic211|SC8/88|SC8|O|opción|88|3|✔|No sabe||||||||||||20;110;120;190;3|F:F2||||||||||
-repsic211|SC8/99|SC8|O|opción|99|4|✔|No contesta||||||||||||20;110;120;190;4|F:F2||||||||||
+repsic211|SC8/88|SC8|O|opción|88|3|✔|NS||||||||||||20;110;120;190;3|F:F2||||||||||
+repsic211|SC8/99|SC8|O|opción|99|4|✔|NC||||||||||||20;110;120;190;4|F:F2||||||||||
 repsic211|SC8/777|SC8|O|opción|777|5|✔|S/D||||||||||||20;110;120;190;5|F:F2||||||||||
 repsic211|SC9|MG|P|pregunta|SC9|220|✔|La semana pasada, ¿cuántos días durmió en la calle?|opciones||G-S|||||true||||20;110;120;220|F:F2||sc9||||||||
 repsic211|SC9/1|SC9|O|opción|1|1|✔|Todos los días||||||||||||20;110;120;220;1|F:F2||||||||||
 repsic211|SC9/2|SC9|O|opción|2|2|✔|Sólo los días hábiles||||de lunes a viernes||||||||20;110;120;220;2|F:F2||||||||||
 repsic211|SC9/3|SC9|O|opción|3|3|✔|Sólo el fin de semana||||||||||||20;110;120;220;3|F:F2||||||||||
 repsic211|SC9/4|SC9|O|opción|4|4|✔|Algunos días||||||||||||20;110;120;220;4|F:F2||||||||||
-repsic211|SC9/88|SC9|O|opción|88|5|✔|No sabe||||||||||||20;110;120;220;5|F:F2||||||||||
-repsic211|SC9/99|SC9|O|opción|99|6|✔|No contesta||||||||||||20;110;120;220;6|F:F2||||||||||
+repsic211|SC9/88|SC9|O|opción|88|5|✔|NS||||||||||||20;110;120;220;5|F:F2||||||||||
+repsic211|SC9/99|SC9|O|opción|99|6|✔|NC||||||||||||20;110;120;220;6|F:F2||||||||||
 repsic211|SC9/777|SC9|O|opción|777|7|✔|S/D||||||||||||20;110;120;220;7|F:F2||||||||||
 repsic211|SC10|MG|P|pregunta|SC10|240|✔|Actualmente, ¿cuánto tiempo hace que vive en situación de calle?|opciones||G-S|Anote código||||true||||20;110;120;240|F:F2||sc10||||||||
 repsic211|SC10/1|SC10|O|opción|1|1|✔|Menos de un mes||||||||||||20;110;120;240;1|F:F2||||||||||
@@ -173,8 +174,8 @@ repsic211|SC10/2|SC10|O|opción|2|2|✔|Entre un mes y seis meses||||||||||||20;
 repsic211|SC10/3|SC10|O|opción|3|3|✔|Más de seis meses a un año||||||||||||20;110;120;240;3|F:F2||||||||||
 repsic211|SC10/4|SC10|O|opción|4|4|✔|Más de un año a tres años||||||||||||20;110;120;240;4|F:F2||||||||||
 repsic211|SC10/5|SC10|O|opción|5|5|✔|Más de tres años||||||||||||20;110;120;240;5|F:F2||||||||||
-repsic211|SC10/88|SC10|O|opción|88|6|✔|No sabe||||||||||||20;110;120;240;6|F:F2||||||||||
-repsic211|SC10/99|SC10|O|opción|99|7|✔|No contesta||||||||||||20;110;120;240;7|F:F2||||||||||
+repsic211|SC10/88|SC10|O|opción|88|6|✔|NS||||||||||||20;110;120;240;6|F:F2||||||||||
+repsic211|SC10/99|SC10|O|opción|99|7|✔|NC||||||||||||20;110;120;240;7|F:F2||||||||||
 repsic211|SC10/777|SC10|O|opción|777|10|✔|S/D||||||||||||20;110;120;240;10|F:F2||||||||||
 repsic211|SC11|MG|P|pregunta|SC11|250|✔|¿Tiene algún documento de identidad?|opciones||E-S|Anote código||||true||||20;110;120;250|F:F2||sc11||||||||
 repsic211|SC11/1|SC11|O|opción|1|1|✔|Si|||||SC13|||||||20;110;120;250;1|F:F2||||||||||
@@ -195,8 +196,8 @@ repsic211|SC13/2|SC13|O|opción|2|2|✔|Pasaporte/Documento extranjero||||||||||
 repsic211|SC13/3|SC13|O|opción|3|3|✔|Residencia precaria||||||||||||20;110;120;290;3|F:F2||||||||||
 repsic211|SC13/4|SC13|O|opción|4|4|✔|Otro||||especificar||||||||20;110;120;290;4|F:F2||||||||||
 repsic211|sc13_esp|SC13/4|P|pregunta|sc13_esp|1|✔||texto|pagina||||||true|solo_variable|-||20;110;120;290;4;1|F:F2||sc13_esp||||||||
-repsic211|SC13/88|SC13|O|opción|88|5|✔|No Sabe||||||||||||20;110;120;290;5|F:F2||||||||||
-repsic211|SC13/99|SC13|O|opción|99|6|✔|No contesta||||||||||||20;110;120;290;6|F:F2||||||||||
+repsic211|SC13/88|SC13|O|opción|88|5|✔|NS||||||||||||20;110;120;290;5|F:F2||||||||||
+repsic211|SC13/99|SC13|O|opción|99|6|✔|NC||||||||||||20;110;120;290;6|F:F2||||||||||
 repsic211|SC13/777|SC13|O|opción|777|7|✔|S/D||||||||||||20;110;120;290;7|F:F2||||||||||
 repsic211|SC14|MG|P|pregunta|SC14|300|✔|¿Tiene Certificado de Discapacidad vigente?|opciones||G-S|Anote código||||true||||20;110;120;300|F:F2||sc14||||||||
 repsic211|SC14/1|SC14|O|opción|1|1|✔|Si|||||SC16|||||||20;110;120;300;1|F:F2||||||||||
@@ -321,3 +322,9 @@ repsic211|SC20/5/2|SC20/5|O|opción|2|2|✔|No||||||||||||20;110;120;480;5;2|F:F
 repsic211|SC20/5/88|SC20/5|O|opción|88|3|✔|NS||||||||||||20;110;120;480;5;3|F:F2||||||||||
 repsic211|SC20/5/99|SC20/5|O|opción|99|4|✔|NC||||||||||||20;110;120;480;5;4|F:F2||||||||||
 repsic211|SC20/5/777|SC20/5|O|opción|777|5|✔|S/D||||||||||||20;110;120;480;5;5|F:F2||||||||||
+repsic211|SC20/6|SC20|OM|opción múltiple|6|6|!opciones|No recibió ningún ingreso|si_no_nn|||||||||||20;110;120;480;6|F:F2||sc20_6||sc4 >=10  && sc4 <>888 && sc4 <>999 && sc4 <>777||||||
+repsic211|SC20/6/1|SC20/6|O|opción|1|1|✔|Sí||||||||||||20;110;120;480;6;1|F:F2||||||||||
+repsic211|SC20/6/2|SC20/6|O|opción|2|2|✔|No||||||||||||20;110;120;480;6;2|F:F2||||||||||
+repsic211|SC20/6/88|SC20/6|O|opción|88|3|✔|NS||||||||||||20;110;120;480;6;3|F:F2||||||||||
+repsic211|SC20/6/99|SC20/6|O|opción|99|4|✔|NC||||||||||||20;110;120;480;6;4|F:F2||||||||||
+repsic211|SC20/6/777|SC20/6|O|opción|777|5|✔|S/D||||||||||||20;110;120;480;6;5|F:F2||||||||||
