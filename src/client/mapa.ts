@@ -374,32 +374,37 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         if(!hidePoints){
             let miRecorrido:number = parseInt(inputRecorrido.value)||0;
             var executionSec = 0;
-            myOwn.ajax.puntos_traer({recorrido:miRecorrido}, {informProgress: function(received){
-                executionSec++;
-                var {row}=received; 
-                var ultimoNodo:Nodo=null;
-                row.puntos.forEach(function(punto:any, i){
-                    let nodo:Nodo = {
-                        posicion: [punto.p_longitud, punto.p_latitud],
-                        coordinates: [punto.c_longitud, punto.c_latitud],
-                        timestamp: punto.timestamp,
-                        more_info: punto.more_info
-                    }
-                    var colocarFun = function colocarFun(){
-                        ultimoNodo = mapa.colocarNodo(nodo, ultimoNodo);
-                    }
-                    let animatePoints = my.getLocalVar('animate-points') == 'true';
-                    if(animatePoints){
-                        setTimeout(function(){
+            var lastTimestamp:number|null = null;
+            var traerPuntos = async ()=>{
+                await myOwn.ajax.puntos_traer({recorrido:miRecorrido, timestamp_desde:lastTimestamp}, {informProgress: function(received){
+                    executionSec++;
+                    var {row}=received; 
+                    lastTimestamp=row.start;
+                    var ultimoNodo:Nodo=null;
+                    row.puntos.forEach(function(punto:any, i){
+                        let nodo:Nodo = {
+                            posicion: [punto.p_longitud, punto.p_latitud],
+                            coordinates: [punto.c_longitud, punto.c_latitud],
+                            timestamp: punto.timestamp,
+                            more_info: punto.more_info
+                        }
+                        var colocarFun = function colocarFun(){
+                            ultimoNodo = mapa.colocarNodo(nodo, ultimoNodo);
+                        }
+                        let animatePoints = my.getLocalVar('animate-points') == 'true';
+                        if(animatePoints){
+                            setTimeout(function(){
+                                colocarFun();
+                            },parametros['velocidad_animacion_puntos_ms'] * executionSec);
+                        }else{
                             colocarFun();
-                        },parametros['velocidad_animacion_puntos_ms'] * executionSec);
-                    }else{
-                        colocarFun();
-                    }
-                    
-                    
-                })
-            }});
+                        }
+                    })
+                }});
+            }
+            await traerPuntos();
+            //chequea cada 30 segundos si hay puntos nuevos
+            setInterval(traerPuntos,30*1000)
         }
     }
 }

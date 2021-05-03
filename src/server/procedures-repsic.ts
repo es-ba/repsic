@@ -263,7 +263,8 @@ export const ProceduresRepsic : ProcedureDef[] = [
     {
         action:'puntos_traer',
         parameters:[
-            {name:'recorrido', typeName:'integer'}
+            {name:'recorrido'       , typeName:'integer'},
+            {name:'timestamp_desde' , typeName:'bigint' }
         ],
         progress:true,
         coreFunction:async function(context:ProcedureContext, parameters: coreFunctionParameters){
@@ -279,7 +280,8 @@ export const ProceduresRepsic : ProcedureDef[] = [
                     json_agg(json_build_object('p_latitud', p_latitud, 'p_longitud', p_longitud, 'c_latitud', c_latitud, 'c_longitud', c_longitud, 'more_info', more_info) order by timestamp) as puntos
                 from recorridos_puntos ` +
                 whereCond + ` 
-                group by recorrido, session, grupo
+                group by recorrido, session, grupo 
+                ${parameters.timestamp_desde?' having min(timestamp) > '+ be.db.quoteLiteral(parameters.timestamp_desde):' '}
                 order by start, 1,2,3;
             `).onRow(function(row){
                 context.informProgress({row:row});
