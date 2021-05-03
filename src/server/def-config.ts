@@ -42,7 +42,7 @@ install:
       - varcal_provisorio.sql
       - desintegrarpk.sql
       - actualizar_inconvar.sql
-      - agregar_adjunto_carto_trg
+      - agregar_adjunto_carto_trg.sql
       - estados_permisos_trg.sql
       - proximo_estado_posible.sql
 login:
