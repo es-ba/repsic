@@ -167,7 +167,13 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         layout.appendChild(barLayout);
         layout.appendChild(mapLayout);
     }
+    //TODO backend-plus para que setup se prefije
+    let isTestEnvironment = JSON.parse(localStorage.getItem('setup')).config['test-environment']
     mapLayout=document.getElementById(idLayout);
+    mapLayout.setAttribute('mapa-test', isTestEnvironment?'si':'no');
+    if(isTestEnvironment){
+        mapLayout!.appendChild(html.div({id:'cartel-test'}, 'TEST').create());
+    }
     var imgLoading=html.img({class:"main-loading", src: my.path.img+"main-loading.gif"}).create();
     mapLayout.appendChild(imgLoading);
     await loadOpenLayer();
