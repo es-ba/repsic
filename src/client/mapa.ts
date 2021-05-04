@@ -163,9 +163,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
             ]),
             divProbarGPS,
         ]).create();
-        let isTestEnvironment = !!my.config.config['test-environment']
         mapLayout = html.div({id:idLayout}).create();
-        mapLayout.style.opacity=isTestEnvironment?'0.6':'1';
         layout.appendChild(barLayout);
         layout.appendChild(mapLayout);
     }
