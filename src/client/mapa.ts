@@ -385,7 +385,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                 await myOwn.ajax.puntos_traer({recorrido:miRecorrido, timestamp_desde:lastTimestamp}, {informProgress: function(received){
                     executionSec++;
                     var {row}=received; 
-                    lastTimestamp=row.start;
+                    //lastTimestamp=row.start;
                     var ultimoNodo:Nodo=null;
                     row.puntos.forEach(function(punto:any, i){
                         let nodo:Nodo = {
@@ -410,7 +410,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
             }
             await traerPuntos();
             //chequea cada 30 segundos si hay puntos nuevos
-            setInterval(traerPuntos,30*1000)
+            //setInterval(traerPuntos,30*1000)
         }
     }
 }
