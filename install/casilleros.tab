@@ -165,9 +165,10 @@ repsic211|SC9/1|SC9|O|opción|1|1|✔|Todos los días||||||||||||20;110;120;220;
 repsic211|SC9/2|SC9|O|opción|2|2|✔|Sólo los días hábiles||||de lunes a viernes||||||||20;110;120;220;2|F:F2||||||||||
 repsic211|SC9/3|SC9|O|opción|3|3|✔|Sólo el fin de semana||||||||||||20;110;120;220;3|F:F2||||||||||
 repsic211|SC9/4|SC9|O|opción|4|4|✔|Algunos días||||||||||||20;110;120;220;4|F:F2||||||||||
-repsic211|SC9/88|SC9|O|opción|88|5|✔|NS||||||||||||20;110;120;220;5|F:F2||||||||||
-repsic211|SC9/99|SC9|O|opción|99|6|✔|NC||||||||||||20;110;120;220;6|F:F2||||||||||
-repsic211|SC9/777|SC9|O|opción|777|7|✔|S/D||||||||||||20;110;120;220;7|F:F2||||||||||
+repsic211|SC9/5|SC9|O|opción|5|5|✔|Ningún día||||||||||||20;110;120;220;5|F:F2||||||||||
+repsic211|SC9/88|SC9|O|opción|88|8|✔|NS||||||||||||20;110;120;220;8|F:F2||||||||||
+repsic211|SC9/99|SC9|O|opción|99|9|✔|NC||||||||||||20;110;120;220;9|F:F2||||||||||
+repsic211|SC9/777|SC9|O|opción|777|10|✔|S/D||||||||||||20;110;120;220;10|F:F2||||||||||
 repsic211|SC10|MG|P|pregunta|SC10|240|✔|Actualmente, ¿cuánto tiempo hace que vive en situación de calle?|opciones||G-S|Anote código||||true||||20;110;120;240|F:F2||sc10||||||||
 repsic211|SC10/1|SC10|O|opción|1|1|✔|Menos de un mes||||||||||||20;110;120;240;1|F:F2||||||||||
 repsic211|SC10/2|SC10|O|opción|2|2|✔|Entre un mes y seis meses||||||||||||20;110;120;240;2|F:F2||||||||||
