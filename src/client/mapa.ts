@@ -52,6 +52,8 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         layout = document.getElementById('total-layout');
         layout.style.height='100%';
     }else{
+        var recorridosArr:{recorrido:number}[] = await myOwn.ajax.recorridos_con_adjuntos({});
+        var indiceRecorridoActual = recorridosArr.findIndex((rec)=>rec.recorrido == addrParams.recorrido || 0);
         idLayout='map-layout';
         let buttonCambiar=html.button({id:'cambiar'},'cambiar').create();
         var inputRecorrido=html.input({style:'width:40px',id:'recorrido',type:'number',value:addrParams.recorrido||0}).create();
@@ -64,6 +66,23 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         }
         buttonCambiar.onclick=function(){
             refreshMap(true);
+        }
+        var seleccionRecorrido = (indexSum:1|-1)=>{
+            inputRecorrido.value = recorridosArr[indiceRecorridoActual+indexSum]?
+                recorridosArr[indiceRecorridoActual+indexSum].recorrido.toString()
+            :
+                (indexSum==-1?
+                    recorridosArr[recorridosArr.length-1].recorrido.toString()
+                :'0')
+            refreshMap(true);
+        }
+        let buttonAnteriorRecorrido=html.button({id:'cambiar'},'<').create();
+        let buttonSiguienteRecorrido=html.button({id:'cambiar'},'>').create();
+        buttonAnteriorRecorrido.onclick=function(){
+            seleccionRecorrido(-1);
+        }
+        buttonSiguienteRecorrido.onclick=function(){
+            seleccionRecorrido(1);
         }
         let buttonInstalar=html.button({id:'instalar'},'instalar').create();
         let divInstalando=html.div().create();
@@ -137,6 +156,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         let barLayout = html.div({class:'bar-layout'},[
             html.div('Recorrido '+addrParams.recorrido),
             html.div([inputRecorrido, buttonCambiar]),
+            html.div([buttonAnteriorRecorrido, buttonSiguienteRecorrido]),
             html.br(),
             html.hr(),
             html.br(),

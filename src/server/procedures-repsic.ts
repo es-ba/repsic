@@ -307,7 +307,18 @@ export const ProceduresRepsic : ProcedureDef[] = [
                 [parameters.operativo, parameters.id_caso, parameters.estado_actual, parameters.proximo_estado]
             ).execute();
             return 'estado_cambiado';
-        }
+        },
+        {
+            action:'recorridos_con_adjuntos',
+            parameters:[],
+            progress:true,
+            coreFunction:async function(context:ProcedureContext, parameters: coreFunctionParameters){
+                let be=context.be;
+                return (await context.client.query(`
+                    select distinct(recorrido) from adjuntos order by recorrido`,
+                    []
+                ).fetchAll()).rows;
+            }
     }
 /* */
 ];
