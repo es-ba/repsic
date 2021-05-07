@@ -1,11 +1,13 @@
 
-set seach_path=repsic, dbo, comun;
-set role repsic211_muleto_admin;
+set search_path=repsic, dbo, comun;
 -- version inicial para tener las funciones de varcal huecas 
 
 drop table if exists "repsic211_grupo_personas_calculada";
 drop table if exists "repsic211_personas_calculada";
 drop table if exists "repsic211_supervision_calculada";
+DROP FUNCTION repsic.generate_fun_varcal_provisorio();
+
+set role repsic211_muleto_admin;
 
 create table "repsic211_grupo_personas_calculada" (
   operativo             text,
