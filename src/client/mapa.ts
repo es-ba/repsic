@@ -226,66 +226,67 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
             mapa.addMark(lugar.latitud, lugar.longitud, lugar.tipo_lugar_descripcion[0], lugar.lugar);
         });
     }
+    const styles={
+        ['contorno']: new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'rgba(239, 172, 44, 0.3)'
+            }),
+            stroke: new ol.style.Stroke({
+                color: 'rgba(239, 172, 44, 0.6)',
+                width: 6
+            }),
+            text: new ol.style.Text({
+                font: '12px Calibri,sans-serif',
+                fill: new ol.style.Fill({
+                    color: '#000'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#fff',
+                    width: 3
+                })
+            })
+        }),
+        ['contorno-adv']: new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.8)'
+            }),
+            stroke: new ol.style.Stroke({
+                color: 'rgba(242, 226, 91, 0.6)',
+                width: 6
+            }),
+            text: new ol.style.Text({
+                font: '12px Calibri,sans-serif',
+                fill: new ol.style.Fill({
+                    color: '#000'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#fff',
+                    width: 3
+                })
+            })
+        }),
+        ['exclusion']: new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'rgba(100, 100, 150, 0.5)'
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#FF0000',
+                width: 2
+            }),
+            text: new ol.style.Text({
+                font: '12px Calibri,sans-serif',
+                fill: new ol.style.Fill({
+                    color: '#000'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#fff',
+                    width: 3
+                })
+            })
+        })
+    }
     if(datosRecorrido.adjuntos){
         datosRecorrido.adjuntos.forEach(function(adjunto){
-            var styles:any = {};
-            styles['contorno'] = new ol.style.Style({
-                fill: new ol.style.Fill({
-                    color: 'rgba(239, 172, 44, 0.3)'
-                }),
-                stroke: new ol.style.Stroke({
-                    color: 'rgba(239, 172, 44, 0.6)',
-                    width: 6
-                }),
-                text: new ol.style.Text({
-                    font: '12px Calibri,sans-serif',
-                    fill: new ol.style.Fill({
-                        color: '#000'
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: '#fff',
-                        width: 3
-                    })
-                })
-            });
-            styles['contorno-adv'] = new ol.style.Style({
-                fill: new ol.style.Fill({
-                    color: 'rgba(255, 255, 255, 0.8)'
-                }),
-                stroke: new ol.style.Stroke({
-                    color: 'rgba(242, 226, 91, 0.6)',
-                    width: 6
-                }),
-                text: new ol.style.Text({
-                    font: '12px Calibri,sans-serif',
-                    fill: new ol.style.Fill({
-                        color: '#000'
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: '#fff',
-                        width: 3
-                    })
-                })
-            });
-            styles['exclusion'] = new ol.style.Style({
-                fill: new ol.style.Fill({
-                    color: 'rgba(100, 100, 150, 0.5)'
-                }),
-                stroke: new ol.style.Stroke({
-                    color: '#FF0000',
-                    width: 2
-                }),
-                text: new ol.style.Text({
-                    font: '12px Calibri,sans-serif',
-                    fill: new ol.style.Fill({
-                        color: '#000'
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: '#fff',
-                        width: 3
-                    })
-                })
-            });
             var style = styles[adjunto.estilo] || null;
             mapa.addLayer('file?id_adjunto='+adjunto.id_adjunto,style)
         });

@@ -14,7 +14,7 @@
   ],
   "dependencies": {
     "yazl": "~2.5.1",
-    "guijarro": "^0.3.0",
+    "guijarro": "^0.3.1",
     "meta-enc": "^1.4.0",
     "procesamiento": "^1.0.4",
     "backend-plus": "^1.8.3"
