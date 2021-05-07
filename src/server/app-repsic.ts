@@ -446,7 +446,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         be.appendToTableDefinition('parametros',function(tableDef){
             tableDef.fields.push(
                 {name:'gra_tx_puntos'                 , typeName:'integer'   , label:'granularidad transmision puntos'      , editable: true, nullable: false, defaultDbValue:1000},
-                {name:'gra_puntos_por_recorrido'      , typeName:'integer'   , label:'granularidad puntos por recorrido'    , editable: true, nullable: false, defaultDbValue:50  },
+                {name:'gra_puntos_por_recorrido'      , typeName:'integer'   , label:'granularidad puntos por recorrido'    , editable: true, nullable: false, defaultDbValue:75  },
                 {name:'gra_puntos_todos_recorridos'   , typeName:'integer'   , label:'granularidad puntos todos recorridos' , editable: true, nullable: false, defaultDbValue:1000 },
                 {name:'velocidad_animacion_puntos_ms' , typeName:'integer'   , label:'vel. animación puntos (ms)'           , editable: true, nullable: false, defaultDbValue:10  }
             );
