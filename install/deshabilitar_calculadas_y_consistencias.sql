@@ -1,4 +1,4 @@
-set seach_path=repsic, dbo, comun;
+set search_path=repsic, dbo, comun;
 set role repsic211_muleto_admin;
 
 update variables set activa=false
