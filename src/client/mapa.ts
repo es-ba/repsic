@@ -52,7 +52,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         layout = document.getElementById('total-layout');
         layout.style.height='100%';
     }else{
-        var recorridosArr:{recorrido:number}[] = await myOwn.ajax.recorridos_con_adjuntos({});
+        var recorridosArr:{recorrido:number}[] = await myOwn.ajax.recorridos_controlables({});
         var indiceRecorridoActual = recorridosArr.findIndex((rec)=>rec.recorrido == addrParams.recorrido || 0);
         idLayout='map-layout';
         let buttonCambiar=html.button({id:'cambiar'},'cambiar').create();

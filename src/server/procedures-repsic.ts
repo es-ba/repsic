@@ -102,7 +102,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
                 }
                 return resultado
             }
-            var moveFile = function moveFile(file, id_adjunto, extension){
+            var moveFile = function moveFile(file:{path:string}, id_adjunto:string, extension:string){
                 fs.move(file.path, newPath + id_adjunto + '.' + extension, { overwrite: true });
             }
             return Promise.resolve().then(function(){
@@ -143,7 +143,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
             {name:'recorrido'       , typeName:'integer', references:'recorridos'},
             {name:'puntos'          , typeName:'jsonb'                           },
         ],
-        encode:'JSON',
+        // encode:'JSON', no existe, cambiar después de la 211
         coreFunction:async function(context:ProcedureContext, parameters: coreFunctionParameters){
             console.log('xxxxxxxxxxxxx')
             console.log(parameters)
@@ -220,7 +220,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
         action:'pasar_json2ua',
         parameters:[
         ],
-        coreFunction:async function(context:ProcedureContext, parameters: coreFunctionParameters){
+        coreFunction:async function(context:ProcedureContext, _parameters: coreFunctionParameters){
             /* GENERALIZAR: */
             var be=context.be;
             let mainTable=be.db.quoteIdent('grupo_personas');
@@ -308,17 +308,17 @@ export const ProceduresRepsic : ProcedureDef[] = [
             ).execute();
             return 'estado_cambiado';
         },
-        {
-            action:'recorridos_con_adjuntos',
-            parameters:[],
-            progress:true,
-            coreFunction:async function(context:ProcedureContext, parameters: coreFunctionParameters){
-                let be=context.be;
-                return (await context.client.query(`
-                    select distinct(recorrido) from adjuntos order by recorrido`,
-                    []
-                ).fetchAll()).rows;
-            }
+    },
+    {
+        action:'recorridos_controlables',
+        parameters:[],
+        progress:true,
+        coreFunction:async function(context:ProcedureContext, _parameters: coreFunctionParameters){
+            return (await context.client.query(`
+                select recorrido from recorridos where orden is not null order by orden`,
+                []
+            ).fetchAll()).rows;
+        }
     }
 /* */
 ];

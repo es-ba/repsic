@@ -11,10 +11,13 @@ export function recorridos(context:TableContext):TableDefinition {
         fields: [
             { name: "recorrido"          , typeName: "integer" },
             { name: "tipo_recorrido"     , typeName: "integer" }, 
+            { name: "apellido"           , typeName: "text"    },
+            { name: "nombre"             , typeName: "text"    },
             { name: "observaciones"      , typeName: "text"    },
             { name: "particion"          , typeName: "text"    },
             { name: "comuna"             , typeName: "text"    , editable:false, inTable: false},
             { name: "descripcion_barrio" , typeName: "text"    , editable:false, inTable: false},
+            { name: "orden"              , typeName: "bigint"  },
             { name: "mapa"               , typeName: "text"    , editable:false, inTable: false, clientSide:'openMap', serverSide:true, title:'🌎'},
         ],
         primaryKey: ['recorrido'],
