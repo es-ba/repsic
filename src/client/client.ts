@@ -29,9 +29,10 @@ formStructure.FormManager.prototype.validateDepot = function validateDepot(){
             this.variables.r8.opciones["2"].salto='r10_1';
         }
         [
-            {variable:'o2_esp'   , sub:'o2'   , valor:9 },
+            {variable:'o2_esp'   , sub:'o2'   , valor: 10 },
             {variable:'o3_esp'   , sub:'o3_5' , valor:1 },
             {variable:'o5_esp'   , sub:'o5'   , valor:5 },
+            /*
             {variable:'p9_esp'   , sub:'p9'   , valor:4 },
             {variable:'r4_esp'   , sub:'r4'   , valor:7 },
             {variable:'r7_esp'   , sub:'r7'   , valor:5 },
@@ -39,6 +40,7 @@ formStructure.FormManager.prototype.validateDepot = function validateDepot(){
             {variable:'r10_esp'  , sub:'r10_5', valor:1 },
             {variable:'r11_esp'  , sub:'r11_6', valor:1 },
             {variable:'r11_esp'  , sub:'r11_6', valor:1 },
+            */
         ].forEach(function({variable, sub, valor}){
             if(variable in this.variables){
                 this.variables[variable].subordinadaVar=sub

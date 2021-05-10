@@ -195,8 +195,7 @@ repsic211|SC13|MG|P|pregunta|SC13|290|✔|¿Qué documento de identidad tiene (o
 repsic211|SC13/1|SC13|O|opción|1|1|✔|DNI/CI/LE/LC argentino||||||||||||20;110;120;290;1|F:F2||||||||||
 repsic211|SC13/2|SC13|O|opción|2|2|✔|Pasaporte/Documento extranjero||||||||||||20;110;120;290;2|F:F2||||||||||
 repsic211|SC13/3|SC13|O|opción|3|3|✔|Residencia precaria||||||||||||20;110;120;290;3|F:F2||||||||||
-repsic211|SC13/4|SC13|O|opción|4|4|✔|Otro||||especificar||||||||20;110;120;290;4|F:F2||||||||||
-repsic211|sc13_esp|SC13/4|P|pregunta|sc13_esp|1|✔||texto|pagina||||||true|solo_variable|-||20;110;120;290;4;1|F:F2||sc13_esp||||||||
+repsic211|SC13/4|SC13|O|opción|4|4|✔|Otro||||||||||||20;110;120;290;4|F:F2||||||||||
 repsic211|SC13/88|SC13|O|opción|88|5|✔|NS||||||||||||20;110;120;290;5|F:F2||||||||||
 repsic211|SC13/99|SC13|O|opción|99|6|✔|NC||||||||||||20;110;120;290;6|F:F2||||||||||
 repsic211|SC13/777|SC13|O|opción|777|7|✔|S/D||||||||||||20;110;120;290;7|F:F2||||||||||
@@ -241,9 +240,8 @@ repsic211|SC17/3/2|SC17/3|O|opción|2|2|✔|No||||||||||||20;110;120;400;3;2|F:F
 repsic211|SC17/3/88|SC17/3|O|opción|88|3|✔|NS||||||||||||20;110;120;400;3;3|F:F2||||||||||
 repsic211|SC17/3/99|SC17/3|O|opción|99|4|✔|NC||||||||||||20;110;120;400;3;4|F:F2||||||||||
 repsic211|SC17/3/777|SC17/3|O|opción|777|5|✔|S/D||||||||||||20;110;120;400;3;5|F:F2||||||||||
-repsic211|SC17/4|SC17|OM|opción múltiple|4|4|!opciones|Otro|si_no_nn|||especificar||||||||20;110;120;400;4|F:F2||sc17_4||||||||
+repsic211|SC17/4|SC17|OM|opción múltiple|4|4|!opciones|Otro|si_no_nn|||||||||||20;110;120;400;4|F:F2||sc17_4||||||||
 repsic211|SC17/4/1|SC17/4|O|opción|1|1|✔|Sí||||||||||||20;110;120;400;4;1|F:F2||||||||||
-repsic211|sc17_esp|SC17/4/1|P|pregunta|sc17_esp|1|✔||texto|pagina||||||true|solo_variable|-||20;110;120;400;4;1;1|F:F2||sc17_esp||||||||
 repsic211|SC17/4/2|SC17/4|O|opción|2|2|✔|No||||||||||||20;110;120;400;4;2|F:F2||||||||||
 repsic211|SC17/4/88|SC17/4|O|opción|88|3|✔|NS||||||||||||20;110;120;400;4;3|F:F2||||||||||
 repsic211|SC17/4/99|SC17/4|O|opción|99|4|✔|NC||||||||||||20;110;120;400;4;4|F:F2||||||||||
@@ -284,9 +282,8 @@ repsic211|SC19/5/2|SC19/5|O|opción|2|2|✔|No||||||||||||20;110;120;450;5;2|F:F
 repsic211|SC19/5/88|SC19/5|O|opción|88|3|✔|NS||||||||||||20;110;120;450;5;3|F:F2||||||||||
 repsic211|SC19/5/99|SC19/5|O|opción|99|4|✔|NC||||||||||||20;110;120;450;5;4|F:F2||||||||||
 repsic211|SC19/5/777|SC19/5|O|opción|777|5|✔|S/D||||||||||||20;110;120;450;5;5|F:F2||||||||||
-repsic211|SC19/6|SC19|OM|opción múltiple|6|6|!opciones|Otro|si_no_nn|||especificar||||||||20;110;120;450;6|F:F2||sc19_6||sc4 >=10  && sc4 <>888 && sc4 <>999 && sc4 <>777||||||
+repsic211|SC19/6|SC19|OM|opción múltiple|6|6|!opciones|Otro|si_no_nn|||||||||||20;110;120;450;6|F:F2||sc19_6||sc4 >=10  && sc4 <>888 && sc4 <>999 && sc4 <>777||||||
 repsic211|SC19/6/1|SC19/6|O|opción|1|1|✔|Sí||||||||||||20;110;120;450;6;1|F:F2||||||||||
-repsic211|sc19_esp|SC19/6/1|P|pregunta|sc19_esp|1|✔||texto|pagina||||||true|solo_variable|-||20;110;120;450;6;1;1|F:F2||sc19_esp||sc4 >=10  && sc4 <>888 && sc4 <>999 && sc4 <>777||||||
 repsic211|SC19/6/2|SC19/6|O|opción|2|2|✔|No||||||||||||20;110;120;450;6;2|F:F2||||||||||
 repsic211|SC19/6/88|SC19/6|O|opción|88|3|✔|NS||||||||||||20;110;120;450;6;3|F:F2||||||||||
 repsic211|SC19/6/99|SC19/6|O|opción|99|4|✔|NC||||||||||||20;110;120;450;6;4|F:F2||||||||||
@@ -316,9 +313,8 @@ repsic211|SC20/4/2|SC20/4|O|opción|2|2|✔|No||||||||||||20;110;120;480;4;2|F:F
 repsic211|SC20/4/88|SC20/4|O|opción|88|3|✔|NS||||||||||||20;110;120;480;4;3|F:F2||||||||||
 repsic211|SC20/4/99|SC20/4|O|opción|99|4|✔|NC||||||||||||20;110;120;480;4;4|F:F2||||||||||
 repsic211|SC20/4/777|SC20/4|O|opción|777|5|✔|S/D||||||||||||20;110;120;480;4;5|F:F2||||||||||
-repsic211|SC20/5|SC20|OM|opción múltiple|5|5|!opciones|algún otro ingreso de dinero?|si_no_nn|||Incluye seguro de  desempleo o indemnización por despido) (especificar||||||||20;110;120;480;5|F:F2||sc20_5||sc4 >=10  && sc4 <>888 && sc4 <>999 && sc4 <>777||||||
+repsic211|SC20/5|SC20|OM|opción múltiple|5|5|!opciones|algún otro ingreso de dinero?|si_no_nn|||Incluye seguro de  desempleo o indemnización por despido||||||||20;110;120;480;5|F:F2||sc20_5||sc4 >=10  && sc4 <>888 && sc4 <>999 && sc4 <>777||||||
 repsic211|SC20/5/1|SC20/5|O|opción|1|1|✔|Sí||||||||||||20;110;120;480;5;1|F:F2||||||||||
-repsic211|sc20_esp|SC20/5/1|P|pregunta|sc20_esp|1|✔||texto|pagina||||||true|solo_variable|-||20;110;120;480;5;1;1|F:F2||sc20_esp||sc4 >=10  && sc4 <>888 && sc4 <>999 && sc4 <>777||||||
 repsic211|SC20/5/2|SC20/5|O|opción|2|2|✔|No||||||||||||20;110;120;480;5;2|F:F2||||||||||
 repsic211|SC20/5/88|SC20/5|O|opción|88|3|✔|NS||||||||||||20;110;120;480;5;3|F:F2||||||||||
 repsic211|SC20/5/99|SC20/5|O|opción|99|4|✔|NC||||||||||||20;110;120;480;5;4|F:F2||||||||||
