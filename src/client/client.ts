@@ -29,7 +29,7 @@ formStructure.FormManager.prototype.validateDepot = function validateDepot(){
             this.variables.r8.opciones["2"].salto='r10_1';
         }
         [
-            {variable:'o2_esp'   , sub:'o2'   , valor: 10 },
+            {variable:'o2_esp'   , sub:'o2'   , valor:10 },
             {variable:'o3_esp'   , sub:'o3_5' , valor:1 },
             {variable:'o5_esp'   , sub:'o5'   , valor:5 },
             /*
