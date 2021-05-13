@@ -47,7 +47,8 @@ create table "repsic211_personas_calculada" (
   "operativo" text,
   "id_caso" text,
   "p0" bigint, 
-  "sexor" bigint
+  "sexor" bigint,
+  "edadr" bigint
 , primary key ("operativo", "id_caso", "p0")
 );
 grant select, insert, update, delete, references on "repsic211_personas_calculada" to "repsic211_muleto_admin";
@@ -182,10 +183,11 @@ BEGIN
       WHERE "grupo_personas"."operativo"="repsic211_grupo_personas_calculada"."operativo" AND "grupo_personas"."id_caso"="repsic211_grupo_personas_calculada"."id_caso" AND "grupo_personas"."operativo"=p_operativo AND "grupo_personas"."id_caso"=p_id_caso;
     UPDATE repsic211_personas_calculada
       SET 
-          sexor = null2zero(referente.sc3) -- VER QUIZAS QUIERA EL NULL!!!
+          sexor = null2zero(referente.sc3), -- VER QUIZAS QUIERA EL NULL!!!
+          edadr = null2zero(referente.sc4)
     FROM personas inner join grupo_personas using (operativo, id_caso) inner join repsic211_grupo_personas_calculada using (operativo, id_caso)
         LEFT JOIN (
-            SELECT operativo, id_caso, p0, referente.sc3
+            SELECT operativo, id_caso, p0, referente.sc3, referente.sc4
               FROM personas referente
               WHERE referente.p0=1
         ) referente ON referente.id_caso=personas.id_caso AND referente.operativo=personas.operativo
@@ -211,14 +213,6 @@ $BODY$;
 $THE_FUN$;
 begin 
   execute v_sql;
-  /*
-  execute replace(replace(replace(replace(
-     v_sql,
-     $$update_varcal_por_encuesta("p_operativo" text, "p_id_caso" text) RETURNS TEXT$$, $$update_varcal("p_operativo" text) RETURNS TEXT$$),
-     $$grupo_personas.id_caso=p_id_caso$$, $$TRUE$$),
-     $$id_caso=p_id_caso$$, $$TRUE$$),
-     $$"id_caso"=p_id_caso$$, $$TRUE$$);
-  */
   execute replace(replace(replace(replace(regexp_replace(replace(
   v_sql,
   $$update_varcal_por_encuesta("p_operativo" text, "p_id_caso" text) RETURNS TEXT$$, $$update_varcal("p_operativo" text) RETURNS TEXT$$),
