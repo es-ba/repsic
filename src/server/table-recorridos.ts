@@ -25,7 +25,7 @@ export function recorridos(context:TableContext):TableDefinition {
             {references:'tipos_recorrido'    , fields: ['tipo_recorrido'] },
         ],
         detailTables:[
-            {table:'recorridos_barrios', fields:['recorrido'], abr:'B', title:'barrios'},
+            {table:'recorridos_barrios', fields:['recorrido'], abr:'B', label:'barrios'},
             {table:'lugares'           , fields:['recorrido'], abr:'L'},
             {table:'adjuntos'          , fields:['recorrido'], abr:'A'},
         ],
