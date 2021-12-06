@@ -7,7 +7,7 @@ drop table if exists "repsic212_personas_calculada";
 drop table if exists "repsic212_supervision_calculada";
 DROP FUNCTION if exists repsic.generate_fun_varcal_provisorio();
 
-set role repsic212_muleto_admin;
+--set role repsic212_muleto_admin;
 
 create table "repsic212_grupo_personas_calculada" (
   operativo             text,
@@ -40,8 +40,8 @@ create table "repsic212_grupo_personas_calculada" (
   "cant_refe" bigint
 , primary key ("operativo", "id_caso")
 );
-grant select, insert, update, delete, references on "repsic212_grupo_personas_calculada" to "repsic212_muleto_admin";
-grant all on "repsic212_grupo_personas_calculada" to "repsic212_muleto_owner";
+--grant select, insert, update, delete, references on "repsic212_grupo_personas_calculada" to "repsic212_muleto_admin";
+--grant all on "repsic212_grupo_personas_calculada" to "repsic212_muleto_owner";
 
 create table "repsic212_personas_calculada" (
   "operativo" text,
@@ -51,16 +51,16 @@ create table "repsic212_personas_calculada" (
   "edadr" bigint
 , primary key ("operativo", "id_caso", "p0")
 );
-grant select, insert, update, delete, references on "repsic212_personas_calculada" to "repsic212_muleto_admin";
-grant all on "repsic212_personas_calculada" to "repsic212_muleto_owner";
+--grant select, insert, update, delete, references on "repsic212_personas_calculada" to "repsic212_muleto_admin";
+--grant all on "repsic212_personas_calculada" to "repsic212_muleto_owner";
 
 create table "repsic212_supervision_calculada" (
   "recorrido" bigint, 
   "cant_form" bigint
 , primary key ("recorrido")
 );
-grant select, insert, update, delete, references on "repsic212_supervision_calculada" to "repsic212_muleto_admin";
-grant all on "repsic212_supervision_calculada" to "repsic212_muleto_owner";
+--grant select, insert, update, delete, references on "repsic212_supervision_calculada" to "repsic212_muleto_admin";
+--grant all on "repsic212_supervision_calculada" to "repsic212_muleto_owner";
 
 -- FKs
 alter table "repsic212_grupo_personas_calculada" add constraint  "repsic212_grupo_personas_calculada grupo_personas REL" foreign key ("operativo", "id_caso") references "grupo_personas" ("operativo", "id_caso")  on delete cascade on update cascade;
