@@ -14,7 +14,7 @@ const pkPersonas = [{fieldName:'operativo'}, {fieldName:'id_caso'}, {fieldName:'
 const fkPersonas = [{target:'operativo', source:'operativo'}, {target:'id_caso', source:'id_caso'}];
 const pkGrupoPersonas = [{fieldName:'operativo'},{fieldName:'id_caso'}];
 const formPrincipal = 'F:F1';
-const OPERATIVO = 'repsic211';
+const OPERATIVO = 'repsic212';
 
 var struct_personas={
     tableName:'personas',
@@ -143,7 +143,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
             {name:'recorrido'       , typeName:'integer', references:'recorridos'},
             {name:'puntos'          , typeName:'jsonb'                           },
         ],
-        // encode:'JSON', no existe, cambiar después de la 211
+        // encode:'JSON', no existe, cambiar después de la 212
         coreFunction:async function(context:ProcedureContext, parameters: coreFunctionParameters){
             console.log('xxxxxxxxxxxxx')
             console.log(parameters)

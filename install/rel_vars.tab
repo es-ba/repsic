@@ -1,14 +1,14 @@
 operativo|tabla_datos   |tiene                   |orden|tabla_relacionada       |campo_datos|campo_tiene|dato_fijo
-repsic211|recorridos    |grupo_personas          |1    |grupo_personas          |recorrido  |u1         |         
-repsic211|supervision   |grupo_personas          |1    |grupo_personas          |recorrido  |u1         |         
-repsic211|supervision   |supervision_calculada   |1	   |supervision_calculada   |recorrido  |recorrido  |         
-repsic211|grupo_personas|personas                |1    |personas                |operativo  |operativo  |         
-repsic211|grupo_personas|personas                |2    |personas                |id_caso    |id_caso    |         
-repsic211|grupo_personas|grupo_personas_calculada|1    |grupo_personas_calculada|operativo  |operativo  |         
-repsic211|grupo_personas|grupo_personas_calculada|2    |grupo_personas_calculada|id_caso    |id_caso    |         
-repsic211|personas      |personas_calculada      |1    |personas_calculada      |operativo  |operativo  |         
-repsic211|personas      |personas_calculada      |2    |personas_calculada      |id_caso    |id_caso    |         
-repsic211|personas      |personas_calculada      |3    |personas_calculada      |p0         |p0         |         
-repsic211|grupo_personas|referente               |1    |personas                |operativo  |operativo  |         
-repsic211|grupo_personas|referente               |2    |personas                |id_caso    |id_caso    |         
-repsic211|grupo_personas|referente               |3    |personas                |           |p0         |1        
+repsic212|recorridos    |grupo_personas          |1    |grupo_personas          |recorrido  |u1         |         
+repsic212|supervision   |grupo_personas          |1    |grupo_personas          |recorrido  |u1         |         
+repsic212|supervision   |supervision_calculada   |1	   |supervision_calculada   |recorrido  |recorrido  |         
+repsic212|grupo_personas|personas                |1    |personas                |operativo  |operativo  |         
+repsic212|grupo_personas|personas                |2    |personas                |id_caso    |id_caso    |         
+repsic212|grupo_personas|grupo_personas_calculada|1    |grupo_personas_calculada|operativo  |operativo  |         
+repsic212|grupo_personas|grupo_personas_calculada|2    |grupo_personas_calculada|id_caso    |id_caso    |         
+repsic212|personas      |personas_calculada      |1    |personas_calculada      |operativo  |operativo  |         
+repsic212|personas      |personas_calculada      |2    |personas_calculada      |id_caso    |id_caso    |         
+repsic212|personas      |personas_calculada      |3    |personas_calculada      |p0         |p0         |         
+repsic212|grupo_personas|referente               |1    |personas                |operativo  |operativo  |         
+repsic212|grupo_personas|referente               |2    |personas                |id_caso    |id_caso    |         
+repsic212|grupo_personas|referente               |3    |personas                |           |p0         |1        

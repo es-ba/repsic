@@ -1,10 +1,10 @@
-set role repsic211_muleto_owner;
+set role repsic212_muleto_owner;
 set search_path=repsic;
 alter table personas drop column sc13_esp;
 alter table personas drop column sc17_esp;
 alter table personas drop column sc19_esp;
 alter table personas drop column sc20_esp;
-delete from variables where operativo='repsic211' and variable in ( 'sc13_esp', 'sc17_esp', 'sc19_esp','sc20_esp');
+delete from variables where operativo='repsic212' and variable in ( 'sc13_esp', 'sc17_esp', 'sc19_esp','sc20_esp');
 --volver a hacer el local-dump
 delete from casilleros;
 -- table data: ..\repsic-data\casilleros.tab

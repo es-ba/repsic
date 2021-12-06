@@ -1,5 +1,5 @@
 set search_path=repsic;
-set role to repsic211_muleto_owner;
+set role to repsic212_muleto_owner;
 
 create or replace function adjunto_carto_trg() returns trigger
   language plpgsql

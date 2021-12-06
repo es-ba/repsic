@@ -18,10 +18,10 @@ create trigger desintegrarpk_trg
 
 /* TESTEOS:
 delete from inconsistencias;
-insert into inconsistencias (operativo,pk_integrada,consistencia) values ('repsic211','{"id_caso":"102","p0":1}'::jsonb,'cant_per_u8_a');
+insert into inconsistencias (operativo,pk_integrada,consistencia) values ('repsic212','{"id_caso":"102","p0":1}'::jsonb,'cant_per_u8_a');
 select * from inconsistencias;
 update inconsistencias set pk_integrada = '{"id_caso":"103","p0":2}'::jsonb 
-  where operativo = 'repsic211' and consistencia = 'cant_per_u8_a' and pk_integrada = '{"id_caso":"102","p0":1}'::jsonb;
+  where operativo = 'repsic212' and consistencia = 'cant_per_u8_a' and pk_integrada = '{"id_caso":"102","p0":1}'::jsonb;
 select * from inconsistencias;
 */  
   

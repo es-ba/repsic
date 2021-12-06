@@ -1,4 +1,4 @@
-set role to repsic211_produc_owner;
+set role to repsic212_produc_owner;
 set search_path=repsic;
 /*
 alter table recorridos add column apellido text; 
