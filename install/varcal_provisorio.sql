@@ -1,11 +1,11 @@
 
-set search_path=repsic, dbo, comun;
+--set search_path=repsic, dbo, comun;
 -- con variables revisadas por procesamiento 07/05/2021
 
 drop table if exists "repsic212_grupo_personas_calculada";
 drop table if exists "repsic212_personas_calculada";
 drop table if exists "repsic212_supervision_calculada";
-DROP FUNCTION if exists repsic.generate_fun_varcal_provisorio();
+DROP FUNCTION if exists generate_fun_varcal_provisorio();
 
 --set role repsic212_muleto_admin;
 
@@ -84,7 +84,7 @@ create index "recorrido 4 repsic212_supervision_calculada IDX" ON "repsic212_sup
 
 ----- SE CREA LA FUNCION PARA LLAMAR ANTES DE CADA CONSISTIR
 -----
-CREATE OR REPLACE FUNCTION repsic.gen_fun_var_calc()  RETURNS TEXT
+CREATE OR REPLACE FUNCTION gen_fun_var_calc()  RETURNS TEXT
   language plpgsql
 AS
 $GENERATOR$

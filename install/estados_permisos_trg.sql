@@ -39,7 +39,7 @@ begin
 end;      
 $BODY$;
 
-DROP TRIGGER IF EXISTS estados_permiso_ingresar_trg ON repsic.grupo_personas;
+DROP TRIGGER IF EXISTS estados_permiso_ingresar_trg ON grupo_personas;
 CREATE TRIGGER estados_permiso_ingresar_trg
   BEFORE UPDATE
   ON grupo_personas
@@ -47,7 +47,7 @@ CREATE TRIGGER estados_permiso_ingresar_trg
     WHEN  (not(new.consistido is distinct from old.consistido) AND (new.estado = old.estado))
   EXECUTE PROCEDURE estados_permiso_ingresar_trg(); 
 
-DROP TRIGGER IF EXISTS estados_permiso_ingresar_trg ON repsic.personas;
+DROP TRIGGER IF EXISTS estados_permiso_ingresar_trg ON personas;
 CREATE TRIGGER estados_permiso_ingresar_pr_trg
   BEFORE INSERT OR UPDATE
   ON personas
