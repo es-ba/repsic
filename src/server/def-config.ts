@@ -7,7 +7,7 @@ db:
   motor: postgresql
   host: localhost
   database: repsic212_db
-  schema: repsic212
+  schema: repsic
   user: repsic212_admin
   search_path: 
   - repsic
