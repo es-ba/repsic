@@ -1,8 +1,0 @@
-operativo|tabla_datos     |tiene                   |que_es  |misma_pk|aridad        
-repsic212|recorridos      |grupo_personas          |        |        |           
-repsic212|supervision     |grupo_personas          |        |        |           
-repsic212|supervision     |supervision_calculada   |        |  true  |1          
-repsic212|grupo_personas  |grupo_personas_calculada|        |  true  |1          
-repsic212|grupo_personas  |personas                |        |        |           
-repsic212|grupo_personas  |referente               |personas|        |1          
-repsic212|personas        |personas_calculada      |        |  true  |1          
