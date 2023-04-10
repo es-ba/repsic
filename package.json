@@ -1,5 +1,5 @@
 {
-  "name": "repsic221",
+  "name": "repsic231",
   "description": "Relevamiento de personas en situación de calle",
   "version": "0.1.5",
   "private": true,
@@ -15,15 +15,15 @@
   "dependencies": {
     "yazl": "~2.5.1",
     "guijarro": "^0.3.1",
-    "meta-enc": "^1.4.2",
-    "procesamiento": "^1.0.9",
-    "backend-plus": "^1.13.5"
+    "meta-enc": "^1.4.6",
+    "procesamiento": "^1.0.10",
+    "backend-plus": "^1.17.16"
   },
   "devDependencies": {
-    "@types/mocha": "~9.0.0",
+    "@types/mocha": "~10.0.1",
     "@types/yazl": "~2.4.2",
-    "types.d.ts": "~0.6.4",
-    "typescript": "^4.5.2",
+    "types.d.ts": "~0.6.13",
+    "typescript": "^5.0.4",
     "mixin-patch": "~0.4.0"
   },
   "engines": {

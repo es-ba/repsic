@@ -1,5 +1,5 @@
 SET SEARCH_PATH=REPSIC;
-set role repsic221_owner;
+set role repsic231_owner;
  
 --completar vars y opciones
 update variables v
@@ -17,23 +17,23 @@ select var.operativo, var.tabla_datos, var.variable, o.casillero::integer, strin
     order by var.operativo, var.tabla_datos, var.variable;
 
 --cambiar owner de tablas calculadas y sus funciones (se crearon con user owner)
- ALTER TABLE IF EXISTS repsic.repsic221_grupo_personas_calculada
-    OWNER to repsic221_admin;
-ALTER TABLE IF EXISTS repsic.repsic221_personas_calculada
-    OWNER to repsic221_admin;
-ALTER TABLE IF EXISTS repsic.repsic221_supervision_calculada
-    OWNER to repsic221_admin; 
+ ALTER TABLE IF EXISTS repsic.repsic231_grupo_personas_calculada
+    OWNER to repsic231_admin;
+ALTER TABLE IF EXISTS repsic.repsic231_personas_calculada
+    OWNER to repsic231_admin;
+ALTER TABLE IF EXISTS repsic.repsic231_supervision_calculada
+    OWNER to repsic231_admin; 
     
 ALTER FUNCTION repsic.gen_fun_var_calc()
-    OWNER TO repsic221_admin;
+    OWNER TO repsic231_admin;
 ALTER FUNCTION repsic.update_varcal(text)
-    OWNER TO repsic221_admin;
+    OWNER TO repsic231_admin;
 ALTER FUNCTION repsic.update_varcal_por_encuesta(text, text)
-    OWNER TO repsic221_admin;   
+    OWNER TO repsic231_admin;   
     
 -- correr varcal_provisorio.sql
 
-select update_varcal('repsic221');
-UPDATE operativos SET calculada=now()::timestamp(0) WHERE operativo='repsic221';
-UPDATE tabla_datos SET generada=now()::timestamp(0) WHERE operativo='repsic221' AND tipo='calculada';
+select update_varcal('repsic231');
+UPDATE operativos SET calculada=now()::timestamp(0) WHERE operativo='repsic231';
+UPDATE tabla_datos SET generada=now()::timestamp(0) WHERE operativo='repsic231' AND tipo='calculada';
     

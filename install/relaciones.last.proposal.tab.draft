@@ -1,12 +1,12 @@
 operativo|tabla_datos     |tiene                   |que_es  |mimsa_pk|tabla_relacionada|a_veces_siempre|max        
-repsic221|comunas         |grupo_personas          |        |        |                 |               |           
-repsic221|supervision     |supervision_calculada   |        | true   |                 |               |1          
-repsic221|recorridos      |grupo_personas          |        |        |                 |               |           
-repsic221|supervision     |grupo_personas          |        |        |                 |               |           
-repsic221|grupo_personas  |grupo_personas_calculada|        | true   |                 |               |1          
-repsic221|profesion       |personas                |        |        |                 |               |           
-repsic221|grupo_personas  |personas                |        |        |                 |               |           
-repsic221|personas        |personas_calculada      |        | true   |                 |               |1          
-repsic221|grupo_personas  |referente               |personas|        |                 |               |1          
-repsic221|grupo_personas  |jefe                    |personas|        |                 |               |1          
-repsic221|persona         |padreo2madre            |personas|        |                 |               |1          
+repsic231|comunas         |grupo_personas          |        |        |                 |               |           
+repsic231|supervision     |supervision_calculada   |        | true   |                 |               |1          
+repsic231|recorridos      |grupo_personas          |        |        |                 |               |           
+repsic231|supervision     |grupo_personas          |        |        |                 |               |           
+repsic231|grupo_personas  |grupo_personas_calculada|        | true   |                 |               |1          
+repsic231|profesion       |personas                |        |        |                 |               |           
+repsic231|grupo_personas  |personas                |        |        |                 |               |           
+repsic231|personas        |personas_calculada      |        | true   |                 |               |1          
+repsic231|grupo_personas  |referente               |personas|        |                 |               |1          
+repsic231|grupo_personas  |jefe                    |personas|        |                 |               |1          
+repsic231|persona         |padreo2madre            |personas|        |                 |               |1          

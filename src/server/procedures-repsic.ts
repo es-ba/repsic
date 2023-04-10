@@ -14,7 +14,7 @@ const pkPersonas = [{fieldName:'operativo'}, {fieldName:'id_caso'}, {fieldName:'
 const fkPersonas = [{target:'operativo', source:'operativo'}, {target:'id_caso', source:'id_caso'}];
 const pkGrupoPersonas = [{fieldName:'operativo'},{fieldName:'id_caso'}];
 const formPrincipal = 'F:F1';
-const OPERATIVO = 'repsic221';
+const OPERATIVO = 'repsic231';
 
 var struct_personas={
     tableName:'personas',
