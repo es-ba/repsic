@@ -77,4 +77,5 @@ client-setup:
   lang: es
   menu: true
   operativo: repsic231
+  background-img: ../img/background-test.png
 `
