@@ -429,6 +429,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         }
         
         be.appendToTableDefinition('inconsistencias',function(tableDef, context){
+            tableDef.sql={...tableDef.sql, isTable:true};
             tableDef.fields.splice(2,0,
                 {name:'id_caso', typeName:'text'   , label:'caso'   , editable: false},
                 {name:'p0'     , typeName:'integer', label:'persona', editable: false}
