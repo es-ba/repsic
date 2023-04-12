@@ -1,4 +1,4 @@
---ejecutar este script  para generar variables, variables opciones y calculadas
+--ejecutar este script  para actualizar nombres de variables, variables opciones y calculadas
 set search_path=repsic;
 set role repsic231_owner;
  
@@ -31,7 +31,11 @@ ALTER FUNCTION repsic.gen_fun_var_calc()
 ALTER FUNCTION repsic.update_varcal(text)
     OWNER TO repsic231_admin;
 ALTER FUNCTION repsic.update_varcal_por_encuesta(text, text)
-    OWNER TO repsic231_admin;   
+    OWNER TO repsic231_admin;  
+    
+GRANT REFERENCES ON "grupo_personas" TO repsic231_admin;
+GRANT REFERENCES ON "personas" TO repsic231_admin;
+GRANT REFERENCES ON "supervision" TO repsic231_admin;    
     
 -- correr varcal_provisorio.sql
 
