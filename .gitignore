@@ -38,3 +38,6 @@ local-*
 
 #don't version generated files
 /dist
+
+#backups notepad++
+*.bak
