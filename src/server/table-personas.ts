@@ -27,6 +27,8 @@ export function personas(context:TableContext):TableDefinition {
             { name: "sc24"          , label:'lugar anterior'             , typeName: 'integer' },
             { name: "sc9"           , label:'durmio calle'               , typeName: 'integer' },
             { name: "sc9a"          , label:'pasó la noche'              , typeName: 'integer' },
+            { name: "sc25"          , label:'durmio parador'             , typeName: 'integer' },
+            { name: "sc25a"         , label:'pasó la noche'              , typeName: 'integer' },
             { name: "sc10"          , label:'tiempo sit calle'           , typeName: 'integer' },
             { name: "sc11"          , label:'tiene documento'            , typeName: 'integer' },
             { name: "sc12"          , label:'tuvo dni argentino'         , typeName: 'integer' },

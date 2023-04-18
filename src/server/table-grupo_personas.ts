@@ -25,6 +25,7 @@ export function grupo_personas(context:TableContext):TableDefinition {
             { name: "u8"            , label:'cant.per'              , typeName: 'integer' },
             { name: "u21"           , label:'cod.relev'             , typeName: 'integer' },
             { name: "u22"           , label:'nombre y ape'          , typeName: 'text'    },
+            { name: "u23"           , label:'teléfono'              , typeName: 'text'    },
             { name: "cant11"        , label:'varon'                 , typeName: 'integer' },
             { name: "cant12"        , label:'mujer'                 , typeName: 'integer' },
             { name: "cant13"        , label:'no se observa'         , typeName: 'integer' },
