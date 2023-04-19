@@ -17,6 +17,16 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "back office Fast Launch",
+            "env": {"BACKEND_PLUS_LOCAL_CONFIG":"local-config.yaml"},
+            "program": "${workspaceFolder}/dist/server/server-repsic.js",
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "dumpDb",
             "preLaunchTask": "build-all",
             "program": "${workspaceFolder}/dist/server/server-repsic.js",
