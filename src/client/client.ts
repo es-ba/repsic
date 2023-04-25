@@ -8,6 +8,9 @@ var my = myOwn;
 const USAR_GUIONES = true;
 
 function checkIdCasoToGuion(id:string|number){ 
+    if(id === null){
+        return null
+    }
     if(USAR_GUIONES){
         var n = id.toString();
         var corte = n[0] == '9' ? 3 : 2 - n.length % 2; 
@@ -18,6 +21,9 @@ function checkIdCasoToGuion(id:string|number){
 }
 
 function checkGuionToIdCaso(idIngresado:string){ 
+    if(idIngresado === null){
+        return null
+    }
     if(USAR_GUIONES){
         var partes = idIngresado.split('-');
         if(partes.length !== 2){
