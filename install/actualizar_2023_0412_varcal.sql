@@ -25,7 +25,7 @@ ALTER TABLE IF EXISTS repsic.repsic231_personas_calculada
     OWNER to repsic231_admin;
 ALTER TABLE IF EXISTS repsic.repsic231_supervision_calculada
     OWNER to repsic231_admin; 
-    
+ /*   
 ALTER FUNCTION repsic.gen_fun_var_calc()
     OWNER TO repsic231_admin;
 ALTER FUNCTION repsic.update_varcal(text)
@@ -36,10 +36,9 @@ ALTER FUNCTION repsic.update_varcal_por_encuesta(text, text)
 GRANT REFERENCES ON "grupo_personas" TO repsic231_admin;
 GRANT REFERENCES ON "personas" TO repsic231_admin;
 GRANT REFERENCES ON "supervision" TO repsic231_admin;    
-    
+*/    
 -- correr varcal_provisorio.sql
 
 select update_varcal('repsic231');
 UPDATE operativos SET calculada=now()::timestamp(0) WHERE operativo='repsic231';
 UPDATE tabla_datos SET generada=now()::timestamp(0) WHERE operativo='repsic231' AND tipo='calculada';
-    
