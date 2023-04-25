@@ -275,7 +275,7 @@ myOwn.wScreens.ingresarFormulario = async function(addrParams:myOwn.AddrParams){
         }
         buttonConsistir.onclick= function(){
             var id_caso=inputIdCaso.getTypedValue();
-            consistirFun(id_caso);
+            consistirFun(checkGuionToIdCaso(id_caso));
         }
         return html.tr([
             html.td([html.label({"for":id}),'caso']),
