@@ -5,6 +5,34 @@ import * as TypedControls from "typed-controls";
 
 var my = myOwn;
 
+const USAR_GUIONES = true;
+
+function checkIdCasoToGuion(id:string|number){ 
+    if(USAR_GUIONES){
+        var n = id.toString();
+        var corte = n[0] == '9' ? 3 : 2 - n.length % 2; 
+        return Number(n.substring(0,corte)) + "-" + Number(n.substring(corte)) 
+    }else{
+        return Number(id)
+    }
+}
+
+function checkGuionToIdCaso(idIngresado:string){ 
+    if(USAR_GUIONES){
+        var partes = idIngresado.split('-');
+        if(partes.length !== 2){
+            var mensaje = 'el id caso debe tener la forma "recorrido-numero".';
+            alertPromise(mensaje);
+            throw Error(mensaje);
+        }
+        partes[1] = partes[1].length % 2 == 1?'0'.concat(partes[1]):partes[1];
+        var nuevoId = partes[0].concat(partes[1]);
+        return  nuevoId
+    }else{
+        return idIngresado
+    }
+}
+
 var savesClientRepsic={
     validateDepot:formStructure.FormManager.prototype.validateDepot
 }
@@ -142,6 +170,16 @@ myOwn.clientSides.generarRelevamiento={
     }
 }
 
+myOwn.clientSides.parseIDPapel={
+    update:function(_depot:myOwn.Depot, _fieldName:string){
+    },
+    prepare:function(depot:myOwn.Depot, fieldName:string){
+        var recorrido = depot.row['id_caso'];
+        var idCasoPapel = checkIdCasoToGuion(recorrido)
+        depot.rowControls[fieldName].setTypedValue(idCasoPapel);
+    }
+}
+
 formStructure.globalSaltosABotones.o4={
     1:'boton-nuevo-F2'
 }
@@ -174,7 +212,7 @@ myOwn.wScreens.ingresarFormulario = async function(addrParams:myOwn.AddrParams){
     let my=myOwn;
     let layout = document.getElementById('main_layout');
     layout.innerHTML="";
-    let casoAnterior=my.getSessionVar('surveyId');
+    let casoAnterior=checkIdCasoToGuion(my.getSessionVar('surveyId'));
     let resultDiv=html.div({id:'result-div'}).create();
     var consistirFun=async function consistirFun(id_caso){
         resultDiv.textContent='consistiendo...';
@@ -198,14 +236,14 @@ myOwn.wScreens.ingresarFormulario = async function(addrParams:myOwn.AddrParams){
             "type-align":"left", 
             style:"min-width: 50px; background-color: white;"
         }).create();
-        TypedControls.adaptElement(inputIdCaso,{typeName:'integer'});
+        TypedControls.adaptElement(inputIdCaso,{typeName:USAR_GUIONES?'text':'integer'});
         let buttonCargarCaso=html.button("cargar").create();
         let buttonConsistir=html.button("consistir").create();
         if(conAnterior){
             if(casoAnterior==null){
                 return null;
             }
-            inputIdCaso.setTypedValue(Number(casoAnterior));
+            inputIdCaso.setTypedValue(casoAnterior);
             inputIdCaso.disable(true);
             inputIdCaso.onclick=function(){
                 cargarFun(inputIdCaso.getTypedValue());
@@ -214,7 +252,7 @@ myOwn.wScreens.ingresarFormulario = async function(addrParams:myOwn.AddrParams){
         }
         var cargarFun=async function cargarFun(idCaso:string){
             resultDiv.textContent='leyendo...'
-            let result = await my.ajax.caso_traer({operativo:my.config.config.operativo, id_caso:idCaso})
+            let result = await my.ajax.caso_traer({operativo:my.config.config.operativo, id_caso:checkGuionToIdCaso(idCaso)})
             var opts = {buttons:{guardar:false,devolver:true}};
             myOwn.wScreens.proc.result.goToEnc(result, resultDiv, opts)
         }
