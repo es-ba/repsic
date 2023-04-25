@@ -221,14 +221,18 @@ myOwn.wScreens.ingresarFormulario = async function(addrParams:myOwn.AddrParams){
     let casoAnterior=checkIdCasoToGuion(my.getSessionVar('surveyId'));
     let resultDiv=html.div({id:'result-div'}).create();
     var consistirFun=async function consistirFun(id_caso){
-        resultDiv.textContent='consistiendo...';
-        my.ajax.consistir_encuesta({
-            operativo: my.config.config.operativo,
-            id_caso: id_caso
-        }).then(function(result){
-            resultDiv.textContent='abriendo '+result+' consistencias.';
-            my.tableGrid('inconsistencias',resultDiv,{fixedFields:[{fieldName:'operativo', value:my.config.config.operativo},{fieldName:'id_caso', value:id_caso}]});
-        })
+        if(id_caso){
+            resultDiv.textContent='consistiendo...';
+            my.ajax.consistir_encuesta({
+                operativo: my.config.config.operativo,
+                id_caso: id_caso
+            }).then(function(result){
+                resultDiv.textContent='abriendo '+result+' consistencias.';
+                my.tableGrid('inconsistencias',resultDiv,{fixedFields:[{fieldName:'operativo', value:my.config.config.operativo},{fieldName:'id_caso', value:id_caso}]});
+            })
+        }else{
+            alertPromise("ingrese un caso para consistir")
+        }
     }
     if(addrParams.consistir){
         consistirFun(addrParams.consistir);
@@ -255,6 +259,8 @@ myOwn.wScreens.ingresarFormulario = async function(addrParams:myOwn.AddrParams){
                 cargarFun(inputIdCaso.getTypedValue());
             }
             inputIdCaso.style.cursor='pointer';
+        }else{
+            inputIdCaso.setTypedValue(checkIdCasoToGuion(addrParams.consistir || null))
         }
         var cargarFun=async function cargarFun(idCaso:string){
             resultDiv.textContent='leyendo...'
