@@ -1,0 +1,8 @@
+tipo_recorrido|descripcion          |abr|via_p|con_lugares
+1 |vías públicas parques y plazas   |V|true |false
+2 |Autopistas                       |A|false|true
+3 |Hospitales                       |H|false|true
+4 |Terminales de trenes y colectivos|T|false|true
+5 |Paradores                        |P|false|true
+12|Mixta c/autopista                |MA|true |true
+14|Mixta c/terminales               |MT|true |true

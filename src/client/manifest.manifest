@@ -1,0 +1,53 @@
+CACHE MANIFEST
+# manifest.manifest
+# repsic241
+# v0.3.0 - 2018-11-18 12:05:00
+
+img/logo-128.png
+img/logo.png
+img/logo.png
+dialog-promise/dialog-promise.css
+pikaday/pikaday.css
+css/my-things.css
+css/my-tables.css
+css/my-menu.css
+css/my-things2.css
+css/guijarro.css
+https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css
+css/mapa.css
+img/logo.png
+img/logo-128.png
+img/main-loading.gif
+lib/js-yaml.js
+lib/xlsx.core.min.js
+lib/require-bro.js
+lib/lazy-some.js
+lib/like-ar.js
+lib/best-globals.js
+lib/json4all.js
+dialog-promise/dialog-promise.js
+lib/js-to-html.js
+moment/min/moment.js
+pikaday/pikaday.js
+lib/big.js
+lib/type-store.js
+lib/typed-controls.js
+lib/ajax-best-promise.js
+lib/my-localdb.js
+lib/my-things.js
+lib/my-skin.js
+lib/my-tables.js
+lib/my-inform-net-status.js
+lib/cliente-en-castellano.js
+lib/client/form-structure.js
+menu-mapa.js
+client/meta-enc.js
+https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL
+https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js
+lib/guijarro.js
+adjuntos.js
+client/mapa.js
+client/client.js
+
+NETWORK:
+*

@@ -1,0 +1,12 @@
+rol          |estado       |puede_ingresar|puede_sacar_estado|puede_poner_estado
+ingresador   |en_ingreso   |true          |true              |true             
+ingresador   |fin_ingreso  |false         |false             |true             
+coor_campo   |en_ingreso   |              |true              |true             
+coor_campo   |fin_ingreso  |true          |true              |true             
+coor_campo   |procesamiento|false         |false             |true             
+procesamiento|en_ingreso   |false         |                  |true             
+procesamiento|fin_ingreso  |false         |true              |true             
+procesamiento|procesamiento|true          |true              |true
+admin        |en_ingreso   |true          |true              |true
+admin        |fin_ingreso  |true          |true              |true
+admin        |procesamiento|true          |true              |true             

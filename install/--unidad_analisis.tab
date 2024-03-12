@@ -1,0 +1,3 @@
+operativo|unidad_analisis|nombre|pk_agregada|padre|orden|principal
+repsic241|grupo_personas||id_caso||10|true
+repsic241|personas||p0|grupo_personas|20|

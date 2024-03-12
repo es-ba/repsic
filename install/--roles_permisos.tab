@@ -1,0 +1,35 @@
+rol          |permiso      |accion    |habilitado
+admin        |campo        |editar    |true
+admin        |campo        |ver       |true
+admin        |encuestas    |ingresar  |true
+cartografia  |campo        |editar    |false
+cartografia  |campo        |ver       |false
+cartografia  |configurar   |editar    |true
+cartografia  |configurar   |ver       |true
+cartografia  |encuestas    |ingresar  |false
+cartografia  |encuestas    |justificar|false
+coor_campo   |campo        |editar    |true
+coor_campo   |campo        |ver       |true
+coor_campo   |configurar   |editar    |false
+coor_campo   |configurar   |ver       |false
+coor_campo   |encuestas    |justificar|true
+coor_campo   |encuestas    |ingresar  |true
+ingresador   |encuestas    |ingresar  |true
+ingresador   |encuestas    |justificar|true
+ingresador   |configurar   |ver       |true
+ingresador   |configurar   |editar    |false
+procesamiento|encuestas    |ingresar  |true
+procesamiento|encuestas    |justificar|true
+procesamiento|encuestas    |procesar  |true
+procesamiento|consistencias|editar    |true
+procesamiento|configurar   |ver       |true
+procesamiento|configurar   |editar    |false
+relevador    |campo        |editar    |false
+relevador    |campo        |ver       |false
+relevador    |configurar   |editar    |false
+relevador    |configurar   |ver       |false
+relevador    |encuestas    |ingresar  |false
+relevador    |encuestas    |procesar  |false
+relevador    |encuestas    |justificar|false
+relevador    |consistencias|editar    |false
+relevador    |puntos       |transmitir|true

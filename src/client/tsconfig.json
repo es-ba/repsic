@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "outDir": "../../dist/client",
+        "lib": ["es5", "dom"]
+    },
+    "include":[
+        "."
+    ],
+    "extends": "../../tsconfig-common.json"
+}

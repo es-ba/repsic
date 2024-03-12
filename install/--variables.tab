@@ -1,0 +1,35 @@
+operativo|tabla_datos|variable|abr|nombre|tipovar|clase|es_pk|es_nombre_unico|activa|filtro|expresion|cascada|nsnc_atipico|cerrada|funcion_agregacion|tabla_agregada|grupo|orden
+repsic241|grupo_personas_calculada|operativo|||texto|interna|1||true|||||true|||claves|1
+repsic241|grupo_personas_calculada|id_caso|||texto|interna|2||true|||||true|||claves|2
+repsic241|personas_calculada|operativo||operativo|texto|interna|1|true|true|||||true|||claves|1
+repsic241|personas_calculada|id_caso||id caso|texto|interna|2|true|true|||||true|||claves|2
+repsic241|personas_calculada|p0||Número de orden|numero|interna|3|true|true|||||true|||claves|3
+repsic241|supervision_calculada|recorrido||recorrido|numero|interna|1||true|||||true|||claves|1
+repsic241|grupo_personas_calculada|cant_per||Cantidad de miembros entrevistados|numero|calculada||true|true||true|||true|contar|personas||8001
+repsic241|grupo_personas_calculada|cant_0a14_mu|||numero|calculada||true|true|p3>=0 and p3<=14 and p2=2|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_0a14_no_obs|||numero|calculada||true|true|p3>=0 and p3<=14 and (p2=88 or p2=99 or p2=777)|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_0a14_tot|||numero|calculada||true|true|p3>=0 and p3<=14|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_0a14_va|||numero|calculada||true|true|p3>=0 and p3<=14 and p2=1|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_15a18_mu|||numero|calculada||true|true|p3>=15 and p3<=18 and p2=2|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_15a18_no_obs|||numero|calculada||true|true|p3>=15 and p3<=18 and (p2=88 or p2=99 or p2=777)|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_15a18_tot|||numero|calculada||true|true|p3>=15 and p3<=18|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_15a18_va|||numero|calculada||true|true|p3>=15 and p3<=18 and p2=1|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_19a59_mu|||numero|calculada||true|true|p3>=19 and p3<=59 and p2=2|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_19a59_no_obs|||numero|calculada||true|true|p3>=19 and p3<=59 and (p2=88 or p2=99 or p2=777)|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_19a59_tot|||numero|calculada||true|true|p3>=19 and p3<=59|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_19a59_va|||numero|calculada||true|true|p3>=19 and p3<=59 and p2=1|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_60ymas_mu|||numero|calculada||true|true|p3>=60 and p3<=150 and p2=2|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_60ymas_no_obs|||numero|calculada||true|true|p3>=60 and p3<=150 and (p2=88 or p2=99 or p2=777)|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_60ymas_tot|||numero|calculada||true|true|p3>=60 and p3<=150|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_60ymas_va|||numero|calculada||true|true|p3>=60 and p3<=150 and p2=1|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_no_obs_mu|||numero|calculada||true|true|(p3=777 or p3=888 or p3=999) and p2=2|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_no_obs_no_obs|||numero|calculada||true|true|(p3=777 or p3=888 or p3=999) and (p2=88 or p2=99 or p2=777)|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_no_obs_tot|||numero|calculada||true|true|(p3=777 or p3=888 or p3=999)|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_no_obs_va|||numero|calculada||true|true|(p3=777 or p3=888 or p3=999) and p2=1|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_refe||Cantidad de referentes entrevistados|numero|calculada||true|true|p1=1|true|||true|contar|personas||8002
+repsic241|grupo_personas_calculada|cant_tot_mu|||numero|calculada||true|true|p2=2|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_tot_no_obs|||numero|calculada||true|true|(p2=88 or p2=99 or p2=777)|true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_tot_tot|||numero|calculada||true|true||true|||true|contar|personas||1
+repsic241|grupo_personas_calculada|cant_tot_va|||numero|calculada||true|true|p2=1|true|||true|contar|personas||1
+repsic241|personas_calculada|sexor||Sexo del referente|numero|calculada||true|true||referente.p2|||||||10000
+repsic241|supervision_calculada|cant_form||cantidad formularios|numero|calculada||true|true||true|||true|contar|grupo_personas||1
