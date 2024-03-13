@@ -346,7 +346,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                     var obsInput = html.input({id:'observaciones', type:'text'}).create();
                     var saveButton={
                         label:'guardar',
-                        attributes:{id:'save-button','save-button':true, 'enter-clicks':true}
+                        attributes:{id:'save-point-button','save-point-button':true, 'enter-clicks':true}
                     };
                     Object.defineProperty(saveButton, 'value', { get: function(){ 
                         return {cantCues:cantCuesInput.value, cantPer:cantPerInput.value, obs: obsInput.value}; 
