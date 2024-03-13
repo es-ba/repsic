@@ -336,58 +336,36 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         return {puede:{}, ...fatherContext};
     }
     getMenu(context:Context){
-        return super.getMenu(context);
+        let menuDef:MenuDefinition = super.getMenu(context);
         if(this.config.server.policy=='web'){
-            let menu:MenuDefinition = {menu:[
-                {menuType:'mapa', name:'mapa'}
-            ]}
-            return <procesamiento.MenuDefinition>menu;
+            menuDef.menu.push({menuType:'mapa', name:'mapa'});
         }else{
-            let menu:MenuDefinition = {menu:[
+            menuDef.menu = menuDef.menu.concat([
                 {menuType:'menu', name:'ingresar', menuContent:[
                     {menuType:'table'             , name:'supervision'        , label:'supervisión'              },
                     {menuType:'ingresarFormulario', name:'cargar_enc'         , label:'relevamiento'             },
                     // {menuType:'table'             , name:'hoja_ruta_paradores', label:'hoja de ruta de paradores'},
                 ]},
-                {menuType:'menu', name:'procesar', menuContent:[
-                    {menuType:'table', name:'variables'    },
-                    {menuType:'table', name:'consistencias'},
-                    {menuType:'table', name:'inconsistencias'},
-                    {menuType:'table', name:'tabla_datos'  },
-                    {menuType:'table', name:'diccionario'  , label:'diccionarios' },
-                    // {menuType:'proc' , name:'gen_varcal'   , label:'regenerar', proc:'calculadas_generar'},
-                ]},
                 {menuType:'mapa', name:'mapa'},
-                {menuType:'menu', name:'configurar', menuContent:[
-                    {menuType:'menu', name:'carto', label:'recorridos y cartografía', menuContent:[
-                        {menuType:'table', name:'barrios'},
-                        {menuType:'table', name:'recorridos'},
-                        {menuType:'table', name:'recorridos_barrios'},
-                        {menuType:'table', name:'tipos_recorrido'},
-                        {menuType:'table', name:'lugares'},
-                        {menuType:'table', name:'tipos_lugar'},
-                        {menuType:'table', name:'parametros'},
-                    ]},
-                    {menuType:'menu', name:'metadatos', menuContent:[
-                        {menuType:'table', name:'operativos'},
-                        {menuType:'table', name:'formularios' , table:'casilleros_principales'},
-                        {menuType:'table', name:'plano'       , table:'casilleros'},
-                        {menuType:'table', name:'tipoc'       , label:'tipos de celdas'},
-                        {menuType:'table', name:'tipoc_tipoc' , label:'inclusiones de celdas'},
-                    ]},
+                {menuType:'menu', name:'carto', label:'recorridos y cartografía', menuContent:[
+                    {menuType:'table', name:'barrios'},
+                    {menuType:'table', name:'recorridos'},
+                    {menuType:'table', name:'recorridos_barrios'},
+                    {menuType:'table', name:'tipos_recorrido'},
+                    {menuType:'table', name:'lugares'},
+                    {menuType:'table', name:'tipos_lugar'},
+                    {menuType:'table', name:'parametros'},
                 ]},
                 {menuType:'menu', name:'materiales', menuContent:[
                     {menuType:'table', name:'adjuntos'           },
                     {menuType:'table', name:'categorias_adjuntos', label:'categorías'},
                     {menuType:'table', name:'adjunto_categoria'  , label:'adjunto-categoría'},
                 ]},
-                {menuType:'menu', name:'usuarios', menuContent:[
-                    {menuType:'table', name:'usuarios'},
-                ]}
-            ]}
-            return <procesamiento.MenuDefinition>menu;
+            ])
         }
+        return menuDef;
     }
+
     prepareGetTables(){
         var be=this;
         super.prepareGetTables();
