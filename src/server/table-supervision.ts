@@ -9,7 +9,9 @@ export function supervision(context:TableContext):TableDefinition {
         elementName: 'supervisión',
         editable: autorizado,
         fields: [
+            { name: "operativo"          , typeName: "text"    , editable:false, inTable:false}, 
             { name: "recorrido"          , typeName: "integer" },
+            { name: "area"               , typeName: "integer" , editable:false, inTable:false}, 
             { name: "relevador"          , typeName: "text"    , editable:false, inTable:false},
             { name: "cant_cues"          , typeName: "integer" , aggregate:'sum'},
             { name: "cant_pers"          , typeName: "integer" , aggregate:'sum'},
@@ -24,8 +26,9 @@ export function supervision(context:TableContext):TableDefinition {
         foreignKeys:[
             {references:'recorridos'    , fields: ['recorrido'] },
         ],
+        hiddenColumns:['operativo'],
         detailTables:[
-            {table:'casos'          , fields:[{source:'recorrido',target:'u1'}], abr:'R'},
+            {table:'areas_asignacion_general'   , fields:['operativo','area'], abr:'A'},
         ],
         sql:{
             fields:{
@@ -63,7 +66,17 @@ export function supervision(context:TableContext):TableDefinition {
                     expr:`(
                         select count(*) from grupo_personas gp where u1 = supervision.recorrido
                     )`
-                }
+                },
+                area:{expr:`(
+                    select area
+                        from areas
+                        where recorrido=recorridos.recorrido
+                )`},
+                operativo:{expr:`(
+                    select operativo
+                        from areas
+                        where recorrido=recorridos.recorrido
+                )`}
             }
         }
     };

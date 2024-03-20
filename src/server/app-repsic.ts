@@ -423,6 +423,37 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 {references:'recorridos'    , fields: ['recorrido'] },
             )
         });
+        be.appendToTableDefinition('areas', function (tableDef,context) {
+            tableDef.fields.splice(2,0,
+                {name:'recorrido'  , typeName:'integer',  editable:true, nullable: false}
+            );
+            tableDef.foreignKeys=tableDef.foreignKeys || [];
+            tableDef.foreignKeys.push(
+                {references:'recorridos'    , fields: ['recorrido'] },
+            )
+        });
+        be.appendToTableDefinition('areas_asignacion_general', function (tableDef,context) {
+            tableDef.fields.splice(2,0,
+                {name:'recorrido'  , typeName:'integer',  editable:false, inTable:false}
+            );
+            tableDef.foreignKeys=tableDef.foreignKeys || [];
+            tableDef.softForeignKeys=tableDef.softForeignKeys || [];
+            tableDef.softForeignKeys.push(
+                {references:'recorridos'    , fields: ['recorrido'] },
+            )
+            tableDef.sql = {
+                ...tableDef.sql, fields: {
+                    ...tableDef.sql?.fields, 
+                    recorridos:{ 
+                        expr:`(
+                            select recorrido
+                                from areas
+                                where area=areas.area
+                        )`
+                    }
+                }
+            }
+        });
     }
   }
 }

@@ -2,6 +2,7 @@ import * as formStructure from "rel-enc/dist/client/form-structure";
 import {html} from "js-to-html";
 import * as myOwn from "myOwn";
 import * as TypedControls from "typed-controls";
+import {sleep} from "best-globals"
 
 var my = myOwn;
 
@@ -152,25 +153,27 @@ myOwn.clientSides.generarRelevamiento={
     prepare:function(depot:myOwn.Depot, fieldName:string){
         var my=myOwn;
         let td=depot.rowControls[fieldName];
-        let boton = html.button('generar').create();
+        const TEXTO_INICIAL_BOTON = "generar";
+        let boton = html.button(TEXTO_INICIAL_BOTON).create();
         td.buttonGenerar=boton;
         td.innerHTML="";
         td.appendChild(boton);
         boton.onclick=async function(){
-            boton.style.title='generando formularios del recorrido '+depot.row.recorrido
             boton.textContent='generando'
+            boton.disabled=true;
             try{
                 await my.ajax.generar_formularios({
-                    recorrido:depot.row.recorrido
+                    recorrido:depot.row.recorrido,
+                    cant_encuestas: depot.row.cant_cues
                 });
-                boton.textContent='ok';
-                setTimeout(function(){
-                    boton.textContent='generar';
-                },3000);
+                boton.textContent='ok'
+                await sleep(2000);
             }catch(err){
-                boton.textContent='error'
-                boton.style.title=err.message
+                alertPromise(err.message)
                 throw err;
+            }finally{
+                boton.disabled=false;
+                boton.textContent=TEXTO_INICIAL_BOTON
             }
         }
     }
@@ -335,7 +338,7 @@ myOwn.clientSides.correrConsistencias={
                 var demora =ahora.sub(empezo); /* falta definir función sub en best-globals --ahora.sub(empezo); */
                 boton.textContent=demora.toHms().replace(/^00:/,'');
             },1000)
-            //await bestGlobals.sleep(5000);
+            //await sleep(5000);
             try{
                 await my.ajax.consistir_encuesta({
                     operativo: my.config.config.operativo,
