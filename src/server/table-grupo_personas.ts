@@ -6,12 +6,12 @@ export function grupo_personas(context:TableContext):TableDefinition {
     let permitidoeditar= context.user.rol === 'admin'||context.puede.encuestas.ingresar;
     let def: TableDefinition = {
         name: 'grupo_personas',
-        elementName: 'grupo_personas',
+        elementName: 'vivienda',
         tableName:'grupo_personas',
         editable: permitidoeditar /*|| context.puede.tablas_directas.editar*/, // TODO: FIX: En el dump-db rompe
         fields: [
             { name: "operativo"     , label:'operativo'             , typeName: "text"    , editable:false, visible:false      },
-            { name: "id_caso"       , label:'id'                    , typeName: "text"    , editable:false       },
+            { name: "vivienda"      , label:'id'                    , typeName: "text"    , editable:false       },  //antes id_caso
             { name: "id_caso_papel" , label:'id papel'              , typeName: "text"    , editable:false, inTable:false, clientSide:"parseIDPapel"       },
             { name: "ver"                                           , typeName: 'text'    , clientSide:'verCaso' },
             { name: "u1"            , label:'recorrido'             , typeName: 'integer' },
@@ -26,7 +26,7 @@ export function grupo_personas(context:TableContext):TableDefinition {
             { name: "u8"            , label:'cant.per'              , typeName: 'integer' },
             { name: "u21"           , label:'cod.relev'             , typeName: 'integer' },
             { name: "u22"           , label:'nombre y ape'          , typeName: 'text'    },
-            { name: "u23"           , label:'teléfono'              , typeName: 'text'    },
+            { name: "u23"           , label:'teléfono'              , typeName: 'text'    },  //paradores
             { name: "cant11"        , label:'varon'                 , typeName: 'integer' },
             { name: "cant12"        , label:'mujer'                 , typeName: 'integer' },
             { name: "cant13"        , label:'no se observa'         , typeName: 'integer' },
@@ -68,12 +68,12 @@ export function grupo_personas(context:TableContext):TableDefinition {
             { name: "consistido"    , label:'consistido'            , typeName: 'timestamp'},
             { name: "modificado"    , label:'modificado'            , typeName: 'timestamp'},
         ],
-        primaryKey: ['operativo', 'id_caso'],
+        primaryKey: ['operativo', 'vivienda'],
         foreignKeys:[
             {references:'recorridos'    , fields: [{source:'u1',target:'recorrido'}], displayFields:[]},
         ],
         detailTables:[
-            {table:'personas', fields:['operativo', 'id_caso'], abr:'P', title:'personas'},
+            {table:'personas', fields:['operativo', 'vivienda'], abr:'P', title:'personas'},
         ],
         sql:{
             fields:{}
