@@ -49,7 +49,6 @@ install:
       - desintegrarpk.sql
       - comun_otras_fun.sql
       - ../node_modules/dmencu/install/actualizar_inconvar.sql
-      - grant_reference.sql
       - esquema_dbo.sql 
       - varcal_provisorio.sql
       - agregar_adjunto_carto_trg.sql

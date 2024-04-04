@@ -11,7 +11,7 @@ export function personas(context:TableContext):TableDefinition {
         editable: permitidoeditar /*|| context.puede.tablas_directas.editar*/, // TODO: FIX: En el dump-db rompe
         fields: [
             { name: "operativo"     , label:'operativo'                  , typeName: "text"    },
-            { name: "vivienda"      , label:'id'                         , typeName: "text"    }, //antes id_caso
+            { name: "id_caso"       , label:'id'                         , typeName: "text"    },
             { name: "persona"       , label:'nro persona'                , typeName: 'integer' }, //p0
             { name: "sc1"           , label:'nombre'                     , typeName: 'text'    },
             { name: "sc_grupo"      , label:'nro grupo'                  , typeName: 'integer' }, //paradores
@@ -95,9 +95,9 @@ export function personas(context:TableContext):TableDefinition {
             { name: "sc20_6"        , label:'No recibió ningún ingreso'  , typeName: 'integer' },
             */
         ],
-        primaryKey: ['operativo','vivienda', 'persona'],
+        primaryKey: ['operativo','id_caso', 'persona'],
         foreignKeys:[
-            {references:'grupo_personas'    , fields: ['operativo','vivienda'], displayFields:[]},
+            {references:'grupo_personas'    , fields: ['operativo','id_caso'], displayFields:[]},
         ],
         sql:{}
     };

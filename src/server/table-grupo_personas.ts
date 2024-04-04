@@ -11,7 +11,7 @@ export function grupo_personas(context:TableContext):TableDefinition {
         editable: permitidoeditar /*|| context.puede.tablas_directas.editar*/, // TODO: FIX: En el dump-db rompe
         fields: [
             { name: "operativo"     , label:'operativo'             , typeName: "text"    , editable:false, visible:false      },
-            { name: "vivienda"      , label:'id'                    , typeName: "text"    , editable:false       },  //antes id_caso
+            { name: "id_caso"       , label:'id'                    , typeName: "text"    , editable:false       },
             { name: "id_caso_papel" , label:'id papel'              , typeName: "text"    , editable:false, inTable:false, clientSide:"parseIDPapel"       },
             { name: "ver"                                           , typeName: 'text'    , clientSide:'verCaso' },
             { name: "u1"            , label:'recorrido'             , typeName: 'integer' },
@@ -68,12 +68,12 @@ export function grupo_personas(context:TableContext):TableDefinition {
             { name: "consistido"    , label:'consistido'            , typeName: 'timestamp'},
             { name: "modificado"    , label:'modificado'            , typeName: 'timestamp'},
         ],
-        primaryKey: ['operativo', 'vivienda'],
+        primaryKey: ['operativo', 'id_caso'],
         foreignKeys:[
             {references:'recorridos'    , fields: [{source:'u1',target:'recorrido'}], displayFields:[]},
         ],
         detailTables:[
-            {table:'personas', fields:['operativo', 'vivienda'], abr:'P', title:'personas'},
+            {table:'personas', fields:['operativo', 'id_caso'], abr:'P', title:'personas'},
         ],
         sql:{
             fields:{}

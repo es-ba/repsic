@@ -26,7 +26,7 @@ import { personas            } from "./table-personas";
 import { recorridos          } from "./table-recorridos";
 import { recorridos_barrios  } from "./table-recorridos_barrios";
 import { recorridos_puntos   } from "./table-recorridos_puntos";
-import { supervision         } from "./table-supervision";
+import { coordinacion        } from "./table-coordinacion";
 import { tipos_lugar         } from "./table-tipos_lugar";
 import { tipos_recorrido     } from "./table-tipos_recorrido";
 
@@ -340,14 +340,13 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         if(this.config.server.policy=='web'){
             menuDef.menu.push({menuType:'mapa', name:'mapa'});
         }else{
-            menuDef.menu = menuDef.menu.concat([
-                {menuType:'menu', name:'ingresar', menuContent:[
-                    {menuType:'table'             , name:'supervision'        , label:'supervisión'              },
-                    {menuType:'ingresarFormulario', name:'cargar_enc'         , label:'relevamiento'             },
-                    // {menuType:'table'             , name:'hoja_ruta_paradores', label:'hoja de ruta de paradores'},
-                ]},
-                {menuType:'mapa', name:'mapa'},
-                {menuType:'menu', name:'carto', label:'recorridos y cartografía', menuContent:[
+            menuDef.menu.unshift(
+                {menuType:'table' , name:'coordinacion'        , label:'generar casos' },
+                {menuType:'table' , name:'ingresar' , table:'tareas_tem_ingreso', ff:{tarea:'encu', asignado:context.user.idper } }
+            );
+            menuDef.menu.push(
+                {menuType:'mapa'  , name:'mapa'},
+                {menuType:'menu'  , name:'carto', label:'materiales recorridos y cartografía', menuContent:[
                     {menuType:'table', name:'barrios'},
                     {menuType:'table', name:'recorridos'},
                     {menuType:'table', name:'recorridos_barrios'},
@@ -355,13 +354,13 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                     {menuType:'table', name:'lugares'},
                     {menuType:'table', name:'tipos_lugar'},
                     {menuType:'table', name:'parametros'},
+                    {menuType:'menu', name:'materiales', menuContent:[
+                        {menuType:'table', name:'adjuntos'           },
+                        {menuType:'table', name:'categorias_adjuntos', label:'categorías'},
+                        {menuType:'table', name:'adjunto_categoria'  , label:'adjunto-categoría'},
+                    ]}
                 ]},
-                {menuType:'menu', name:'materiales', menuContent:[
-                    {menuType:'table', name:'adjuntos'           },
-                    {menuType:'table', name:'categorias_adjuntos', label:'categorías'},
-                    {menuType:'table', name:'adjunto_categoria'  , label:'adjunto-categoría'},
-                ]},
-            ])
+            )
         }
         return menuDef;
     }
@@ -384,17 +383,23 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             , recorridos_puntos   
             , grupo_personas
             , casos
-            , supervision
+            , coordinacion
             , diccionario
             , dicvar
             , dictra        
         }
+        delete(this.getTableDefinition.viviendas);
+        delete(this.getTableDefinition.personas_sup);
+        delete(this.getTableDefinition.hogares);
+        delete(this.getTableDefinition.hogares_sup);
+        delete(this.getTableDefinition.visitas);
+        delete(this.getTableDefinition.visitas_sup);
         
         be.appendToTableDefinition('inconsistencias',function(tableDef, context){
             tableDef.sql={...tableDef.sql, isTable:true};
             tableDef.fields.splice(2,0,
                 {name:'id_caso', typeName:'text'   , label:'caso'   , editable: false},
-                {name:'p0'     , typeName:'integer', label:'persona', editable: false}
+                //{name:'persona'     , typeName:'integer', label:'persona', editable: false}
             );
             tableDef.editable=tableDef.editable || (<TableContext>context).puede.encuestas.justificar;
             tableDef.fields.forEach(function(field){

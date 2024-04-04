@@ -2,11 +2,11 @@
 
 import {TableDefinition, TableContext} from "./types-repsic";
 
-export function supervision(context:TableContext):TableDefinition {
+export function coordinacion(context:TableContext):TableDefinition {
     var autorizado = context.user.rol === 'admin'||context.user.rol === 'coor_campo';
     return {
-        name: 'supervision',
-        elementName: 'supervisión',
+        name: 'coordinacion',
+        elementName: 'coordinación',
         editable: autorizado,
         fields: [
             { name: "operativo"          , typeName: "text"    , editable:false, inTable:false}, 
@@ -28,7 +28,7 @@ export function supervision(context:TableContext):TableDefinition {
         ],
         hiddenColumns:['operativo'],
         detailTables:[
-            {table:'areas_asignacion_general'   , fields:['operativo','area'], abr:'A'},
+            //{table:'areas_asignacion_general'   , fields:['operativo','area'], abr:'A'},
         ],
         sql:{
             fields:{
@@ -39,11 +39,11 @@ export function supervision(context:TableContext):TableDefinition {
                                 from (select comuna
                                         from recorridos_barrios 
                                              left join barrios using (barrio) 
-                                        where recorrido=supervision.recorrido
+                                        where recorrido=coordinacion.recorrido
                                       union 
                                       select comuna
                                         from lugares 
-                                        where recorrido=supervision.recorrido
+                                        where recorrido=coordinacion.recorrido
                                 ) x
                     )`
                 },
@@ -52,19 +52,19 @@ export function supervision(context:TableContext):TableDefinition {
                         select string_agg(nombre,', ' order by barrio) 
                                 from recorridos_barrios 
                                     left join barrios using (barrio) 
-                                where recorrido=supervision.recorrido
+                                where recorrido=coordinacion.recorrido
                     )`
                 },
                 relevador:{
                     expr:`(
                         select string_agg(coalesce(nullif(concat_ws(' ', nombre, apellido),''), usuario), ', ' order by usuario) 
                                 from usuarios 
-                                where recorrido=supervision.recorrido
+                                where recorrido=coordinacion.recorrido
                     )`
                 },
                 generar:{
                     expr:`(
-                        select count(*) from grupo_personas gp where u1 = supervision.recorrido
+                        select count(*) from grupo_personas gp where u1 = coordinacion.recorrido
                     )`
                 },
                 area:{expr:`(
