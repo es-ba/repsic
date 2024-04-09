@@ -340,27 +340,32 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         if(this.config.server.policy=='web'){
             menuDef.menu.push({menuType:'mapa', name:'mapa'});
         }else{
-            menuDef.menu.unshift(
-                {menuType:'table' , name:'coordinacion'        , label:'generar casos' },
+            menuDef.menu = menuDef.menu.filter((menuInfo)=>!['varios','supervision'].includes(menuInfo.name));
+            menuDef.menu.splice(2,0,
                 {menuType:'table' , name:'ingresar' , table:'tareas_tem_ingreso', ff:{tarea:'encu', asignado:context.user.idper } }
             );
-            menuDef.menu.push(
-                {menuType:'mapa'  , name:'mapa'},
-                {menuType:'menu'  , name:'carto', label:'materiales recorridos y cartografía', menuContent:[
-                    {menuType:'table', name:'barrios'},
-                    {menuType:'table', name:'recorridos'},
-                    {menuType:'table', name:'recorridos_barrios'},
-                    {menuType:'table', name:'tipos_recorrido'},
-                    {menuType:'table', name:'lugares'},
-                    {menuType:'table', name:'tipos_lugar'},
-                    {menuType:'table', name:'parametros'},
-                    {menuType:'menu', name:'materiales', menuContent:[
-                        {menuType:'table', name:'adjuntos'           },
-                        {menuType:'table', name:'categorias_adjuntos', label:'categorías'},
-                        {menuType:'table', name:'adjunto_categoria'  , label:'adjunto-categoría'},
-                    ]}
-                ]},
-            )
+            if(context.puede?.campo?.administrar){
+                menuDef.menu.unshift(
+                    {menuType:'table' , name:'coordinacion'        , label:'generar casos' },
+                );
+                menuDef.menu.push(
+                    {menuType:'mapa'  , name:'mapa'},
+                    {menuType:'menu'  , name:'carto', label:'materiales recorridos y cartografía', menuContent:[
+                        {menuType:'table', name:'barrios'},
+                        {menuType:'table', name:'recorridos'},
+                        {menuType:'table', name:'recorridos_barrios'},
+                        {menuType:'table', name:'tipos_recorrido'},
+                        {menuType:'table', name:'lugares'},
+                        {menuType:'table', name:'tipos_lugar'},
+                        {menuType:'table', name:'parametros'},
+                        {menuType:'menu', name:'materiales', menuContent:[
+                            {menuType:'table', name:'adjuntos'           },
+                            {menuType:'table', name:'categorias_adjuntos', label:'categorías'},
+                            {menuType:'table', name:'adjunto_categoria'  , label:'adjunto-categoría'},
+                        ]}
+                    ]},
+                )
+            }
         }
         return menuDef;
     }
