@@ -5,6 +5,8 @@ import {ProceduresRepsic} from "./procedures-repsic";
 
 import {AppProcesamientoType, Response, TableContext} from "procesamiento";
 
+import { getDomicilioFields } from "dmencu";
+
 import * as pg from "pg-promise-strict";
 import * as miniTools from "mini-tools";
 import * as fs from "fs-extra";
@@ -68,9 +70,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
     }
     
     async getProcedures(){
-        var procedimientoAReemplazar=["caso_guardar","caso_traer"];
         var parentProc = await super.getProcedures();
-        parentProc = parentProc.filter((procedure:any) => !procedimientoAReemplazar.includes(procedure.action));
         return parentProc.concat(ProceduresRepsic);
     }
 
@@ -340,7 +340,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         if(this.config.server.policy=='web'){
             menuDef.menu.push({menuType:'mapa', name:'mapa'});
         }else{
-            menuDef.menu = menuDef.menu.filter((menuInfo)=>!['varios','supervision'].includes(menuInfo.name));
+            menuDef.menu = menuDef.menu.filter((menuInfo)=>!['supervision'].includes(menuInfo.name));
             menuDef.menu.splice(2,0,
                 {menuType:'table' , name:'ingresar' , table:'tareas_tem_ingreso', ff:{tarea:'encu', asignado:context.user.idper } }
             );
@@ -441,6 +441,16 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             tableDef.foreignKeys.push(
                 {references:'recorridos'    , fields: ['recorrido'] },
             )
+        });
+        be.appendToTableDefinition('t_encu_areas', function (tableDef,context) {
+            let fkAreas = tableDef.foreignKeys!.find((fk)=>fk.references=='areas')!;
+            fkAreas.displayAllFields=false;
+            fkAreas.displayAfterFieldName='area';
+            fkAreas.displayFields=['recorrido'];
+        });
+        be.appendToTableDefinition('tareas_tem_ingreso', function (tableDef,context) {
+            let domicilioFieldNames:string[] = getDomicilioFields().map((fieldDef)=>fieldDef.name);
+            tableDef.hiddenColumns = tableDef.hiddenColumns?.concat([...domicilioFieldNames,'telefono']);
         });
         be.appendToTableDefinition('areas_asignacion_general', function (tableDef,context) {
             tableDef.fields.splice(2,0,
