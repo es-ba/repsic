@@ -76,7 +76,8 @@ export function grupo_personas(context:TableContext):TableDefinition {
             {table:'personas', fields:['operativo', 'id_caso'], abr:'P', title:'personas'},
         ],
         sql:{
-            fields:{}
+            fields:{},
+            "isReferable": true
         }
     };
     return def;

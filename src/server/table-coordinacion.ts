@@ -31,6 +31,7 @@ export function coordinacion(context:TableContext):TableDefinition {
             //{table:'areas_asignacion_general'   , fields:['operativo','area'], abr:'A'},
         ],
         sql:{
+            "isReferable": true,
             fields:{
                 tipo_recorrido:{expr:"recorridos.tipo_recorrido"},                
                 comuna:{

@@ -1,15 +1,17 @@
 
---set search_path=repsic, dbo, comun;
+--set search_path=base, dbo, comun;
 -- con variables revisadas por procesamiento 07/05/2021
 
-drop table if exists "repsic241_grupo_personas_calculada";
-drop table if exists "repsic241_personas_calculada";
-drop table if exists "repsic241_supervision_calculada";
-DROP FUNCTION if exists generate_fun_varcal_provisorio();
+drop table if exists "repsic_241_grupo_personas_calculada";
+drop table if exists "repsic_241_personas_calculada";
+drop table if exists "repsic_241_coordinacion_calculada";
+DROP FUNCTION if exists gen_fun_var_calc();
+DROP FUNCTION if exists update_varcal(text);
+DROP FUNCTION if exists update_varcal_por_encuesta(text,text);
 
---set role repsic241_muleto_admin;
+--set role repsic241_admin;
 
-create table "repsic241_grupo_personas_calculada" (
+create table "repsic_241_grupo_personas_calculada" (
   operativo             text,
   id_caso               text,
   "cant_0a14_mu" bigint, 
@@ -40,10 +42,10 @@ create table "repsic241_grupo_personas_calculada" (
   "cant_refe" bigint
 , primary key ("operativo", "id_caso")
 );
---grant select, insert, update, delete, references on "repsic241_grupo_personas_calculada" to "repsic241_muleto_admin";
---grant all on "repsic241_grupo_personas_calculada" to "repsic241_muleto_owner";
+--grant select, insert, update, delete, references on "repsic_241_grupo_personas_calculada" to "repsic241_admin";
+--grant all on "repsic_241_grupo_personas_calculada" to "repsic241_owner";
 
-create table "repsic241_personas_calculada" (
+create table "repsic_241_personas_calculada" (
   "operativo" text,
   "id_caso" text,
   "persona" bigint, 
@@ -51,40 +53,40 @@ create table "repsic241_personas_calculada" (
   "edadr" bigint
 , primary key ("operativo", "id_caso", "persona")
 );
---grant select, insert, update, delete, references on "repsic241_personas_calculada" to "repsic241_muleto_admin";
---grant all on "repsic241_personas_calculada" to "repsic241_muleto_owner";
+--grant select, insert, update, delete, references on "repsic_241_personas_calculada" to "repsic241_admin";
+--grant all on "repsic_241_personas_calculada" to "repsic241_owner";
 
-create table "repsic241_supervision_calculada" (
+create table "repsic_241_coordinacion_calculada" (
   "recorrido" bigint, 
   "cant_form" bigint
 , primary key ("recorrido")
 );
---grant select, insert, update, delete, references on "repsic241_supervision_calculada" to "repsic241_muleto_admin";
---grant all on "repsic241_supervision_calculada" to "repsic241_muleto_owner";
+--grant select, insert, update, delete, references on "repsic_241_coordinacion_calculada" to "repsic241_admin";
+--grant all on "repsic_241_coordinacion_calculada" to "repsic241_owner";
 
 -- conss
-alter table "repsic241_grupo_personas_calculada" add constraint "operativo<>''" check ("operativo"<>'');
-alter table "repsic241_grupo_personas_calculada" add constraint "id_caso<>''" check ("id_caso"<>'');
-alter table "repsic241_personas_calculada" add constraint "operativo<>''" check ("operativo"<>'');
-alter table "repsic241_personas_calculada" add constraint "id_caso<>''" check ("id_caso"<>'');
+alter table "repsic_241_grupo_personas_calculada" add constraint "operativo<>''" check ("operativo"<>'');
+alter table "repsic_241_grupo_personas_calculada" add constraint "id_caso<>''" check ("id_caso"<>'');
+alter table "repsic_241_personas_calculada" add constraint "operativo<>''" check ("operativo"<>'');
+alter table "repsic_241_personas_calculada" add constraint "id_caso<>''" check ("id_caso"<>'');
 
 -- FKs
-alter table "repsic241_grupo_personas_calculada" add constraint  "repsic241_grupo_personas_calculada grupo_personas REL" foreign key ("operativo", "id_caso") references "grupo_personas" ("operativo", "id_caso")  on delete cascade on update cascade;
-alter table "repsic241_personas_calculada" add constraint  "repsic241_personas_calculada personas REL" foreign key ("operativo", "id_caso", "persona") references "personas" ("operativo", "id_caso", "persona")  on delete cascade on update cascade;
-alter table "repsic241_supervision_calculada" add constraint  "repsic241_supervision_calculada coordinacion REL" foreign key ("recorrido") references "coordinacion" ("recorrido")  on delete cascade on update cascade;
+alter table "repsic_241_grupo_personas_calculada" add constraint  "repsic_241_grupo_personas_calculada grupo_personas REL" foreign key ("operativo", "id_caso") references "grupo_personas" ("operativo", "id_caso")  on delete cascade on update cascade;
+alter table "repsic_241_personas_calculada" add constraint  "repsic_241_personas_calculada personas REL" foreign key ("operativo", "id_caso", "persona") references "personas" ("operativo", "id_caso", "persona")  on delete cascade on update cascade;
+alter table "repsic_241_coordinacion_calculada" add constraint  "repsic_241_coordinacion_calculada coordinacion REL" foreign key ("recorrido") references "coordinacion" ("recorrido")  on delete cascade on update cascade;
 -- index
-create index "operativo,id_caso 4 repsic241_grupo_personas_calculada IDX" ON "repsic241_grupo_personas_calculada" ("operativo", "id_caso");
-create index "operativo,id_caso,persona 4 repsic241_personas_calculada IDX" ON "repsic241_personas_calculada" ("operativo", "id_caso", "persona");
-create index "recorrido 4 repsic241_supervision_calculada IDX" ON "repsic241_supervision_calculada" ("recorrido");
+create index "operativo,id_caso 4 repsic_241_grupo_personas_calculada IDX" ON "repsic_241_grupo_personas_calculada" ("operativo", "id_caso");
+create index "operativo,id_caso,persona 4 repsic_241_personas_calculada IDX" ON "repsic_241_personas_calculada" ("operativo", "id_caso", "persona");
+create index "recorrido 4 repsic_241_coordinacion_calculada IDX" ON "repsic_241_coordinacion_calculada" ("recorrido");
 ----
 --mejora
-            INSERT INTO "repsic241_grupo_personas_calculada" ("operativo","id_caso") 
+            INSERT INTO "repsic_241_grupo_personas_calculada" ("operativo","id_caso") 
               SELECT "operativo","id_caso" FROM "grupo_personas";
 
-            INSERT INTO "repsic241_personas_calculada" ("operativo","id_caso","persona") 
+            INSERT INTO "repsic_241_personas_calculada" ("operativo","id_caso","persona") 
               SELECT "operativo","id_caso","persona" FROM "personas";
 
-            INSERT INTO "repsic241_supervision_calculada" ("recorrido") 
+            INSERT INTO "repsic_241_coordinacion_calculada" ("recorrido") 
               SELECT "recorrido" FROM "coordinacion";
 ----
 
@@ -110,14 +112,14 @@ BEGIN
   end if;
   -- Cada vez que se actualizan las variables calculadas, previamente se deben insertar los registros que no existan (on conflict do nothing)
   -- de las tablas base (solo los campos pks), sin filtrar por p_id_caso para update_varcal o con dicho filtro para update_varcal_por_encuesta
-    INSERT INTO "repsic241_grupo_personas_calculada" ("operativo","id_caso") 
+    INSERT INTO "repsic_241_grupo_personas_calculada" ("operativo","id_caso") 
       SELECT "operativo","id_caso" FROM "grupo_personas" WHERE operativo=p_operativo AND "id_caso"=p_id_caso ON CONFLICT DO NOTHING;
-    INSERT INTO "repsic241_personas_calculada" ("operativo","id_caso","persona") 
+    INSERT INTO "repsic_241_personas_calculada" ("operativo","id_caso","persona") 
       SELECT "operativo","id_caso","persona" FROM "personas" WHERE operativo=p_operativo AND "id_caso"=p_id_caso ON CONFLICT DO NOTHING;
-    INSERT INTO "repsic241_supervision_calculada" ("recorrido") 
+    INSERT INTO "repsic_241_coordinacion_calculada" ("recorrido") 
       SELECT "recorrido" FROM "coordinacion" WHERE recorrido=v_recorrido ON CONFLICT DO NOTHING;
   ----
-    UPDATE repsic241_grupo_personas_calculada
+    UPDATE repsic_241_grupo_personas_calculada
       SET 
         cant_0a14_mu = personas_agg.cant_0a14_mu,
         cant_0a14_no_obs = personas_agg.cant_0a14_no_obs,
@@ -170,11 +172,11 @@ BEGIN
           count(nullif(CASE WHEN ("personas"."sc3"=88 or "personas"."sc3"=99 or "personas"."sc3"=777) THEN true ELSE NULL END,false)) as cant_tot_no_obs,
           count(nullif(CASE WHEN "personas"."sc3"=1 THEN true ELSE NULL END,false)) as cant_tot_va,
           count(nullif(CASE WHEN "personas"."sc2"=1 THEN true ELSE NULL END,false)) as cant_refe
-            FROM "personas" JOIN "repsic241_personas_calculada" using ("operativo","id_caso","persona")
+            FROM "personas" JOIN "repsic_241_personas_calculada" using ("operativo","id_caso","persona")
                 WHERE "grupo_personas"."operativo"="personas"."operativo" AND "grupo_personas"."id_caso"="personas"."id_caso"
         ) as personas_agg
-      WHERE "grupo_personas"."operativo"="repsic241_grupo_personas_calculada"."operativo" AND "grupo_personas"."id_caso"="repsic241_grupo_personas_calculada"."id_caso" AND "grupo_personas"."operativo"=p_operativo AND "grupo_personas"."id_caso"=p_id_caso;
-    UPDATE repsic241_grupo_personas_calculada
+      WHERE "grupo_personas"."operativo"="repsic_241_grupo_personas_calculada"."operativo" AND "grupo_personas"."id_caso"="repsic_241_grupo_personas_calculada"."id_caso" AND "grupo_personas"."operativo"=p_operativo AND "grupo_personas"."id_caso"=p_id_caso;
+    UPDATE repsic_241_grupo_personas_calculada
       SET 
         cant_tot_tot = personas_agg.cant_tot_tot,
         cant_per = personas_agg.cant_per
@@ -183,33 +185,33 @@ BEGIN
           SELECT
           count(nullif(true,false)) as cant_tot_tot,
           count(nullif(true,false)) as cant_per
-            FROM "personas" JOIN "repsic241_personas_calculada" using ("operativo","id_caso","persona")
+            FROM "personas" JOIN "repsic_241_personas_calculada" using ("operativo","id_caso","persona")
                 WHERE "grupo_personas"."operativo"="personas"."operativo" AND "grupo_personas"."id_caso"="personas"."id_caso"
         ) as personas_agg
-      WHERE "grupo_personas"."operativo"="repsic241_grupo_personas_calculada"."operativo" AND "grupo_personas"."id_caso"="repsic241_grupo_personas_calculada"."id_caso" AND "grupo_personas"."operativo"=p_operativo AND "grupo_personas"."id_caso"=p_id_caso;
-    UPDATE repsic241_personas_calculada
+      WHERE "grupo_personas"."operativo"="repsic_241_grupo_personas_calculada"."operativo" AND "grupo_personas"."id_caso"="repsic_241_grupo_personas_calculada"."id_caso" AND "grupo_personas"."operativo"=p_operativo AND "grupo_personas"."id_caso"=p_id_caso;
+    UPDATE repsic_241_personas_calculada
       SET 
           sexor = null2zero(referente.sc3), -- VER QUIZAS QUIERA EL NULL!!!
           edadr = null2zero(referente.sc4)
-    FROM personas inner join grupo_personas using (operativo, id_caso) inner join repsic241_grupo_personas_calculada using (operativo, id_caso)
+    FROM personas inner join grupo_personas using (operativo, id_caso) inner join repsic_241_grupo_personas_calculada using (operativo, id_caso)
         LEFT JOIN (
             SELECT operativo, id_caso, persona, referente.sc3, referente.sc4
               FROM personas referente
               WHERE referente.persona=1
         ) referente ON referente.id_caso=personas.id_caso AND referente.operativo=personas.operativo
-    WHERE "personas"."operativo"="repsic241_personas_calculada"."operativo" AND "personas"."id_caso"="repsic241_personas_calculada"."id_caso" AND "personas"."persona"="repsic241_personas_calculada"."persona" 
+    WHERE "personas"."operativo"="repsic_241_personas_calculada"."operativo" AND "personas"."id_caso"="repsic_241_personas_calculada"."id_caso" AND "personas"."persona"="repsic_241_personas_calculada"."persona" 
       AND "personas"."operativo"=p_operativo AND "personas"."id_caso"=p_id_caso;
-    UPDATE repsic241_supervision_calculada
+    UPDATE repsic_241_coordinacion_calculada
       SET 
           cant_form = grupo_personas_agg.cant_form
       FROM "coordinacion"  
         ,LATERAL (
           SELECT 
           count(nullif(true,false)) as cant_form
-          FROM "grupo_personas" JOIN "repsic241_grupo_personas_calculada" using ("operativo","id_caso")
+          FROM "grupo_personas" JOIN "repsic_241_grupo_personas_calculada" using ("operativo","id_caso")
           WHERE "coordinacion"."recorrido"="grupo_personas"."u1"
         ) as grupo_personas_agg
-      WHERE "coordinacion"."recorrido"="repsic241_supervision_calculada"."recorrido" 
+      WHERE "coordinacion"."recorrido"="repsic_241_coordinacion_calculada"."recorrido" 
         AND "coordinacion"."recorrido"=v_recorrido;
 
   --
@@ -233,6 +235,7 @@ $GENERATOR$;
 
 SELECT gen_fun_var_calc();
 -----
-UPDATE operativos SET calculada=now()::timestamp(0) WHERE operativo='repsic241';
-UPDATE tabla_datos SET generada=now()::timestamp(0) WHERE operativo='repsic241' AND tipo='calculada';
+select update_varcal('REPSIC_241');
+UPDATE operativos SET calculada=now()::timestamp(0) WHERE operativo='REPSIC_241';
+UPDATE tabla_datos SET generada=now()::timestamp(0) WHERE operativo='REPSIC_241' AND tipo='calculada';
 -----

@@ -50,6 +50,7 @@ install:
       - comun_otras_fun.sql
       - ../node_modules/dmencu/install/actualizar_inconvar.sql
       - esquema_dbo.sql 
+      - cargar_variables_y_opciones.sql
       - varcal_provisorio.sql
       - agregar_adjunto_carto_trg.sql
       - configuracion_sorteo_repsic.sql  

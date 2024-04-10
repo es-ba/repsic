@@ -97,9 +97,15 @@ export function personas(context:TableContext):TableDefinition {
         ],
         primaryKey: ['operativo','id_caso', 'persona'],
         foreignKeys:[
-            {references:'grupo_personas'    , fields: ['operativo','id_caso'], displayFields:[]},
+            {
+                references:'grupo_personas'    ,
+                fields: ['operativo','id_caso'],
+                displayFields:[],
+                onDelete: 'cascade'
+            },
         ],
-        sql:{}
+        sql:{       "isReferable": true,
+        }
     };
     return def;
 }
