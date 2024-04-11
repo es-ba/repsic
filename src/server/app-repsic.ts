@@ -315,8 +315,9 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         return super.clientIncludes(req, hideBEPlusInclusions).concat([
             {type:'js' , src:'lib/guijarro.js'  , module:'guijarro', ts:{url:'src', path:'../src'}},
             {type:'js' , src:'adjuntos.js'      },
-            {type:'js' , src:'client/mapa.js'   },
-            {type:'js' , src:'client/client.js' },
+            {type:'js' , src:'mapa.js'   },
+            {type:'js' , src:'client.js' },
+            {type:'js' , src:'my-render-formulario.js' },
             {type:'css', file:'mapa.css'        },
             {type:'css', file:'guijarro.css', module: 'guijarro'    },
             {type:'css', file:'repsic.css'     },

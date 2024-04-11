@@ -3,7 +3,7 @@
 import { ProcedureDef } from "./types-repsic";
 import { changing } from "best-globals";
 import { ProcedureContext, coreFunctionParameters, UploadedFileInfo } from "procesamiento";
-import {getOperativoActual} from "dmencu/dist/server/server/procedures-dmencu";
+import {getOperativoActual, setGenerarIdEncFun, setMaxAgenerar} from "dmencu/dist/server/server/procedures-dmencu";
 var fs = require('fs-extra');
 var path = require('path');
 var sqlTools = require('sql-tools');
@@ -14,6 +14,9 @@ const pkPersonas = [{fieldName:'operativo'}, {fieldName:'id_caso'}, {fieldName:'
 const fkPersonas = [{target:'operativo', source:'operativo'}, {target:'id_caso', source:'id_caso'}];
 const pkGrupoPersonas = [{fieldName:'operativo'},{fieldName:'id_caso'}];
 const formPrincipal = 'F:F1';
+
+setGenerarIdEncFun((area:number,index:number)=>area.toString() + ((index<9)?'0':'') + (index+1).toString());
+setMaxAgenerar(99);
 
 var struct_personas={
     tableName:'personas',
