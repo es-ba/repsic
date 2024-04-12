@@ -13,7 +13,6 @@ export function grupo_personas(context:TableContext):TableDefinition {
             { name: "operativo"     , label:'operativo'             , typeName: "text"    , editable:false, visible:false      },
             { name: "id_caso"       , label:'id'                    , typeName: "text"    , editable:false       },
             { name: "id_caso_papel" , label:'id papel'              , typeName: "text"    , editable:false, inTable:false, clientSide:"parseIDPapel"       },
-            { name: "ver"                                           , typeName: 'text'    , clientSide:'verCaso' },
             { name: "u1"            , label:'recorrido'             , typeName: 'integer' },
             { name: "u2"            , label:'tipo'                  , typeName: 'integer' },
             { name: "u3"            , label:'comuna'                , typeName: 'integer' },
