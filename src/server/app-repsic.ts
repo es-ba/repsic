@@ -465,6 +465,9 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         });
         be.appendToTableDefinition('tareas_tem_ingreso', function (tableDef,context) {
             let domicilioFieldNames:string[] = getDomicilioFields().map((fieldDef)=>fieldDef.name);
+            tableDef.fields.splice(2,0,
+                { name: "id_caso_papel" , label:'id papel'              , typeName: "text"    , editable:false, inTable:false, clientSide:"parseIDPapel"       },
+            );
             tableDef.hiddenColumns = tableDef.hiddenColumns?.concat([...domicilioFieldNames,'telefono']);
         });
         be.appendToTableDefinition('areas_asignacion_general', function (tableDef,context) {

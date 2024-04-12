@@ -43,8 +43,8 @@ myOwn.clientSides.parseIDPapel={
     update:function(_depot:myOwn.Depot, _fieldName:string){
     },
     prepare:function(depot:myOwn.Depot, fieldName:string){
-        var recorrido = depot.row['id_caso'];
-        var idCasoPapel = checkIdCasoToGuion(recorrido)
+        var idCaso = depot.row['id_caso'] || depot.row['enc'];
+        var idCasoPapel = checkIdCasoToGuion(idCaso)
         depot.rowControls[fieldName].setTypedValue(idCasoPapel);
     }
 }
