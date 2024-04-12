@@ -1,36 +1,13 @@
 "use strict";
 
 import { ProcedureDef } from "./types-repsic";
-import { changing } from "best-globals";
-import { ProcedureContext, coreFunctionParameters, UploadedFileInfo } from "procesamiento";
+import { ProcedureContext, CoreFunctionParameters, UploadedFileInfo } from "procesamiento";
 import {getOperativoActual, setGenerarIdEncFun, setMaxAgenerar} from "dmencu/dist/server/server/procedures-dmencu";
 var fs = require('fs-extra');
 var path = require('path');
-var sqlTools = require('sql-tools');
-
-var discrepances = require('discrepances');
-
-const pkPersonas = [{fieldName:'operativo'}, {fieldName:'id_caso'}, {fieldName:'p0'}];
-const fkPersonas = [{target:'operativo', source:'operativo'}, {target:'id_caso', source:'id_caso'}];
-const pkGrupoPersonas = [{fieldName:'operativo'},{fieldName:'id_caso'}];
-const formPrincipal = 'F:F1';
 
 setGenerarIdEncFun((area:number,index:number)=>area.toString() + ((index<9)?'0':'') + (index+1).toString());
 setMaxAgenerar(99);
-
-var struct_personas={
-    tableName:'personas',
-    pkFields:pkPersonas,
-    childTables:[],
-};
-
-var struct_grupo_personas={
-    tableName:'grupo_personas',
-    pkFields:pkGrupoPersonas,
-    childTables:[
-        changing(struct_personas,{fkFields: fkPersonas})
-    ]
-};
 
 export const ProceduresRepsic : ProcedureDef[] = [
     {
@@ -39,7 +16,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
             {name:'recorrido'       , typeName:'integer', references:'recorridos'},
             {name:'cant_encuestas'  , typeName:'integer'}
         ],
-        coreFunction:async function(context:ProcedureContext, parameters: coreFunctionParameters){
+        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
             var be=context.be;
             const OPERATIVO = await getOperativoActual(context);
             let {area} = (await context.client.query(`
@@ -131,7 +108,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
             {name:'puntos'          , typeName:'jsonb'                           },
         ],
         // encode:'JSON', no existe, cambiar después de la 212
-        coreFunction:async function(context:ProcedureContext, parameters: coreFunctionParameters){
+        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
             console.log('xxxxxxxxxxxxx')
             console.log(parameters)
             console.log(typeof parameters.puntos)
@@ -155,7 +132,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
             {name:'timestamp_desde' , typeName:'bigint' }
         ],
         progress:true,
-        coreFunction:async function(context:ProcedureContext, parameters: coreFunctionParameters){
+        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
             let be=context.be;
             let whereCond = parameters.recorrido?`where recorrido = ` + be.db.quoteLiteral(parameters.recorrido):` `;
             await context.client.query(`
@@ -181,7 +158,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
         action:'recorridos_controlables',
         parameters:[],
         progress:true,
-        coreFunction:async function(context:ProcedureContext, _parameters: coreFunctionParameters){
+        coreFunction:async function(context:ProcedureContext, _parameters: CoreFunctionParameters){
             return (await context.client.query(`
                 select recorrido from recorridos where orden is not null order by orden`,
                 []

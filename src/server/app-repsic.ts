@@ -5,7 +5,7 @@ import {ProceduresRepsic} from "./procedures-repsic";
 
 import {AppProcesamientoType, Response, TableContext} from "procesamiento";
 
-import { getDomicilioFields } from "dmencu";
+import { FieldDefinition, MenuInfoBase, getDomicilioFields } from "dmencu";
 
 import * as pg from "pg-promise-strict";
 import * as miniTools from "mini-tools";
@@ -336,6 +336,21 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         }
         return {puede:{}, ...fatherContext};
     }
+    getMenuVarios(context:Context){
+        let menuVarios = super.getMenuVarios(context);
+        menuVarios.menuContent = menuVarios.menuContent.filter((menuInfo)=>!['abrir_encuesta','hoja_ruta'].includes(menuInfo.name));
+        return menuVarios;
+    }
+    getMenuAsignacion(context:Context){
+        let menuAsignacion = super.getMenuAsignacion(context);
+        menuAsignacion.menuContent = menuAsignacion.menuContent.filter((menuInfo)=>!['recuperador','supervisor'].includes(menuInfo.name));
+        return menuAsignacion;
+    }
+    getMenuRecepcion(context:Context){
+        let menuRecepcion = super.getMenuRecepcion(context);
+        menuRecepcion.menuContent = menuRecepcion.menuContent.filter((menuInfo)=>!['recuperador','supervisor','mis_supervisores'].includes(menuInfo.name));
+        return menuRecepcion;
+    }
     getMenu(context:Context){
         let menuDef:MenuDefinition = super.getMenu(context);
         if(this.config.server.policy=='web'){
@@ -350,7 +365,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                     {menuType:'table' , name:'coordinacion'        , label:'generar casos' },
                 );
                 menuDef.menu.push(
-                    {menuType:'mapa'  , name:'mapa'},
+                    //{menuType:'mapa'  , name:'mapa'},
                     {menuType:'menu'  , name:'carto', label:'materiales recorridos y cartografía', menuContent:[
                         {menuType:'table', name:'barrios'},
                         {menuType:'table', name:'recorridos'},
@@ -358,7 +373,6 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                         {menuType:'table', name:'tipos_recorrido'},
                         {menuType:'table', name:'lugares'},
                         {menuType:'table', name:'tipos_lugar'},
-                        {menuType:'table', name:'parametros'},
                         {menuType:'menu', name:'materiales', menuContent:[
                             {menuType:'table', name:'adjuntos'           },
                             {menuType:'table', name:'categorias_adjuntos', label:'categorías'},
@@ -452,6 +466,15 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         be.appendToTableDefinition('tareas_tem_ingreso', function (tableDef,context) {
             let domicilioFieldNames:string[] = getDomicilioFields().map((fieldDef)=>fieldDef.name);
             tableDef.hiddenColumns = tableDef.hiddenColumns?.concat([...domicilioFieldNames,'telefono']);
+        });
+        be.appendToTableDefinition('areas_asignacion_general', function (tableDef,context) {
+            let forExclude: string[] = [];
+            for(let t of ['recu', 'supe']){
+                for(let f of tableDef.tareasFields){
+                    forExclude.push(`${f.prefijo}_${t}`);
+                }
+            }
+            tableDef.fields = tableDef.fields.filter((fieldDef:FieldDefinition)=>!forExclude.includes(fieldDef.name));
         });
         be.appendToTableDefinition('areas_asignacion_general', function (tableDef,context) {
             tableDef.fields.splice(2,0,

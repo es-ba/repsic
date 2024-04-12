@@ -12,7 +12,8 @@ export function personas(context:TableContext):TableDefinition {
         fields: [
             { name: "operativo"     , label:'operativo'                  , typeName: "text"    },
             { name: "id_caso"       , label:'id'                         , typeName: "text"    },
-            { name: "persona"       , label:'nro persona'                , typeName: 'integer' }, //p0
+            { name: "persona"       , label:'nro persona'                , typeName: 'integer' },
+            { name: "p0"            , label:'sc0'                        , typeName: 'integer' },
             { name: "sc1"           , label:'nombre'                     , typeName: 'text'    },
             { name: "sc_grupo"      , label:'nro grupo'                  , typeName: 'integer' }, //paradores
             { name: "sc2"           , label:'parentesco'                 , typeName: 'integer' },
@@ -34,9 +35,9 @@ export function personas(context:TableContext):TableDefinition {
             { name: "sc10"          , label:'tiempo sit calle'           , typeName: 'integer' },
             { name: "sc25b"         , label:'documentación'              , typeName: 'integer' },
             { name: "sc12"          , label:'dni argentino'              , typeName: 'integer' },
-            { name: "sc26"          , label:'cuál'                       , typeName: 'integer' },
+            { name: "sc26"          , label:'cuál'                       , typeName: 'text'    },
             { name: "sc27"          , label:'país emisor'                , typeName: 'integer' },
-            { name: "sc28"          , label:'número'                     , typeName: 'integer' },          
+            { name: "sc28"          , label:'número'                     , typeName: 'text'    },          
             { name: "sc18"          , label:'act sem pasada'             , typeName: 'integer' },
             { name: "sc18a"         , label:'trab lo hizo'               , typeName: 'integer' },
             { name: "sc19_1"        , label:'cartoneo'                   , typeName: 'integer' },

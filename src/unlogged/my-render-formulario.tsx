@@ -16,4 +16,8 @@ import { FormStructureState } from "row-validator";
 
 setCalcularVariablesEspecificasOperativo((respuestasRaiz:RespuestasRaiz, forPk:ForPk)=>{
     delete(respuestasRaiz.vdominio);
+    if(forPk.formulario == 'F:F2' as IdFormulario){
+        let {respuestas} = respuestasForPk(forPk);
+        respuestas['p0' as IdVariable] = forPk.persona;
+    }
 })
