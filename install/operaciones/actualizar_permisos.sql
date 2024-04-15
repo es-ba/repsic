@@ -5,3 +5,7 @@ ALTER TABLE IF EXISTS base.repsic_241_personas_calculada
     OWNER to repsic241_admin;
 ALTER TABLE IF EXISTS base.repsic_241_coordinacion_calculada
     OWNER to repsic241_admin;
+    
+GRANT ALL ON SCHEMA comun TO repsic241_admin;
+GRANT ALL ON SCHEMA comun TO repsic241_owner;
+    
