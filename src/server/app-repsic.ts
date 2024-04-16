@@ -419,10 +419,14 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             tableDef.sql={...tableDef.sql, isTable:true};
             tableDef.fields.splice(2,0,
                 {name:'id_caso', typeName:'text'   , label:'caso'   , editable: false},
-                //{name:'persona'     , typeName:'integer', label:'persona', editable: false}
             );
             tableDef.editable=tableDef.editable || (<TableContext>context).puede.encuestas.justificar;
+
+            tableDef.fields=tableDef.fields.filter(f=>![/*'vivienda',*/'hogar','visita'].includes(f.name ))
             tableDef.fields.forEach(function(field){
+                if(field.name=='vivienda'){
+                    field.visible=false;
+                }
                 if(field.name=='pk_integrada'){
                     field.visible=false;
                 }

@@ -1,18 +1,19 @@
 set search_path= base;
 --set role eah_owner;
 
-ALTER TABLE inconsistencias 
-  ADD COLUMN if not exists renglon bigint;
-
+alter table inconsistencias
+    drop column if exists renglon, 
+    drop column if exists visita,
+    drop column if exists hogar;
+   -- drop column if exists vivienda;
+  
 create or replace function desintegrarpk_trg() returns trigger
   language plpgsql SECURITY DEFINER as
 $body$
 begin
-  new.vivienda := new.pk_integrada->>'vivienda';
-  new.hogar := new.pk_integrada->>'hogar';
+  new.id_caso := new.pk_integrada->>'id_caso';
+  new.vivienda := new.pk_integrada->>'id_caso';
   new.persona := new.pk_integrada->>'persona';
-  new.visita := new.pk_integrada->>'visita';
-  new.renglon := new.pk_integrada->>'renglon';
   return new;
 end;
 $body$;
