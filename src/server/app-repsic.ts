@@ -505,6 +505,18 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 }
             }
         });
+        be.appendToTableDefinition('tem', function (tableDef,context) {
+            tableDef.fields.splice(9,0,
+                {name:'recorrido'        , typeName:'integer',  editable:false},
+                {name:'tipo_recorrido'   , typeName:'integer',  editable:false},
+                {name:'comuna_agrupada'  , typeName:'text'   ,  editable:false},
+                {name:'barrios_agrupados', typeName:'text'   ,  editable:false},
+            );
+            tableDef.fields;
+            tableDef.sql!.from = tableDef.sql!.from?.replace(
+                't."operativo",t."enc"',
+                't."operativo",t."enc",t."recorrido", t."tipo_recorrido", t."comuna_agrupada", t."barrios_agrupados"');
+        });
     }
   }
 }

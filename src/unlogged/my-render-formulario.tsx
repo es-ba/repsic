@@ -20,4 +20,9 @@ setCalcularVariablesEspecificasOperativo((respuestasRaiz:RespuestasRaiz, forPk:F
         let {respuestas} = respuestasForPk(forPk);
         respuestas['p0' as IdVariable] = forPk.persona;
     }
+    let datosByPass = getDatosByPass();
+    respuestasRaiz['u1' as IdVariable]=getDatosByPass().informacionHdr[forPk.vivienda].tem.recorrido;
+    respuestasRaiz['u2' as IdVariable]=getDatosByPass().informacionHdr[forPk.vivienda].tem.tipo_recorrido;
+    respuestasRaiz['u3' as IdVariable]=getDatosByPass().informacionHdr[forPk.vivienda].tem.comuna_agrupada;
+    respuestasRaiz['u4' as IdVariable]=getDatosByPass().informacionHdr[forPk.vivienda].tem.barrios_agrupados;
 })
