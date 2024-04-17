@@ -53,6 +53,7 @@ install:
       - cargar_variables_y_opciones.sql
       - varcal_provisorio.sql
       - agregar_adjunto_carto_trg.sql
+      - registrar_barrio_recorrido_tem.sql
       - configuracion_sorteo_repsic.sql  
 login:
   infoFieldList: [usuario, rol, idper, recorrido]
