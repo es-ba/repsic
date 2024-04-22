@@ -80,3 +80,49 @@ myOwn.clientSides.generarRelevamiento={
         }
     }
 }
+
+myOwn.clientSides.consistir = {
+    prepare: function (depot: myOwn.Depot, fieldName: string) {
+        var td = depot.rowControls[fieldName];
+        var boton = html.button('consistir').create();
+        td.innerHTML = "";
+        td.appendChild(boton);
+        var restaurarBoton = function () {
+            boton.disabled = false;
+            boton.textContent = "consistir";
+            boton.style.backgroundColor = '';
+        }
+
+        boton.onclick = function () {
+            boton.disabled = true;
+            boton.textContent = 'procesando...';
+            return myOwn.ajax.consistir_encuesta({
+                operativo: depot.row.operativo,
+                id_caso: depot.row.enc
+            }).then(async function(result){
+                if(result && typeof result === 'object' && 'ok' in result){
+                    if(result.ok){
+                        var grid=depot.manager;
+                        await grid.retrieveRowAndRefresh(depot);
+                        if (depot.detailControls.inconsistencias){
+                            depot.detailControls.inconsistencias.forceDisplayDetailGrid({});
+                        }  
+                        boton.textContent =  result.message;
+                        boton.title = result;
+                        boton.style.backgroundColor = '#8F8';
+                    }else{
+                        throw new Error(result.message);
+                    }
+                }
+                setTimeout(restaurarBoton, 2500);
+            }, function (err) {
+                boton.textContent = 'error';
+                boton.style.backgroundColor = '#FF8';
+                alertPromise(err.message);
+            })
+        }
+        //if ((depot.row.consistido==null  && depot.row.rea!=null) || depot.row.modificado!=null && depot.row.consistido!=null && depot.row.modificado >depot.row.consistido){
+        //    boton.style.backgroundColor='#8CF'
+        //}
+    }      
+}
