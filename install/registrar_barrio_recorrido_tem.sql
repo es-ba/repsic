@@ -28,6 +28,6 @@ end;
 $BODY$;
 
 CREATE TRIGGER registrar_barrio_recorrido_trg
-  before INSERT OR UPDATE OF tem
+  before INSERT OR UPDATE ON tem
   FOR EACH ROW
   EXECUTE PROCEDURE registrar_barrio_recorrido_trg();  
