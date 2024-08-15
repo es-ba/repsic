@@ -1,18 +1,23 @@
+server:
+  port: 3060
 db:
-  port: 5435
-  password: 39ddkan3a__xfhfheu..33!!
+  password: cambiar!!
 log:
   req: false
+  db:
+    on-demand: true
+install:
+  dump:
+    #drop-his: true
+  table-data-dir: 
+    - ../dmencu-data/repsic241
 login:
   plus:
     secret: 39djjfnvvjas..33.3.33
     allowHttpLogin: true
 devel:
   forceShowAsEditable: false
+  useFileDevelopment: true
 client-setup:
   skin: ""
   lang: es
-server:
-  skins:
-    confort:
-      local-path: ../backend-skins/dist/
