@@ -41,6 +41,7 @@ install:
       - ../node_modules/dmencu/install/accion_cumple_condicion.sql
       - ../node_modules/dmencu/install/tarea_cumple_condicion.sql
       - ../node_modules/dmencu/install/agregar_historial_tem_trg.sql
+      - ../node_modules/dmencu/install/actualizar_estado_tem_trg.sql
       - ../node_modules/dmencu/install/carga_inicial_tareas_tem.sql
       - ../node_modules/dmencu/install/validar_tareas_tem_trg.sql
       - ../node_modules/dmencu/install/asignar_desasignar_tareas_tem_trg.sql
