@@ -3,10 +3,12 @@ import { IdFormulario, RespuestasRaiz, ForPk, IdVariable, Formulario, Libre, IdU
     Estructura,
     PlainForPk,
     IdFin,
-    CasoState
+    CasoState,
+    CampoPkRaiz
 } from "dmencu/dist/unlogged/unlogged/tipos";
 import {getDatosByPass, persistirDatosByPass, setCalcularVariablesEspecificasOperativo, respuestasForPk, 
-    registrarElemento, dispatchByPass, accion_registrar_respuesta, accion_abrir_formulario
+    registrarElemento, dispatchByPass, accion_registrar_respuesta, accion_abrir_formulario,
+    getEstructura
 } from "dmencu/dist/unlogged/unlogged/bypass-formulario";
 import {setLibreDespliegue} from "dmencu/dist/unlogged/unlogged/render-formulario";
 import { useEffect } from "react";
@@ -15,14 +17,15 @@ import { dispatchers } from "dmencu/dist/unlogged/unlogged/redux-formulario";
 import { FormStructureState } from "row-validator";
 
 setCalcularVariablesEspecificasOperativo((respuestasRaiz:RespuestasRaiz, forPk:ForPk)=>{
+    var estructura = getEstructura();
     delete(respuestasRaiz.vdominio);
     if(forPk.formulario == 'F:F2' as IdFormulario){
         let {respuestas} = respuestasForPk(forPk);
         respuestas['p0' as IdVariable] = forPk.persona;
     }
     let datosByPass = getDatosByPass();
-    respuestasRaiz['u1' as IdVariable]=getDatosByPass().informacionHdr[forPk.vivienda].tem.recorrido;
-    respuestasRaiz['u2' as IdVariable]=getDatosByPass().informacionHdr[forPk.vivienda].tem.tipo_recorrido;
-    respuestasRaiz['u3' as IdVariable]=getDatosByPass().informacionHdr[forPk.vivienda].tem.comuna_agrupada;
-    respuestasRaiz['u4' as IdVariable]=getDatosByPass().informacionHdr[forPk.vivienda].tem.barrios_agrupados;
+    respuestasRaiz['u1' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.mainTDPK]].tem.recorrido;
+    respuestasRaiz['u2' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.mainTDPK]].tem.tipo_recorrido;
+    respuestasRaiz['u3' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.mainTDPK]].tem.comuna_agrupada;
+    respuestasRaiz['u4' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.mainTDPK]].tem.barrios_agrupados;
 })

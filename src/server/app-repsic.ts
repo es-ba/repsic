@@ -29,6 +29,7 @@ import { recorridos          } from "./table-recorridos";
 import { recorridos_barrios  } from "./table-recorridos_barrios";
 import { recorridos_puntos   } from "./table-recorridos_puntos";
 import { coordinacion        } from "./table-coordinacion";
+import { provisorio_recepcion} from "./table-provisorio_recepcion";
 import { tipos_lugar         } from "./table-tipos_lugar";
 import { tipos_recorrido     } from "./table-tipos_recorrido";
 
@@ -391,7 +392,10 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             );
             if(context.puede?.campo?.administrar){
                 menuDef.menu.unshift(
-                    {menuType:'table' , name:'coordinacion'        , label:'generar casos' },
+                    {menuType:'menu'  , name:'provisorio', menuContent:[
+                        {menuType:'table' , name:'provisorio_recepcion', label:'recepcion' },
+                    ]},
+                    {menuType:'table' , name:'coordinacion'         , label:'generar casos' },
                 );
                 menuDef.menu.push(
                     //{menuType:'mapa'  , name:'mapa'},
@@ -433,6 +437,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             , grupo_personas
             , casos
             , coordinacion
+            , provisorio_recepcion
             , diccionario
             , dicvar
             , dictra        

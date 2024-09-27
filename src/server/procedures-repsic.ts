@@ -9,8 +9,9 @@ var path = require('path');
 
 setGenerarIdEncFun((area:number,index:number)=>area.toString() + ((index<9)?'0':'') + (index+1).toString());
 setMaxAgenerar(99);
+//setMaxEncPorArea(99);
 
-setHdrQuery((quotedCondViv:string, context)=>{
+setHdrQuery((quotedCondViv:string, context: ProcedureContext, permiteGenerarMuestra:boolean)=>{
     return `
     with ${context.be.db.quoteIdent(OperativoGenerator.mainTD)} as 
         (select t.enc, t.json_encuesta as respuestas, t.resumen_estado as "resumenEstado", 
@@ -48,17 +49,21 @@ setHdrQuery((quotedCondViv:string, context)=>{
             group by t.enc, t.json_encuesta, t.resumen_estado, recorrido, tipo_recorrido, comuna_agrupada, barrios_agrupados, dominio, nomcalle,sector,edificio, entrada, nrocatastral, piso,departamento,habitacion,casa,reserva,tt.carga_observaciones, cita, t.area, tt.tarea, fecha_asignacion, asignado, main_form
         )
         select jsonb_build_object(
-                'viviendas', ${jsono(
+                ${context.be.db.quoteLiteral(OperativoGenerator.mainTD)}, ${jsono(
                     `select enc, respuestas, jsonb_build_object('resumenEstado',"resumenEstado") as otras from ${context.be.db.quoteIdent(OperativoGenerator.mainTD)}`,
                     'enc',
                     `otras || coalesce(respuestas,'{}'::jsonb)`
                 )}
             ) as respuestas,
             ${json(`
-                select area as carga, observaciones_hdr as observaciones, min(fecha_asignacion) as fecha
-                    from ${context.be.db.quoteIdent(OperativoGenerator.mainTD)} inner join areas using (area) 
-                    group by area, observaciones_hdr`, 
-                'fecha')} as cargas,
+                select a.area as carga, observaciones_hdr as observaciones, min(fecha_asignacion) as fecha, ta.recepcionista
+                    from ${context.be.db.quoteIdent(OperativoGenerator.mainTD)} aux inner join areas a using (area) inner join tareas_areas ta on (a.area = ta.area and aux.tarea->>'tarea' = ta.tarea)
+                    group by a.area, observaciones_hdr, ta.recepcionista 
+                ${permiteGenerarMuestra?`
+                    union -- este union permite visualizar areas asignadas sin encuestas generadas
+                    select area as carga, null as observaciones, null as fecha, recepcionista
+                        from tareas_areas where asignado = ${context.be.db.quoteLiteral(context.user.idper)} and tarea = 'encu'`:''}
+                `,'fecha')} as cargas,
             ${jsono(
                 `select enc, jsonb_build_object('tem', tem, 'tarea', tarea) as otras from ${context.be.db.quoteIdent(OperativoGenerator.mainTD)}`,
                  'enc',
@@ -88,6 +93,33 @@ export const ProceduresRepsic : ProcedureDef[] = [
                 throw Error("el recorrido y el área deben ser iguales")
             }
             await be.procedure.muestra_generar.coreFunction(context, {
+                operativo: OPERATIVO, 
+                area, 
+                dominio:3, 
+                cant_encuestas: parameters.cant_encuestas
+            });
+            return "ok";
+        }
+    },
+    {
+        action:'agregar_formularios',
+        parameters:[
+            {name:'recorrido'       , typeName:'integer', references:'recorridos'},
+            {name:'cant_encuestas'  , typeName:'integer'}
+        ],
+        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
+            var be=context.be;
+            const OPERATIVO = await getOperativoActual(context);
+            let {area} = (await context.client.query(`
+                select *
+                    from areas
+                    where recorrido = $1`,
+                [parameters.recorrido]
+            ).fetchUniqueRow()).row;
+            if(parameters.recorrido != area){
+                throw Error("el recorrido y el área deben ser iguales")
+            }
+            await be.procedure.muestra_agregar.coreFunction(context, {
                 operativo: OPERATIVO, 
                 area, 
                 dominio:3, 

@@ -2,39 +2,35 @@
 
 import {TableDefinition, TableContext} from "./types-repsic";
 
-export function coordinacion(context:TableContext):TableDefinition {
-    var autorizado = context.user.rol === 'admin'||context.user.rol === 'coor_campo';
+export function provisorio_recorridos(context:TableContext):TableDefinition {
     return {
-        name: 'coordinacion',
-        elementName: 'coordinación',
-        editable: autorizado,
+        name: 'provisorio_recorridos',
+        elementName: 'provisorio_recorridos',
+        editable: false,
         fields: [
-            { name: "operativo"          , typeName: "text"    , editable:false, inTable:false}, 
+            { name: "operativo"          , typeName: "text"    }, 
             { name: "recorrido"          , typeName: "integer" },
-            { name: "area"               , typeName: "integer" , editable:false, inTable:false}, 
-            { name: "relevador"          , typeName: "text"    , editable:false, inTable:false},
-            { name: "cant_dm"            , typeName: "integer" , aggregate:'sum', editable:false, inTable: false}, 
-            { name: "cant_papel"         , typeName: "integer" , aggregate:'sum', editable:false, inTable: false}, 
-            { name: "cant_total"         , typeName: "integer" , aggregate:'sum', editable:false, inTable: false}, 
+            { name: "relevador"          , typeName: "text"    },
+            { name: "cant_cues_dm"       , typeName: "integer" , aggregate:'sum'}, 
+            { name: "cant_cues_papel"    , typeName: "integer" , aggregate:'sum'}, 
+            { name: "cant_cues_total"    , typeName: "integer" , aggregate:'sum'}, 
+            { name: "cant_per_dm"        , typeName: "integer" , aggregate:'sum'}, 
+            { name: "cant_per_papel"     , typeName: "integer" , aggregate:'sum'}, 
+            { name: "cant_per_total"     , typeName: "integer" , aggregate:'sum'}, 
             { name: "agregar_cues_papel" , typeName: "integer" },
-            { name: "generar"            , typeName: "bigint"  , editable:false, serverSide:true, clientSide:'generarRelevamiento', inTable: false},
-            { name: "cant_pers"          , typeName: "integer" , aggregate:'sum'},
-            { name: "salida"             , typeName: "interval", aggregate:'count'},
-            { name: "regreso"            , typeName: "interval", aggregate:'count'},
-            { name: "tipo_recorrido"     , typeName: "integer" , editable:false, inTable: false}, 
-            { name: "comuna"             , typeName: "text"    , editable:false, inTable: false},
-            { name: "descripcion_barrio" , typeName: "text"    , editable:false, inTable: false},
+            { name: "tipo_recorrido"     , typeName: "integer" , inTable: false}, 
+            { name: "comuna"             , typeName: "text"    , inTable: false},
+            { name: "descripcion_barrio" , typeName: "text"    , inTable: false},
         ],
-        primaryKey: ['recorrido'],
+        primaryKey: ['operativo','recorrido'],
         foreignKeys:[
             {references:'recorridos'    , fields: ['recorrido'] },
         ],
-        hiddenColumns:['operativo'],
         detailTables:[
             //{table:'areas_asignacion_general'   , fields:['operativo','area'], abr:'A'},
         ],
         sql:{
-            "isReferable": true,
+            isTable: false,
             fields:{
                 tipo_recorrido:{expr:"recorridos.tipo_recorrido"},                
                 comuna:{
@@ -66,11 +62,6 @@ export function coordinacion(context:TableContext):TableDefinition {
                                 where recorrido=coordinacion.recorrido
                     )`
                 },
-                generar:{
-                    expr:`(
-                        select count(*) from grupo_personas gp where u1 = coordinacion.recorrido
-                    )`
-                },
                 cant_dm:{
                     expr:`(
                         select count(*) from tem where enc_autogenerado_dm is not null and area in (select area
@@ -94,11 +85,6 @@ export function coordinacion(context:TableContext):TableDefinition {
                 },
                 area:{expr:`(
                     select area
-                        from areas
-                        where recorrido=recorridos.recorrido
-                )`},
-                operativo:{expr:`(
-                    select operativo
                         from areas
                         where recorrido=recorridos.recorrido
                 )`}
