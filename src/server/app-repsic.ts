@@ -30,6 +30,7 @@ import { recorridos_barrios  } from "./table-recorridos_barrios";
 import { recorridos_puntos   } from "./table-recorridos_puntos";
 import { coordinacion        } from "./table-coordinacion";
 import { provisorio_recepcion} from "./table-provisorio_recepcion";
+import { provisorio_recorridos} from "./table-provisorio_recorridos";
 import { tipos_lugar         } from "./table-tipos_lugar";
 import { tipos_recorrido     } from "./table-tipos_recorrido";
 
@@ -390,29 +391,34 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             menuDef.menu.splice(2,0,
                 {menuType:'table' , name:'ingresar' , table:'tareas_tem_ingreso', ff:{tarea:'encu', asignado:context.user.idper } }
             );
-            if(context.puede?.campo?.administrar){
-                menuDef.menu.unshift(
-                    {menuType:'menu'  , name:'provisorio', menuContent:[
-                        {menuType:'table' , name:'provisorio_recepcion', label:'recepcion' },
-                    ]},
-                    {menuType:'table' , name:'coordinacion'         , label:'generar casos' },
-                );
-                menuDef.menu.push(
-                    //{menuType:'mapa'  , name:'mapa'},
-                    {menuType:'menu'  , name:'carto', label:'materiales recorridos y cartografía', menuContent:[
-                        {menuType:'table', name:'barrios'},
-                        {menuType:'table', name:'recorridos'},
-                        {menuType:'table', name:'recorridos_barrios'},
-                        {menuType:'table', name:'tipos_recorrido'},
-                        {menuType:'table', name:'lugares'},
-                        {menuType:'table', name:'tipos_lugar'},
-                        {menuType:'menu', name:'materiales', menuContent:[
-                            {menuType:'table', name:'adjuntos'           },
-                            {menuType:'table', name:'categorias_adjuntos', label:'categorías'},
-                            {menuType:'table', name:'adjunto_categoria'  , label:'adjunto-categoría'},
-                        ]}
-                    ]},
-                )
+            let menuProvisorio: MenuInfo = {menuType:'menu'  , name:'provisorio', menuContent:[]};
+            if(context.puede?.campo?.editar){
+                menuProvisorio.menuContent.push({menuType:'table' , name:'provisorio_recepcion', label:'recepcion' })
+                menuDef.menu.unshift(menuProvisorio);
+                if(context.puede?.campo?.administrar){
+                    menuProvisorio.menuContent.unshift(
+                        {menuType:'table' , name:'provisorio_recorridos', label:'recorridos' },
+                    );
+                    menuDef.menu.splice(1,0,
+                        {menuType:'table' , name:'coordinacion'         , label:'generar casos' },
+                    );
+                    menuDef.menu.push(
+                        //{menuType:'mapa'  , name:'mapa'},
+                        {menuType:'menu'  , name:'carto', label:'materiales recorridos y cartografía', menuContent:[
+                            {menuType:'table', name:'barrios'},
+                            {menuType:'table', name:'recorridos'},
+                            {menuType:'table', name:'recorridos_barrios'},
+                            {menuType:'table', name:'tipos_recorrido'},
+                            {menuType:'table', name:'lugares'},
+                            {menuType:'table', name:'tipos_lugar'},
+                            {menuType:'menu', name:'materiales', menuContent:[
+                                {menuType:'table', name:'adjuntos'           },
+                                {menuType:'table', name:'categorias_adjuntos', label:'categorías'},
+                                {menuType:'table', name:'adjunto_categoria'  , label:'adjunto-categoría'},
+                            ]}
+                        ]},
+                    )
+                }
             }
         }
         return menuDef;
@@ -438,6 +444,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             , casos
             , coordinacion
             , provisorio_recepcion
+            , provisorio_recorridos
             , diccionario
             , dicvar
             , dictra        
