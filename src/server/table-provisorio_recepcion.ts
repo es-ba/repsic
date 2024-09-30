@@ -42,41 +42,42 @@ export function provisorio_recepcion(context:TableContext):TableDefinition {
             isTable: true,
             from: `(
                 SELECT pr.*, a.recorrido, tr.tipo_recorrido, (
-                            select array_agg(distinct comuna order by comuna)::text 
-                                from (select comuna
-                                        from recorridos_barrios 
-                                             left join barrios using (barrio) 
-                                        where recorrido=a.recorrido
-                                      union 
-                                      select comuna
-                                        from lugares 
-                                        where recorrido=a.recorrido
-                                ) x
-                            ) as comuna, (
-                            select string_agg(nombre,', ' order by barrio) 
+                    select array_agg(distinct comuna order by comuna)::text 
+                        from (select comuna
                                 from recorridos_barrios 
-                                    left join barrios using (barrio) 
+                                        left join barrios using (barrio) 
                                 where recorrido=a.recorrido
-                            ) as descripcion_barrio,
-                            (select string_agg(coalesce(nullif(concat_ws(' ', nombre, apellido),''), usuario), ', ' order by usuario) 
-                                from tareas_areas ta join usuarios u on (ta.asignado = u.idper and ta.area = a.area and ta.tarea = 'encu')
-                            ) as relevador,
-                            coalesce(cues_dm,0) as cues_dm
-                            null as pers_dm,
-                            (select count(*) from tem t where t.area = a.area) + coalesce(cues_papel,0) as cues_total,
-                            null as pers_total
+                                union 
+                                select comuna
+                                from lugares 
+                                where recorrido=a.recorrido
+                        ) x
+                    ) as comuna, (
+                    select string_agg(nombre,', ' order by barrio) 
+                        from recorridos_barrios 
+                            left join barrios using (barrio) 
+                        where recorrido=a.recorrido
+                    ) as descripcion_barrio,
+                    (select string_agg(coalesce(nullif(concat_ws(' ', nombre, apellido),''), usuario), ', ' order by usuario) 
+                        from tareas_areas ta join usuarios u on (ta.asignado = u.idper and ta.area = a.area and ta.tarea = 'encu')
+                    ) as relevador,
+                    coalesce(cues_dm,0) as cues_dm,
+                    coalesce(pers_dm,0) as pers_dm,
+                    coalesce(cues_dm,0) + coalesce(cues_papel,0) as cues_total,
+                    coalesce(pers_dm,0) + coalesce(pers_papel,0) as pers_total
+                    
                     FROM provisorio_recepcion pr 
-                            inner join areas a using (operativo, area) 
-                            inner join recorridos using (recorrido) 
-                            inner join tipos_recorrido tr using (tipo_recorrido)
-                            left join (
-                                select 
-                                    area, 
-                                    count(*) filter (where enc_autogenerado_dm is not null) as cues_dm 
-                                    count(*) filter (where enc_autogenerado_dm is not null) as cues_total 
-                                    from tem t 
-                                    group by area
-                            ) using (area)
+                        inner join areas a using (operativo, area) 
+                        inner join recorridos using (recorrido) 
+                        inner join tipos_recorrido tr using (tipo_recorrido)
+                        left join (
+                            select 
+                                area, 
+                                count(*) filter (where enc_autogenerado_dm is not null) as cues_dm,
+                                sum(coalesce((json_encuesta->>'u8')::integer,0)) filter (where enc_autogenerado_dm is not null and json_encuesta is not null) as pers_dm
+                                from tem t 
+                                group by area
+                        ) using (area)
                             
             )`
             /*fields:{
