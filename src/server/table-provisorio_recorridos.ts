@@ -20,6 +20,7 @@ export function provisorio_recorridos(context:TableContext):TableDefinition {
             { name: "pers_papel"         , typeName: "integer" , aggregate:'sum'},
             { name: "cues_total"         , typeName: "integer" , aggregate:'sum'}, 
             { name: "pers_total"         , typeName: "integer" , aggregate:'sum'}, 
+            { name: "verificado"         , typeName: "boolean" },
             { name: "tipo_recorrido"     , typeName: "integer" }, 
             { name: "comuna"             , typeName: "text"    },
             { name: "descripcion_barrio" , typeName: "text"    },
@@ -43,6 +44,7 @@ export function provisorio_recorridos(context:TableContext):TableDefinition {
                 sum(pers_papel) as pers_papel,
                 sum(cues_total) as cues_total,
                 sum(pers_total) as pers_total,
+                bool_and(case verificado when verificado then true else false end) as verificado,
                 tipo_recorrido,
                 comuna,
                 descripcion_barrio
