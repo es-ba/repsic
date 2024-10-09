@@ -73,7 +73,7 @@ alter table "repsic_241_personas_calculada" add constraint "id_caso<>''" check (
 -- FKs
 alter table "repsic_241_grupo_personas_calculada" add constraint  "repsic_241_grupo_personas_calculada grupo_personas REL" foreign key ("operativo", "id_caso") references "grupo_personas" ("operativo", "id_caso")  on delete cascade on update cascade;
 alter table "repsic_241_personas_calculada" add constraint  "repsic_241_personas_calculada personas REL" foreign key ("operativo", "id_caso", "persona") references "personas" ("operativo", "id_caso", "persona")  on delete cascade on update cascade;
-alter table "repsic_241_coordinacion_calculada" add constraint  "repsic_241_coordinacion_calculada coordinacion REL" foreign key ("recorrido") references "coordinacion" ("recorrido")  on delete cascade on update cascade;
+--alter table "repsic_241_coordinacion_calculada" add constraint  "repsic_241_coordinacion_calculada coordinacion REL" foreign key ("recorrido") references "coordinacion" ("recorrido")  on delete cascade on update cascade;
 -- index
 create index "operativo,id_caso 4 repsic_241_grupo_personas_calculada IDX" ON "repsic_241_grupo_personas_calculada" ("operativo", "id_caso");
 create index "operativo,id_caso,persona 4 repsic_241_personas_calculada IDX" ON "repsic_241_personas_calculada" ("operativo", "id_caso", "persona");

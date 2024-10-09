@@ -75,6 +75,32 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
     
     async getProcedures(){
         var parentProc = await super.getProcedures();
+        var be = this;
+        parentProc = parentProc.map(procDef=>{
+            if(['dm_sincronizar','dm_backup','dm_blanquear'].includes(procDef.action)){
+                var coreFunctionInterno = procDef.coreFunction;
+                procDef.coreFunction = async function(context:procesamiento.ProcedureContext, parameters:any){
+                    var result = await coreFunctionInterno(context, parameters);
+                    var actualizadas = await context.client.query(`
+                        update provisorio_recepcion pr
+                            set cues_dm = t.cues_dm, pers_dm = t.pers_dm
+                            from (
+                                select
+                                    operativo,
+                                    area, 
+                                    count(*) filter (where enc_autogenerado_dm is not null) as cues_dm,
+                                    sum(coalesce((json_encuesta->>'u8')::integer,0)) filter (where enc_autogenerado_dm is not null and json_encuesta is not null) as pers_dm
+                                    from tem t 
+                                    group by operativo, area
+                            ) as t
+                            where pr.operativo = t.operativo and pr.area =  t.area
+                    `,[]).fetchAll();
+                    console.log(`se actualizó el provisorio, ${actualizadas.rowCount} areas actualizadas`)
+                    return result;
+                }
+            }
+            return procDef;
+        })
         return parentProc.concat(ProceduresRepsic);
     }
 
@@ -400,7 +426,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                         {menuType:'table' , name:'provisorio_recorridos', label:'recorridos' },
                     );
                     menuDef.menu.splice(1,0,
-                        {menuType:'table' , name:'coordinacion'         , label:'generar casos' },
+                        {menuType:'table' , name:'coordinacion'         , label:'generar casos papel' },
                     );
                     menuDef.menu.push(
                         //{menuType:'mapa'  , name:'mapa'},
@@ -500,6 +526,10 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             tableDef.foreignKeys=tableDef.foreignKeys || [];
             tableDef.foreignKeys.push(
                 {references:'recorridos'    , fields: ['recorrido'] },
+            )
+            tableDef.constraints = tableDef.constraints || [];
+            tableDef.constraints.push(
+                {constraintType:'unique', fields:['operativo', 'recorrido','area']},
             )
         });
         be.appendToTableDefinition('t_encu_areas', function (tableDef,context) {

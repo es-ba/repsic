@@ -4,6 +4,7 @@ import { ProcedureDef } from "./types-repsic";
 import { ProcedureContext, CoreFunctionParameters, UploadedFileInfo, OperativoGenerator } from "procesamiento";
 import {getOperativoActual, setGenerarIdEncFun, setMaxAgenerar, setHdrQuery} from "dmencu/dist/server/server/procedures-dmencu";
 import {json, jsono} from "pg-promise-strict";
+import { IdUnidadAnalisis } from "dmencu/dist/server/unlogged/tipos";
 var fs = require('fs-extra');
 var path = require('path');
 
@@ -11,9 +12,9 @@ setGenerarIdEncFun((area:number,index:number)=>area.toString() + ((index<9)?'0':
 setMaxAgenerar(99);
 //setMaxEncPorArea(99);
 
-setHdrQuery((quotedCondViv:string, context: ProcedureContext, permiteGenerarMuestra:boolean)=>{
+setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrincipal:IdUnidadAnalisis, permiteGenerarMuestra:boolean)=>{
     return `
-    with ${context.be.db.quoteIdent(OperativoGenerator.mainTD)} as 
+    with ${context.be.db.quoteIdent(unidadAnalisisPrincipal)} as 
         (select t.enc, t.json_encuesta as respuestas, t.resumen_estado as "resumenEstado", 
             jsonb_build_object(
                 'recorrido'        , recorrido         ,
@@ -49,15 +50,15 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, permiteGenerarMues
             group by t.enc, t.json_encuesta, t.resumen_estado, recorrido, tipo_recorrido, comuna_agrupada, barrios_agrupados, dominio, nomcalle,sector,edificio, entrada, nrocatastral, piso,departamento,habitacion,casa,reserva,tt.carga_observaciones, cita, t.area, tt.tarea, fecha_asignacion, asignado, main_form
         )
         select jsonb_build_object(
-                ${context.be.db.quoteLiteral(OperativoGenerator.mainTD)}, ${jsono(
-                    `select enc, respuestas, jsonb_build_object('resumenEstado',"resumenEstado") as otras from ${context.be.db.quoteIdent(OperativoGenerator.mainTD)}`,
+                ${context.be.db.quoteLiteral(unidadAnalisisPrincipal)}, ${jsono(
+                    `select enc, respuestas, jsonb_build_object('resumenEstado',"resumenEstado") as otras from ${context.be.db.quoteIdent(unidadAnalisisPrincipal)}`,
                     'enc',
                     `otras || coalesce(respuestas,'{}'::jsonb)`
                 )}
             ) as respuestas,
             ${json(`
                 select a.area as carga, observaciones_hdr as observaciones, min(fecha_asignacion) as fecha, ta.recepcionista
-                    from ${context.be.db.quoteIdent(OperativoGenerator.mainTD)} aux inner join areas a using (area) inner join tareas_areas ta on (a.area = ta.area and aux.tarea->>'tarea' = ta.tarea)
+                    from ${context.be.db.quoteIdent(unidadAnalisisPrincipal)} aux inner join areas a using (area) inner join tareas_areas ta on (a.area = ta.area and aux.tarea->>'tarea' = ta.tarea)
                     group by a.area, observaciones_hdr, ta.recepcionista 
                 ${permiteGenerarMuestra?`
                     union -- este union permite visualizar areas asignadas sin encuestas generadas
@@ -65,7 +66,7 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, permiteGenerarMues
                         from tareas_areas where asignado = ${context.be.db.quoteLiteral(context.user.idper)} and tarea = 'encu'`:''}
                 `,'fecha')} as cargas,
             ${jsono(
-                `select enc, jsonb_build_object('tem', tem, 'tarea', tarea) as otras from ${context.be.db.quoteIdent(OperativoGenerator.mainTD)}`,
+                `select enc, jsonb_build_object('tem', tem, 'tarea', tarea) as otras from ${context.be.db.quoteIdent(unidadAnalisisPrincipal)}`,
                  'enc',
                  `otras ||'{}'::jsonb`
                 )}
@@ -77,21 +78,13 @@ export const ProceduresRepsic : ProcedureDef[] = [
     {
         action:'generar_formularios',
         parameters:[
-            {name:'recorrido'       , typeName:'integer', references:'recorridos'},
+            {name:'area'            , typeName:'integer'},
             {name:'cant_encuestas'  , typeName:'integer'}
         ],
         coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
             var be=context.be;
+            const {area, cant_encuestas} = parameters;
             const OPERATIVO = await getOperativoActual(context);
-            let {area} = (await context.client.query(`
-                select *
-                    from areas
-                    where recorrido = $1`,
-                [parameters.recorrido]
-            ).fetchUniqueRow()).row;
-            if(parameters.recorrido != area){
-                throw Error("el recorrido y el área deben ser iguales")
-            }
             await be.procedure.muestra_generar.coreFunction(context, {
                 operativo: OPERATIVO, 
                 area, 
@@ -102,28 +95,25 @@ export const ProceduresRepsic : ProcedureDef[] = [
         }
     },
     {
-        action:'agregar_formularios',
+        action:'generar_formularios_papel',
         parameters:[
-            {name:'recorrido'       , typeName:'integer', references:'recorridos'},
+            {name:'area'            , typeName:'integer'},
             {name:'cant_encuestas'  , typeName:'integer'}
         ],
         coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
             var be=context.be;
             const OPERATIVO = await getOperativoActual(context);
-            let {area} = (await context.client.query(`
-                select *
-                    from areas
-                    where recorrido = $1`,
-                [parameters.recorrido]
-            ).fetchUniqueRow()).row;
-            if(parameters.recorrido != area){
-                throw Error("el recorrido y el área deben ser iguales")
-            }
+            const {area, cant_encuestas} = parameters;
+            let cantidad = (await context.client.query(`
+                select count(*) as cantidad
+                    from tem
+                    where operativo = $1 and area = $2 and enc_autogenerado_dm is null
+            `,[OPERATIVO,area]).fetchUniqueValue()).value;
             await be.procedure.muestra_agregar.coreFunction(context, {
                 operativo: OPERATIVO, 
                 area, 
                 dominio:3, 
-                cant_encuestas: parameters.cant_encuestas
+                cant_encuestas: cant_encuestas - cantidad
             });
             return "ok";
         }

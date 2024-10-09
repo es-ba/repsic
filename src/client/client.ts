@@ -64,9 +64,9 @@ myOwn.clientSides.generarRelevamiento={
             boton.textContent='generando'
             boton.disabled=true;
             try{
-                await my.ajax.agregar_formularios({
-                    recorrido:depot.row.recorrido,
-                    cant_encuestas: depot.row.agregar_cues_papel
+                await my.ajax.generar_formularios_papel({
+                    area: depot.row.area,
+                    cant_encuestas: depot.row.cant_cues_papel
                 });
                 boton.textContent='ok'
             }catch(err){

@@ -2,107 +2,55 @@
 
 import {TableDefinition, TableContext} from "./types-repsic";
 
+import {provisorio_recepcion} from "./table-provisorio_recepcion"
+
 export function coordinacion(context:TableContext):TableDefinition {
+    const provisorioRecepcionTableDef = provisorio_recepcion(context);
     var autorizado = context.user.rol === 'admin'||context.user.rol === 'coor_campo';
     return {
         name: 'coordinacion',
-        elementName: 'coordinación',
+        elementName: 'coordinacion',
         editable: autorizado,
+        allow:{
+            delete:false,
+            insert: false,
+            import: false
+        },
         fields: [
-            { name: "operativo"          , typeName: "text"    , editable:false, inTable:false}, 
-            { name: "recorrido"          , typeName: "integer" },
-            { name: "area"               , typeName: "integer" , editable:false, inTable:false}, 
-            { name: "relevador"          , typeName: "text"    , editable:false, inTable:false},
-            { name: "cant_dm"            , typeName: "integer" , aggregate:'sum', editable:false, inTable: false}, 
-            { name: "cant_papel"         , typeName: "integer" , aggregate:'sum', editable:false, inTable: false}, 
-            { name: "cant_total"         , typeName: "integer" , aggregate:'sum', editable:false, inTable: false}, 
-            { name: "agregar_cues_papel" , typeName: "integer" },
-            { name: "generar"            , typeName: "bigint"  , editable:false, serverSide:true, clientSide:'generarRelevamiento', inTable: false},
-            { name: "cant_pers"          , typeName: "integer" , aggregate:'sum'},
-            { name: "salida"             , typeName: "interval", aggregate:'count'},
-            { name: "regreso"            , typeName: "interval", aggregate:'count'},
-            { name: "tipo_recorrido"     , typeName: "integer" , editable:false, inTable: false}, 
-            { name: "comuna"             , typeName: "text"    , editable:false, inTable: false},
-            { name: "descripcion_barrio" , typeName: "text"    , editable:false, inTable: false},
+            { name: "operativo"             , typeName: "text"    , editable:false}, 
+            { name: "recorrido"             , typeName: "integer" , editable:false},
+            { name: "area"                  , typeName: "integer" , editable:false}, 
+            { name: "relevador"             , typeName: "text"    , editable:false, inTable:false},
+            { name: "cant_papel_provisorio" , typeName: "integer" , aggregate:'sum', editable:false, inTable: false}, 
+            { name: "cant_cues_definitivo"  , typeName: "integer" , aggregate:'sum', editable:autorizado},
+            { name: "generar"               , typeName: "bigint"  , editable:false, clientSide:'generarRelevamiento', inTable: false},
+            { name: "tipo_recorrido"        , typeName: "integer" , editable:false, inTable: false}, 
+            { name: "comuna"                , typeName: "text"    , editable:false, inTable: false},
+            { name: "descripcion_barrio"    , typeName: "text"    , editable:false, inTable: false},
         ],
-        primaryKey: ['recorrido'],
+        primaryKey: ['operativo','recorrido','area'],
         foreignKeys:[
-            {references:'recorridos'    , fields: ['recorrido'] },
-        ],
-        hiddenColumns:['operativo'],
-        detailTables:[
-            //{table:'areas_asignacion_general'   , fields:['operativo','area'], abr:'A'},
+            {references:'areas'       , fields: ['operativo', 'recorrido','area']},
+            //{references:'recorridos'  , fields: ['recorrido']},
         ],
         sql:{
+            insertIfNotUpdate: true,
+            isTable: true,
             "isReferable": true,
-            fields:{
-                tipo_recorrido:{expr:"recorridos.tipo_recorrido"},                
-                comuna:{
-                    expr:`(
-                            select array_agg(distinct comuna order by comuna)::text 
-                                from (select comuna
-                                        from recorridos_barrios 
-                                             left join barrios using (barrio) 
-                                        where recorrido=coordinacion.recorrido
-                                      union 
-                                      select comuna
-                                        from lugares 
-                                        where recorrido=coordinacion.recorrido
-                                ) x
-                    )`
-                },
-                descripcion_barrio:{
-                    expr:`(
-                        select string_agg(nombre,', ' order by barrio) 
-                                from recorridos_barrios 
-                                    left join barrios using (barrio) 
-                                where recorrido=coordinacion.recorrido
-                    )`
-                },
-                relevador:{
-                    expr:`(
-                        select string_agg(coalesce(nullif(concat_ws(' ', nombre, apellido),''), usuario), ', ' order by usuario) 
-                                from usuarios 
-                                where recorrido=coordinacion.recorrido
-                    )`
-                },
-                generar:{
-                    expr:`(
-                        select count(*) from grupo_personas gp where u1 = coordinacion.recorrido
-                    )`
-                },
-                cant_dm:{
-                    expr:`(
-                        select count(*) from tem where enc_autogenerado_dm is not null and area in (select area
-                            from areas
-                            where recorrido=recorridos.recorrido)
-                    )`
-                },
-                cant_papel:{
-                    expr:`(
-                        select count(*) from tem where enc_autogenerado_dm is null and area in (select area
-                            from areas
-                            where recorrido=recorridos.recorrido)
-                    )`
-                },
-                cant_total:{
-                    expr:`(
-                        select count(*) from tem where area in (select area
-                            from areas
-                            where recorrido=recorridos.recorrido)
-                    )`
-                },
-                area:{expr:`(
-                    select area
-                        from areas
-                        where recorrido=recorridos.recorrido
-                )`},
-                operativo:{expr:`(
-                    select operativo
-                        from areas
-                        where recorrido=recorridos.recorrido
-                )`}
-            }
+            from: `
+            (select 
+                operativo,
+                recorrido,
+                area,
+                relevador,
+                cues_papel as cant_papel_provisorio,
+                (select cant_cues_definitivo from coordinacion where operativo = aux.operativo and recorrido = aux.recorrido and area = aux.area) as cant_cues_definitivo,
+                tipo_recorrido,
+                comuna,
+                descripcion_barrio
+            from
+                (${provisorioRecepcionTableDef.sql!.from}) aux
+            )`
         }
     };
 }
