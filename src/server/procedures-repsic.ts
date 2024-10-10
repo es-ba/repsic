@@ -89,7 +89,8 @@ export const ProceduresRepsic : ProcedureDef[] = [
                 operativo: OPERATIVO, 
                 area, 
                 dominio:3, 
-                cant_encuestas: parameters.cant_encuestas
+                cant_encuestas: parameters.cant_encuestas,
+                tarea_actual: null
             });
             return "ok";
         }
@@ -101,6 +102,9 @@ export const ProceduresRepsic : ProcedureDef[] = [
             {name:'cant_encuestas'  , typeName:'integer'}
         ],
         coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
+            if(!context.user.idper){
+                throw Error ('debe configurar un idper para su usuario')
+            }
             var be=context.be;
             const OPERATIVO = await getOperativoActual(context);
             const {area, cant_encuestas} = parameters;
@@ -113,8 +117,23 @@ export const ProceduresRepsic : ProcedureDef[] = [
                 operativo: OPERATIVO, 
                 area, 
                 dominio:3, 
-                cant_encuestas: cant_encuestas - cantidad
+                cant_encuestas: cant_encuestas - cantidad,
+                tarea_actual: 'ingr'
             });
+            await context.client.query(`
+                UPDATE tareas_tem tt
+                    set recepcionista = $3, asignado = $4
+                    where operativo=$1 and tarea= $2 and 
+					(select enc_autogenerado_dm from tem t where t.operativo = tt.operativo and t.enc = tt.enc) is null
+                    returning *
+            `,[OPERATIVO, 'encu',context.user.idper,context.user.idper]).fetchAll();
+            await context.client.query(`
+                UPDATE tareas_tem tt
+                    set verificado = '1', estado = 'V'
+                    where operativo=$1 and tarea= $2 and 
+					(select enc_autogenerado_dm from tem t where t.operativo = tt.operativo and t.enc = tt.enc) is null
+                    returning *
+            `,[OPERATIVO, 'encu']).fetchAll();
             return "ok";
         }
     },

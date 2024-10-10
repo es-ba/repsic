@@ -13,7 +13,7 @@ export function coordinacion(context:TableContext):TableDefinition {
         editable: autorizado,
         allow:{
             delete:false,
-            insert: false,
+            insert: context.forDump,
             import: false
         },
         fields: [

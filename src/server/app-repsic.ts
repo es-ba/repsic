@@ -415,17 +415,17 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         }else{
             menuDef.menu = menuDef.menu.filter((menuInfo)=>!['supervision'].includes(menuInfo.name));
             menuDef.menu.splice(2,0,
-                {menuType:'table' , name:'ingresar' , table:'tareas_tem_ingreso', ff:{tarea:'encu', asignado:context.user.idper } }
+                {menuType:'table' , name:'ingresar' , table:'tareas_tem_ingreso', ff:{tarea:'ingr', asignado:context.user.idper } }
             );
             let menuProvisorio: MenuInfo = {menuType:'menu'  , name:'provisorio', menuContent:[]};
             if(context.puede?.campo?.editar){
                 menuProvisorio.menuContent.push({menuType:'table' , name:'provisorio_recepcion', label:'recepcion' })
-                menuDef.menu.unshift(menuProvisorio);
+                menuDef.menu.splice(2,0,menuProvisorio);
                 if(context.puede?.campo?.administrar){
                     menuProvisorio.menuContent.unshift(
                         {menuType:'table' , name:'provisorio_recorridos', label:'recorridos' },
                     );
-                    menuDef.menu.splice(1,0,
+                    menuDef.menu.splice(3,0,
                         {menuType:'table' , name:'coordinacion'         , label:'generar casos papel' },
                     );
                     menuDef.menu.push(
