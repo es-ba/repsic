@@ -401,11 +401,15 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
     getMenuAsignacion(context:Context){
         let menuAsignacion = super.getMenuAsignacion(context);
         menuAsignacion.menuContent = menuAsignacion.menuContent.filter((menuInfo)=>!['recuperador','supervisor'].includes(menuInfo.name));
+        menuAsignacion.menuContent.find((menuInfo)=>menuInfo.name == 'encuestador').label = 'encuestador (dm)';
+        menuAsignacion.menuContent.find((menuInfo)=>menuInfo.name == 'ingresador').label = 'ingresador (papel)';
         return menuAsignacion;
     }
     getMenuRecepcion(context:Context){
         let menuRecepcion = super.getMenuRecepcion(context);
         menuRecepcion.menuContent = menuRecepcion.menuContent.filter((menuInfo)=>!['recuperador','supervisor','mis_supervisores'].includes(menuInfo.name));
+        menuRecepcion.menuContent.find((menuInfo)=>menuInfo.name == 'encuestador').label = 'encuestador (dm)';
+        menuRecepcion.menuContent.find((menuInfo)=>menuInfo.name == 'ingresador').label = 'ingresador (papel)';
         return menuRecepcion;
     }
     getMenu(context:Context){
@@ -415,7 +419,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         }else{
             menuDef.menu = menuDef.menu.filter((menuInfo)=>!['supervision'].includes(menuInfo.name));
             menuDef.menu.splice(2,0,
-                {menuType:'table' , name:'ingresar' , table:'tareas_tem_ingreso', ff:{tarea:'ingr', asignado:context.user.idper } }
+                {menuType:'table' , name:'ingresar', label:'ingreso papel' table:'tareas_tem_ingreso', ff:{tarea:'ingr', asignado:context.user.idper } }
             );
             let menuProvisorio: MenuInfo = {menuType:'menu'  , name:'provisorio', menuContent:[]};
             if(context.puede?.campo?.editar){
