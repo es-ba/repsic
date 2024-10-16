@@ -10,7 +10,7 @@ install:
   dump:
     #drop-his: true
   table-data-dir: 
-    - ../dmencu-data/repsic241
+    - ../dmencu-data/repsic242
 login:
   plus:
     secret: 39djjfnvvjas..33.3.33
