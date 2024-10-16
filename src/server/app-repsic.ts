@@ -415,7 +415,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
     getMenu(context:Context){
         let menuDef:MenuDefinition = super.getMenu(context);
         if(this.config.server.policy=='web'){
-            menuDef.menu.push({menuType:'mapa', name:'mapa'});
+            //menuDef.menu.push({menuType:'mapa', name:'mapa'});
         }else{
             menuDef.menu = menuDef.menu.filter((menuInfo)=>!['supervision'].includes(menuInfo.name));
             menuDef.menu.splice(2,0,
