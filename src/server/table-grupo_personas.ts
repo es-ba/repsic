@@ -23,6 +23,7 @@ export function grupo_personas(context:TableContext):TableDefinition {
             { name: "u6"            , label:'n°'                    , typeName: 'integer' },
             { name: "u7"            , label:'intersección'          , typeName: 'text'    },
             { name: "u8"            , label:'cant.per'              , typeName: 'integer' },
+            { name: "u9"            , label:'punto GPS'          , typeName: 'text'    },
             { name: "u21"           , label:'cod.relev'             , typeName: 'integer' },
             { name: "u22"           , label:'nombre y ape'          , typeName: 'text'    },
             { name: "u23"           , label:'teléfono'              , typeName: 'text'    },  //paradores
