@@ -55,9 +55,10 @@ setDesplegarCarga((props:{
     const cantPerArea = likeAr(informacionHdr).filter((informacion)=>informacion.tem.carga==idCarga).map((_informacion, numVivienda)=>
         respuestas[estructura.uaPpal][numVivienda].u8 || 0
     ).array().reduce((accumulator, currentValue) => accumulator + currentValue,0);
+    const cantCuesArea = likeAr(informacionHdr).filter((informacion)=>informacion.tem.carga==idCarga).array().length
     return <Paper className="carga" style={{marginBottom: '10px', padding: '10px'}}>
         <div className="informacion-carga">
-            <div className="carga">Área: {idCarga} | personas: {cantPerArea}
+            <div className="carga">Área: {idCarga} | cuestionarios: {cantCuesArea} | personas: {cantPerArea}
                 
             </div>
             <div className="observaciones">{carga.observaciones}</div>
@@ -171,7 +172,7 @@ setDesplegarLineaResumenUAPrincipal((props:{
     })
     return <TableRow key={numVivienda}>
         <TableCell>
-            {respuestas.u8 || 'u8 sin responder'}
+            {respuestas.u8 || 'cantidad de personas sin responder'}
         </TableCell>
         <TableCell>
             {tarea}
