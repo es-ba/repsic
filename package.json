@@ -15,7 +15,7 @@
   "dependencies": {
     "yazl": "~2.5.1",
     "guijarro": "^0.3.1",
-    "dmencu": "^1.0.10"
+    "dmencu": "^1.0.11"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
