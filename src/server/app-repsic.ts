@@ -398,38 +398,47 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         menuVarios.menuContent = menuVarios.menuContent.filter((menuInfo)=>!['abrir_encuesta','hoja_ruta'].includes(menuInfo.name));
         return menuVarios;
     }
-    getMenuAsignacion(context:Context){
-        let menuAsignacion = super.getMenuAsignacion(context);
-        menuAsignacion.menuContent = menuAsignacion.menuContent.filter((menuInfo)=>!['recuperador','supervisor'].includes(menuInfo.name));
-        menuAsignacion.menuContent.find((menuInfo)=>menuInfo.name == 'encuestador').label = 'encuestador (dm)';
-        menuAsignacion.menuContent.find((menuInfo)=>menuInfo.name == 'ingresador').label = 'ingresador (papel)';
-        return menuAsignacion;
+    getMenuAsignacion(context:Context, modo:'papel'|'dm'){
+        let filtroRecepcionista = context.user.rol=='recepcionista' ? {recepcionista: context.user.idper} : {};
+        return modo=='dm'?
+                { menuType: 'table', name: 'asig_encuestador', label:'asignacion', table: 't_encu_areas', ff: { tarea: 'encu', ...filtroRecepcionista } }
+            :
+                { menuType: 'table', name: 'asig_ingresador', label:'asignacion', table: 't_ingr_areas', ff: { tarea: 'ingr', ...filtroRecepcionista } }
     }
-    getMenuRecepcion(context:Context){
-        let menuRecepcion = super.getMenuRecepcion(context);
-        menuRecepcion.menuContent = menuRecepcion.menuContent.filter((menuInfo)=>!['recuperador','supervisor','mis_supervisores'].includes(menuInfo.name));
-        menuRecepcion.menuContent.find((menuInfo)=>menuInfo.name == 'encuestador').label = 'encuestador (dm)';
-        menuRecepcion.menuContent.find((menuInfo)=>menuInfo.name == 'ingresador').label = 'ingresador (papel)';
-        return menuRecepcion;
+        
+    getMenuRecepcion(context:Context, modo:'papel'|'dm'){
+        return modo=='dm'?
+            {menuType:'table', name:'recep_encuestador', label:'recepcion', table:'encuestadores_asignados'}
+        :
+            {menuType:'table', name:'recep_ingresador', label:'recepcion', table:'ingresadores_asignados'}
     }
     getMenu(context:Context){
         let menuDef:MenuDefinition = super.getMenu(context);
+        let filtroRecepcionista = context.user.rol=='recepcionista' ? {recepcionista: context.user.idper} : {};
         if(this.config.server.policy=='web'){
             //menuDef.menu.push({menuType:'mapa', name:'mapa'});
         }else{
-            menuDef.menu = menuDef.menu.filter((menuInfo)=>!['supervision'].includes(menuInfo.name));
-            menuDef.menu.splice(2,0,
-                {menuType:'table' , name:'ingresar', label:'ingreso papel' table:'tareas_tem_ingreso', ff:{tarea:'ingr', asignado:context.user.idper } }
-            );
+            //oculto menu de asignacion y recepcion para redefinirlo en repsic
+            menuDef.menu = menuDef.menu.filter((menuInfo:MenuInfo)=>!['supervision','asig_encuestador','asig_ingresador','recep_encuestador','recep_ingresador'].includes(menuInfo.name));
+            if (context.puede?.campo?.administrar) {
+                menuDef.menu.unshift({ menuType: 'table', name: 'general', label:'asignacion gral', table: 'areas_asignacion_general' });
+            }
             let menuProvisorio: MenuInfo = {menuType:'menu'  , name:'provisorio', menuContent:[]};
+            let menuDM: MenuInfo = {menuType:'menu'  , name:'dm', menuContent:[]};
+            let menuPapel: MenuInfo = {menuType:'menu'  , name:'papel', menuContent:[]};
+            menuPapel.menuContent.push({menuType:'table' , name:'ingresar', label:'ingreso', table:'tareas_tem_ingreso', ff:{tarea:'ingr', asignado:context.user.idper }})
             if(context.puede?.campo?.editar){
-                menuProvisorio.menuContent.push({menuType:'table' , name:'provisorio_recepcion', label:'recepcion' })
-                menuDef.menu.splice(2,0,menuProvisorio);
+                menuDM.menuContent.push(this.getMenuAsignacion(context,'dm'));
+                menuDM.menuContent.push(this.getMenuRecepcion(context,'dm'));
+                menuPapel.menuContent.unshift(this.getMenuAsignacion(context,'papel'));
+                menuPapel.menuContent.push(this.getMenuRecepcion(context,'papel'));
+                menuProvisorio.menuContent.push({menuType:'table' , name:'provisorio_recepcion', label:'recepcion' });
+                menuDef.menu.splice(1,0,menuProvisorio,menuDM,menuPapel);
                 if(context.puede?.campo?.administrar){
                     menuProvisorio.menuContent.unshift(
                         {menuType:'table' , name:'provisorio_recorridos', label:'recorridos' },
                     );
-                    menuDef.menu.splice(3,0,
+                    menuPapel.menuContent.unshift(
                         {menuType:'table' , name:'coordinacion'         , label:'generar casos papel' },
                     );
                     menuDef.menu.push(
@@ -449,11 +458,16 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                         ]},
                     )
                 }
+            //usuario ingresador
+            }else{
+                menuDef.menu.splice(1,0,menuPapel);
+            }
+            if(this.getMenuVarios(context).menuContent.length == 0){
+                menuDef.menu = menuDef.menu.filter((menuInfo:MenuInfo)=>!['varios'].includes(menuInfo.name));
             }
         }
         return menuDef;
     }
-
     prepareGetTables(){
         var be=this;
         super.prepareGetTables();
