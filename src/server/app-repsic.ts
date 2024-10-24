@@ -39,7 +39,7 @@ import { Request } from "rel-enc";
 
 import * as cookieParser from 'cookie-parser';
 
-const APP_DM_VERSION="#24-10-18";
+const APP_DM_VERSION="#24-10-24";
 
 interface Context extends procesamiento.Context{
   puede:object
@@ -88,7 +88,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                                 select
                                     operativo,
                                     area, 
-                                    count(*) filter (where enc_autogenerado_dm is not null) as cues_dm,
+                                    count(*) filter (where enc_autogenerado_dm is not null and coalesce((json_encuesta->>'u8')::integer,0) > 0 ) as cues_dm,
                                     sum(coalesce((json_encuesta->>'u8')::integer,0)) filter (where enc_autogenerado_dm is not null and json_encuesta is not null) as pers_dm
                                     from tem t 
                                     group by operativo, area

@@ -31,6 +31,7 @@ import React = require("react");
 import {
     AppBar,
     IconButton,
+    Chip,
     Paper, Table, TableBody, TableCell, TableHead, TableRow,
     Toolbar,
     Typography
@@ -55,7 +56,7 @@ setDesplegarCarga((props:{
     const cantPerArea = likeAr(informacionHdr).filter((informacion)=>informacion.tem.carga==idCarga).map((_informacion, numVivienda)=>
         respuestas[estructura.uaPpal][numVivienda].u8 || 0
     ).array().reduce((accumulator, currentValue) => accumulator + currentValue,0);
-    const cantCuesArea = likeAr(informacionHdr).filter((informacion)=>informacion.tem.carga==idCarga).array().length
+    const cantCuesArea = likeAr(informacionHdr).filter((informacion, numVivienda)=>informacion.tem.carga==idCarga && respuestas[estructura.uaPpal][numVivienda].u8).array().length
     return <Paper className="carga" style={{marginBottom: '10px', padding: '10px'}}>
         <div className="informacion-carga">
             <div className="carga">Área: {idCarga} | cuestionarios: {cantCuesArea} | personas: {cantPerArea}
@@ -172,7 +173,11 @@ setDesplegarLineaResumenUAPrincipal((props:{
     })
     return <TableRow key={numVivienda}>
         <TableCell>
-            {respuestas.u8 || 'cantidad de personas sin responder'}
+            {respuestas.u8?
+                null
+            :
+                <Chip label="informar cantidad de personas" color="secondary" />    
+            }
         </TableCell>
         <TableCell>
             {tarea}
