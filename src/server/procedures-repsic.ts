@@ -123,14 +123,14 @@ export const ProceduresRepsic : ProcedureDef[] = [
             await context.client.query(`
                 UPDATE tareas_tem tt
                     set recepcionista = $3, asignado = $4
-                    where operativo=$1 and tarea= $2 and 
+                    where operativo=$1 and tarea= $2 and recepcionista is null and asignado is null and
 					(select enc_autogenerado_dm from tem t where t.operativo = tt.operativo and t.enc = tt.enc) is null
                     returning *
             `,[OPERATIVO, 'encu',context.user.idper,context.user.idper]).fetchAll();
             await context.client.query(`
                 UPDATE tareas_tem tt
                     set verificado = '1', estado = 'V'
-                    where operativo=$1 and tarea= $2 and 
+                    where operativo=$1 and tarea= $2 and
 					(select enc_autogenerado_dm from tem t where t.operativo = tt.operativo and t.enc = tt.enc) is null
                     returning *
             `,[OPERATIVO, 'encu']).fetchAll();
