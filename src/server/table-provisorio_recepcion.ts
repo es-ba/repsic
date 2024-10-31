@@ -26,6 +26,7 @@ export function provisorio_recepcion(context:TableContext):TableDefinition {
             { name: "cues_total"         , typeName: "integer" , aggregate:'sum', editable:false, inTable: false}, 
             { name: "pers_total"         , typeName: "integer" , aggregate:'sum', editable:false, inTable: false}, 
             { name: "verificado"         , typeName: "boolean" , editable:autorizado},
+            { name: "observaciones"      , typeName: "text"    , editable:autorizado},
             { name: "salida"             , typeName: "interval", editable:autorizado},
             { name: "regreso"            , typeName: "interval", editable:autorizado},
             { name: "tipo_recorrido"     , typeName: "integer" , editable:false, inTable: false}, 
