@@ -35,7 +35,7 @@ import {
     Paper, Table, TableBody, TableCell, TableHead, TableRow,
     Toolbar,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import { ICON } from "dmencu/dist/unlogged/unlogged/render-general";
 
 setDesplegarCarga((props:{
