@@ -31,8 +31,12 @@ export function personas(context:TableContext):TableDefinition {
             { name: "sc25a"         , label:'pasó la noche'              , typeName: 'integer' }, //paradores
             { name: "sc9"           , label:'durmio calle'               , typeName: 'integer' }, //calle
             { name: "sc9a"          , label:'pasó la noche'              , typeName: 'integer' }, //calle
+            { name: "sc9a1"         , label:'en un parador o cis'        , typeName: 'integer' },
             { name: "sc9b"          , label:'en el mismo lugar'          , typeName: 'integer' },
             { name: "sc10"          , label:'tiempo sit calle'           , typeName: 'integer' },
+            { name: "sc29"          , label:'mantuvo contacto'           , typeName: 'integer' },
+            { name: "sc30"          , label:'motivo '                    , typeName: 'integer' },
+            { name: "sc30_esp"      , label:'otro motivo'                , typeName: 'text'    },
             { name: "sc25b"         , label:'documentación'              , typeName: 'integer' },
             { name: "sc12"          , label:'dni argentino'              , typeName: 'integer' },
             { name: "sc26"          , label:'cuál'                       , typeName: 'text'    },
