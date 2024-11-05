@@ -10,7 +10,8 @@ import { IdFormulario, RespuestasRaiz, ForPk, IdVariable, Formulario, Libre, IdU
     InformacionHdr,
     RespuestaLasUA,
     ForPkRaiz,
-    IdEnc
+    IdEnc,
+    CasillerosImplementados
 } from "dmencu/dist/unlogged/unlogged/tipos";
 import {getDatosByPass, persistirDatosByPass, setCalcularVariablesEspecificasOperativo, respuestasForPk, 
     registrarElemento, dispatchByPass, accion_registrar_respuesta, accion_abrir_formulario,
@@ -192,16 +193,110 @@ setDesplegarLineaResumenUAPrincipal((props:{
     </TableRow>
 });
 
-setCalcularVariablesEspecificasOperativo((respuestasRaiz:RespuestasRaiz, forPk:ForPk)=>{
+const sumador = (numeros:number[])=> numeros.reduce((accum:number, numero:number)=>accum + numero);
+
+const variableExisteEnCasillerosHijos = (casillero:CasillerosImplementados, variable:IdVariable):boolean => {
+    if(casillero.var_name == variable) return true
+    const casilleros = casillero.casilleros;
+    if(!casilleros) return false
+    const existArray = casilleros.map((casillero:CasillerosImplementados)=>variableExisteEnCasillerosHijos(casillero, variable))
+    return !!existArray.find((result:boolean)=>result)
+}
+
+const numberIfNullOrUndefined = (value:Valor) => Number(value ?? 0)
+
+setCalcularVariablesEspecificasOperativo((resRaiz:RespuestasRaiz, forPk:ForPk)=>{
     var estructura = getEstructura();
-    delete(respuestasRaiz.vdominio);
+    delete(resRaiz.vdominio);
     if(forPk.formulario == 'F:F2' as IdFormulario){
         let {respuestas} = respuestasForPk(forPk);
         respuestas['p0' as IdVariable] = forPk.persona;
     }
     let datosByPass = getDatosByPass();
-    respuestasRaiz['u1' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem.recorrido;
-    respuestasRaiz['u2' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem.tipo_recorrido;
-    respuestasRaiz['u3' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem.comuna_agrupada;
-    respuestasRaiz['u4' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem.barrios_agrupados;
+    resRaiz['u1' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem.recorrido;
+    resRaiz['u2' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem.tipo_recorrido;
+    resRaiz['u3' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem.comuna_agrupada;
+    resRaiz['u4' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem.barrios_agrupados;
+
+    const cant11 = 'cant11' as IdVariable;
+    const cant12 = 'cant12' as IdVariable;
+    const cant13 = 'cant13' as IdVariable;
+    const cant14 = 'cant14' as IdVariable;
+    const cant21 = 'cant21' as IdVariable;
+    const cant22 = 'cant22' as IdVariable;
+    const cant23 = 'cant23' as IdVariable;
+    const cant24 = 'cant24' as IdVariable;
+    const cant31 = 'cant31' as IdVariable;
+    const cant32 = 'cant32' as IdVariable;
+    const cant33 = 'cant33' as IdVariable;
+    const cant34 = 'cant34' as IdVariable;
+    const cant41 = 'cant41' as IdVariable;
+    const cant42 = 'cant42' as IdVariable;
+    const cant43 = 'cant43' as IdVariable;
+    const cant44 = 'cant44' as IdVariable;
+    const cant51 = 'cant51' as IdVariable;
+    const cant52 = 'cant52' as IdVariable;
+    const cant53 = 'cant53' as IdVariable;
+    const cant54 = 'cant54' as IdVariable;
+    const cant61 = 'cant61' as IdVariable;
+    const cant62 = 'cant62' as IdVariable;
+    const cant63 = 'cant63' as IdVariable;
+    const cant64 = 'cant64' as IdVariable;
+    
+    if(variableExisteEnCasillerosHijos(estructura.formularios[forPk.formulario].casilleros,cant11)){
+        //matriz de cantidades
+        resRaiz[cant14] = sumador([
+            numberIfNullOrUndefined(resRaiz[cant11]),
+            numberIfNullOrUndefined(resRaiz[cant12]),
+            numberIfNullOrUndefined(resRaiz[cant13])
+        ]);
+        resRaiz[cant24] = sumador([
+            numberIfNullOrUndefined(resRaiz[cant21]),
+            numberIfNullOrUndefined(resRaiz[cant22]),
+            numberIfNullOrUndefined(resRaiz[cant23])
+        ]);
+        resRaiz[cant34] = sumador([
+            numberIfNullOrUndefined(resRaiz[cant31]),
+            numberIfNullOrUndefined(resRaiz[cant32]),
+            numberIfNullOrUndefined(resRaiz[cant33])
+        ]);
+        resRaiz[cant44] = sumador([
+            numberIfNullOrUndefined(resRaiz[cant41]),
+            numberIfNullOrUndefined(resRaiz[cant42]),
+            numberIfNullOrUndefined(resRaiz[cant43])
+        ]);
+        resRaiz[cant54] = sumador([
+            numberIfNullOrUndefined(resRaiz[cant51]),
+            numberIfNullOrUndefined(resRaiz[cant52]),
+            numberIfNullOrUndefined(resRaiz[cant53])
+        ]);
+        resRaiz[cant61] = sumador([
+            numberIfNullOrUndefined(resRaiz[cant11]),
+            numberIfNullOrUndefined(resRaiz[cant21]),
+            numberIfNullOrUndefined(resRaiz[cant31]),
+            numberIfNullOrUndefined(resRaiz[cant41]),
+            numberIfNullOrUndefined(resRaiz[cant51])
+        ]);
+        resRaiz[cant62] = sumador([
+            numberIfNullOrUndefined(resRaiz[cant12]),
+            numberIfNullOrUndefined(resRaiz[cant22]),
+            numberIfNullOrUndefined(resRaiz[cant32]),
+            numberIfNullOrUndefined(resRaiz[cant42]),
+            numberIfNullOrUndefined(resRaiz[cant52])
+        ]);
+        resRaiz[cant63] = sumador([
+            numberIfNullOrUndefined(resRaiz[cant13]),
+            numberIfNullOrUndefined(resRaiz[cant23]),
+            numberIfNullOrUndefined(resRaiz[cant33]),
+            numberIfNullOrUndefined(resRaiz[cant43]),
+            numberIfNullOrUndefined(resRaiz[cant53])
+        ]);
+        resRaiz[cant64] = sumador([
+            numberIfNullOrUndefined(resRaiz[cant14]),
+            numberIfNullOrUndefined(resRaiz[cant24]),
+            numberIfNullOrUndefined(resRaiz[cant34]),
+            numberIfNullOrUndefined(resRaiz[cant44]),
+            numberIfNullOrUndefined(resRaiz[cant54])
+        ]);
+    }
 })
