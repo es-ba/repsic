@@ -408,9 +408,9 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         
     getMenuRecepcion(context:Context, modo:'papel'|'dm'){
         return modo=='dm'?
-            {menuType:'table', name:'recep_encuestador', label:'recepcion', table:'encuestadores_asignados'}
+            {menuType:'table', name:'recep_encuestador', label:'recepción/subcordinación', table:'encuestadores_asignados'}
         :
-            {menuType:'table', name:'recep_ingresador', label:'recepcion', table:'ingresadores_asignados'}
+            {menuType:'table', name:'recep_ingresador', label:'recepción', table:'ingresadores_asignados'}
     }
     getMenu(context:Context){
         let menuDef:MenuDefinition = super.getMenu(context);
@@ -432,11 +432,11 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 menuDM.menuContent.push(this.getMenuRecepcion(context,'dm'));
                 menuPapel.menuContent.unshift(this.getMenuAsignacion(context,'papel'));
                 menuPapel.menuContent.push(this.getMenuRecepcion(context,'papel'));
-                menuProvisorio.menuContent.push({menuType:'table' , name:'provisorio_recepcion', label:'recepcion' });
+                menuProvisorio.menuContent.push({menuType:'table' , name:'provisorio_recepcion', label:'subcoordinación' });
                 menuDef.menu.splice(1,0,menuProvisorio,menuDM,menuPapel);
                 if(context.puede?.campo?.administrar){
                     menuProvisorio.menuContent.unshift(
-                        {menuType:'table' , name:'provisorio_recorridos', label:'recorridos' },
+                        {menuType:'table' , name:'provisorio_recorridos', label:'recorridos resumen' },
                     );
                     menuPapel.menuContent.unshift(
                         {menuType:'table' , name:'coordinacion'         , label:'generar casos papel' },
