@@ -39,7 +39,7 @@ import { Request } from "rel-enc";
 
 import * as cookieParser from 'cookie-parser';
 
-const APP_DM_VERSION="#24-11-13b";
+const APP_DM_VERSION="#24-11-19";
 
 interface Context extends procesamiento.Context{
   puede:object
@@ -414,7 +414,6 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
     }
     getMenu(context:Context){
         let menuDef:MenuDefinition = super.getMenu(context);
-        let filtroRecepcionista = context.user.rol=='recepcionista' ? {recepcionista: context.user.idper} : {};
         if(this.config.server.policy=='web'){
             //menuDef.menu.push({menuType:'mapa', name:'mapa'});
         }else{
