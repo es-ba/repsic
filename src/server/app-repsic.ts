@@ -33,6 +33,7 @@ import { provisorio_recepcion} from "./table-provisorio_recepcion";
 import { provisorio_recorridos} from "./table-provisorio_recorridos";
 import { tipos_lugar         } from "./table-tipos_lugar";
 import { tipos_recorrido     } from "./table-tipos_recorrido";
+import { incompletas_dm_tem  } from "./table-incompletas_dm_tem";
 
 import {defConfig} from "./def-config"
 import { Request } from "rel-enc";
@@ -398,6 +399,12 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         menuVarios.menuContent = menuVarios.menuContent.filter((menuInfo)=>!['abrir_encuesta','hoja_ruta'].includes(menuInfo.name));
         return menuVarios;
     }
+    getMenuControles(context:Context){
+        let menuControles = super.getMenuControles(context);
+        menuControles.push({menuType:'table', name:'encuestas_incompletas_dm', table:'incompletas_dm_tem'},
+        )
+        return menuControles;
+    }
     getMenuAsignacion(context:Context, modo:'papel'|'dm'){
         let filtroRecepcionista = context.user.rol=='recepcionista' ? {recepcionista: context.user.idper} : {};
         return modo=='dm'?
@@ -490,7 +497,8 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             , provisorio_recorridos
             , diccionario
             , dicvar
-            , dictra        
+            , dictra
+            , incompletas_dm_tem
         }
         delete(this.getTableDefinition.viviendas);
         delete(this.getTableDefinition.personas_sup);
