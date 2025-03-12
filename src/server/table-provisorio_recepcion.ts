@@ -19,6 +19,8 @@ export function provisorio_recepcion(context:TableContext):TableDefinition {
             { name: "recorrido"          , typeName: "integer" , editable:false, inTable: false},
             { name: "area"               , typeName: "integer" , editable:false}, 
             { name: "relevador"          , typeName: "text"    , editable:false, inTable:false},
+            { name: "nombre"             , typeName: "text"    , editable:false, inTable:false},
+            { name: "apellido"           , typeName: "text"    , editable:false, inTable:false},
             { name: "cues_dm"            , typeName: "integer" , aggregate:'sum', editable:false, defaultDbValue:'0'}, 
             { name: "pers_dm"            , typeName: "integer" , aggregate:'sum', editable:false, defaultDbValue:'0'},
             { name: "cues_papel"         , typeName: "integer" , aggregate:'sum', editable:autorizado, defaultDbValue:'0'}, 
@@ -60,15 +62,22 @@ export function provisorio_recepcion(context:TableContext):TableDefinition {
                             left join barrios using (barrio) 
                         where recorrido=a.recorrido
                     ) as descripcion_barrio,
-                    (select string_agg(coalesce(nullif(concat_ws(' ', nombre, apellido),''), usuario), ', ' order by usuario) 
-                        from tareas_areas ta join usuarios u on (ta.asignado = u.idper and ta.area = a.area and ta.tarea = 'encu')
-                    ) as relevador,
+                    --(select string_agg(coalesce(nullif(concat_ws(' ', nombre, apellido),''), usuario), ', ' order by usuario) 
+                    --    from tareas_areas ta join usuarios u on (ta.asignado = u.idper and ta.area = a.area and ta.tarea = 'encu')
+                    --) as relevador,
+                    rels.relevador,
+                    rels.nombre,
+                    rels.apellido,
                     coalesce(cues_dm,0) + coalesce(cues_papel,0) as cues_total,
                     coalesce(pers_dm,0) + coalesce(pers_papel,0) as pers_total
                     FROM provisorio_recepcion pr 
                         inner join areas a using (operativo, area) 
                         inner join recorridos using (recorrido) 
                         inner join tipos_recorrido tr using (tipo_recorrido)
+                        left join (
+                            select ta.area, idper as relevador, nombre, apellido
+                                from tareas_areas ta join usuarios u on (ta.asignado = u.idper and ta.tarea = 'encu')
+                        ) as rels on (rels.area = a.area)
                         --left join (
                         --    select 
                         --        area, 
