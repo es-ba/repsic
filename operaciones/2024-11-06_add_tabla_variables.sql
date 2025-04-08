@@ -1,4 +1,4 @@
-set role repsic242_owner; --adecuar al entorno 
+set role repsic251_owner; --adecuar al entorno 
 set search_path=base;
 --agregar a tabla variables las variables agregadas een sql del 2024-11-05
 insert into variables(operativo, tabla_datos, variable, tipovar, grupo, clase, es_pk, orden, cerrada, activa)

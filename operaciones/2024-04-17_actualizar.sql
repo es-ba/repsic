@@ -1,5 +1,5 @@
 ﻿set search_path = base;
-set role to repsic242_owner;
+set role to repsic251_owner;
 
 create or replace function registrar_barrio_recorrido_trg() returns trigger
   language plpgsql

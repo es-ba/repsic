@@ -1,17 +1,17 @@
 export const defConfig=`
 server:
   port: 3055
-  base-url: /repsic242
+  base-url: /repsic251
   session-store: memory
 db:
   motor: postgresql
   host: localhost
-  database: repsic242_db
-  user: repsic242_admin
+  database: repsic251_db
+  user: repsic251_admin
 install:
   dump:
     db:
-      owner: repsic242_owner
+      owner: repsic251_owner
       apply-generic-user-replaces: true
     admin-can-create-tables: true
     enances: inline
@@ -40,6 +40,7 @@ install:
       - ../node_modules/dmencu/install/control_cargado_tareas_tem_trg.sql
       - ../node_modules/dmencu/install/generador_accion_cumple_condicion.sql
       - ../node_modules/dmencu/install/tarea_cumple_condicion.sql
+      - ../node_modules/dmencu/install/momento_consistencia_cumple_condicion.sql.sql
       - ../node_modules/dmencu/install/agregar_historial_tem_trg.sql
       - ../node_modules/dmencu/install/actualizar_estado_tem_trg.sql
       - ../node_modules/dmencu/install/carga_inicial_tareas_tem.sql
@@ -83,10 +84,10 @@ login:
     lockedFail: el usuario se encuentra bloqueado
     inactiveFail: es usuario está marcado como inactivo
 client-setup:
-  title: repsic242
+  title: repsic251
   cursors: true
   lang: es
   menu: true
-  operativo: repsic242
+  operativo: repsic251
   background-img: ../img/background-test.png
 `

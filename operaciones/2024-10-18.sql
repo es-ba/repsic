@@ -1,5 +1,5 @@
 set search_path= base;
-set role to repsic242_owner; --adecuar al entorno
+set role to repsic251_owner; --adecuar al entorno
 
 CREATE OR REPLACE FUNCTION sincro_tareas_areas_tareas_tem_trg()
     RETURNS trigger

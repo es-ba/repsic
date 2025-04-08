@@ -271,7 +271,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                 color: 'rgba(255, 255, 255, 0.8)'
             }),
             stroke: new ol.style.Stroke({
-                color: 'rgba(242, 226, 91, 0.6)',
+                color: 'rgba(251, 226, 91, 0.6)',
                 width: 6
             }),
             text: new ol.style.Text({
