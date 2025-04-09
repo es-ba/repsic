@@ -196,59 +196,6 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
     addLoggedServices(){
         var be = this;
         super.addLoggedServices();
-        be.app.get('/manifest.manifest', async function(req:Request, res:Response, next:NextFunction){
-            miniTools.serveFile('dist/client/manifest.manifest',{})(req,res);
-        });
-        be.app.get(`/web-manifest.webmanifest`, async function(req, res, next){
-            try{
-                let isTestEnvironment = !!be.config['client-setup']['test-environment']
-                const content = {
-                  "name": `Repsic Progressive Web App ${isTestEnvironment?'(Test)':''}`,
-                  "short_name": `REPSIC PWA ${isTestEnvironment?'(Test)':''}`,
-                  "description": `Progressive Web App for Repsic ${isTestEnvironment?'(Test)':''}.`,
-                  "icons": [
-                    {
-                      "src": `./img/logo_dm_32${isTestEnvironment?'_test':''}.png`,
-                      "sizes": "32x32",
-                      "type": "image/png"
-                    },
-                    {
-                      "src": `./img/logo_dm_48${isTestEnvironment?'_test':''}.png`,
-                      "sizes": "48x48",
-                      "type": "image/png"
-                    },
-                    {
-                      "src": `./img/logo_dm_64${isTestEnvironment?'_test':''}.png`,
-                      "sizes": "64x64",
-                      "type": "image/png"
-                    },
-                    {
-                      "src": `./img/logo_dm_72${isTestEnvironment?'_test':''}.png`,
-                      "sizes": "72x72",
-                      "type": "image/png"
-                    },
-                    {
-                      "src": `./img/logo_dm_192${isTestEnvironment?'_test':''}.png`,
-                      "sizes": "192x192",
-                      "type": "image/png"
-                    },
-                    {
-                      "src": `./img/logo_dm_512${isTestEnvironment?'_test':''}.png`,
-                      "sizes": "512x512",
-                      "type": "image/png"
-                    }
-                  ],
-                  "start_url": "mapa",
-                  "display": "standalone",
-                  "theme_color": "#000000",
-                  "background_color": `${isTestEnvironment?'#EAAD3F':'#F86AF5'}`
-                }
-                miniTools.serveText(JSON.stringify(content), 'application/json')(req,res);
-            }catch(err){
-                console.log(err);
-                miniTools.serveErr(req, res, next)(err);
-            }
-        });
         be.app.get('/mapa', async function(req:Request, res:Response, next:NextFunction){
             try{
                 let isTestEnvironment = !!be.config['client-setup']['test-environment']
