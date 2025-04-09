@@ -40,7 +40,7 @@ import { Request } from "rel-enc";
 
 import * as cookieParser from 'cookie-parser';
 
-const APP_DM_VERSION="#24-11-19";
+const APP_DM_VERSION="#25-04-09";
 
 interface Context extends procesamiento.Context{
   puede:object
