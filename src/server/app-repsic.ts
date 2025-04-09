@@ -588,18 +588,6 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             tableDef.softForeignKeys.push(
                 {references:'recorridos'    , fields: ['recorrido'] },
             )
-            tableDef.sql = {
-                ...tableDef.sql, fields: {
-                    ...tableDef.sql?.fields, 
-                    recorridos:{ 
-                        expr:`(
-                            select recorrido
-                                from areas
-                                where area=areas.area
-                        )`
-                    }
-                }
-            }
         });
         be.appendToTableDefinition('tem', function (tableDef,context) {
             tableDef.fields.splice(9,0,
