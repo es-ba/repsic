@@ -40,7 +40,7 @@ install:
       - ../node_modules/dmencu/install/control_cargado_tareas_tem_trg.sql
       - ../node_modules/dmencu/install/generador_accion_cumple_condicion.sql
       - ../node_modules/dmencu/install/tarea_cumple_condicion.sql
-      - ../node_modules/dmencu/install/momento_consistencia_cumple_condicion.sql.sql
+      - ../node_modules/dmencu/install/momento_consistencia_cumple_condicion.sql
       - ../node_modules/dmencu/install/agregar_historial_tem_trg.sql
       - ../node_modules/dmencu/install/actualizar_estado_tem_trg.sql
       - ../node_modules/dmencu/install/carga_inicial_tareas_tem.sql
