@@ -14,6 +14,7 @@ export function personas(context:TableContext):TableDefinition {
             { name: "id_caso"       , label:'id'                         , typeName: "text"    },
             { name: "persona"       , label:'nro persona'                , typeName: 'integer' },
             { name: "p0"            , label:'sc0'                        , typeName: 'integer' },
+            { name: "apertura"      , label:'contesta entrevista'        , typeName: 'integer' },
             { name: "sc1"           , label:'nombre'                     , typeName: 'text'    },
             { name: "sc_grupo"      , label:'nro grupo'                  , typeName: 'integer' }, //paradores
             { name: "sc2"           , label:'parentesco'                 , typeName: 'integer' },
