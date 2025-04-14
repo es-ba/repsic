@@ -127,3 +127,36 @@ myOwn.clientSides.consistir = {
         //}
     }      
 }
+
+myOwn.clientSides.borrarEncuesta = {
+    update:function(_depot:myOwn.Depot, _fieldname:string){
+    },
+    prepare:function(depot:myOwn.Depot, fieldName:string){
+        var my=myOwn;
+        var up = {
+            operativo:depot.row.operativo,
+            enc:depot.row.enc
+        }
+        let td=depot.rowControls[fieldName];
+        const TEXTO_INICIAL_BOTON = 'borrar encuesta';
+        let boton = html.button(TEXTO_INICIAL_BOTON).create();
+        td.buttonGenerar=boton;
+        td.innerHTML="";
+        td.appendChild(boton);
+        boton.onclick=async function(){
+            boton.disabled=true;
+            try{
+                history.replaceState(null, '', `${location.origin+location.pathname}/../menu#menuType=proc&name=encuesta_borrar_previsualizar&i=varios,encuesta_borrar_previsualizar&up=${JSON.stringify(up)}`);
+                location.reload();   
+            }catch(err){
+                alertPromise(err.message)
+                throw err;
+            }finally{
+                depot.manager.retrieveRowAndRefresh(depot)
+                await sleep(2000);
+                boton.disabled=false;
+                boton.textContent=TEXTO_INICIAL_BOTON
+            }
+        }
+    }
+}

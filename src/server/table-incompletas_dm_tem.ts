@@ -12,6 +12,9 @@ export function incompletas_dm_tem(context: TableContext):TableDefinition {
         editable: false,
         detailTables:[],
     });
+    tableDef.fields.splice(3,0,
+        {name:'borrar', typeName:'text', editable:false, clientSide:'borrarEncuesta'},
+    )
     tableDef.sql!.isTable = false;
     tableDef.sql!.where = `"tem".enc_autogenerado_dm is not null and coalesce(("tem".json_encuesta->>'u8')::integer,0) = 0`;
     return tableDef
