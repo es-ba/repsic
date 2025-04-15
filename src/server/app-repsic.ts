@@ -527,7 +527,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             tableDef.fields = tableDef.fields.filter((fieldDef:FieldDefinition)=>!forExclude.includes(fieldDef.name));
         });
         be.appendToTableDefinition('areas_asignacion_general', function (tableDef,context) {
-            tableDef.fields.splice(2,0,
+            tableDef.fields.splice(1,0,
                 {name:'recorrido'  , typeName:'integer',  editable:false, inTable:false}
             );
             tableDef.foreignKeys=tableDef.foreignKeys || [];
