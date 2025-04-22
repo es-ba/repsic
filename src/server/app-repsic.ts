@@ -344,6 +344,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
     getMenuVarios(context:Context){
         let menuVarios = super.getMenuVarios(context);
         menuVarios.menuContent = menuVarios.menuContent.filter((menuInfo)=>!['abrir_encuesta','hoja_ruta'].includes(menuInfo.name));
+        menuVarios.menuContent.push({menuType:'proc', name:'area_agregar', label: 'agregar area a un recorrido'})
         return menuVarios;
     }
     getMenuControles(context:Context){
