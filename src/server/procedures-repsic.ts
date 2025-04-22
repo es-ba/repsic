@@ -292,6 +292,12 @@ export const ProceduresRepsic : ProcedureDef[] = [
                     order by 1,2,3`,
                 []
             ).execute();
+            await context.client.query(
+                `insert into provisorio_recepcion (operativo, area) 
+                    values ($1, $2) 
+                    returning *`,
+                [parameters.operativo, parameters.area]
+            ).fetchUniqueRow();
             return `se agregó correctamente el área ${parameters.area} al recorrido ${parameters.recorrido}`;
         }
     }
