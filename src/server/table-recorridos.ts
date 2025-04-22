@@ -11,7 +11,7 @@ export function recorridos(context:TableContext):TableDefinition {
         fields: [
             { name: "recorrido"          , typeName: "integer" },
             { name: "tipo_recorrido"     , typeName: "integer" }, 
-            { name: "area"               , typeName: "integer" , editable:false, inTable: false}, 
+            { name: "areas"              , typeName: "text" , editable:false, inTable: false}, 
             { name: "apellido"           , typeName: "text"    },
             { name: "nombre"             , typeName: "text"    },
             { name: "observaciones"      , typeName: "text"    },
@@ -62,8 +62,8 @@ export function recorridos(context:TableContext):TableDefinition {
                     )`
                 },
                 mapa:{expr:'tipos_recorrido.abr'},
-                area:{expr:`(
-                    select area
+                areas:{expr:`(
+                    select string_agg(area::text,', ')
                         from areas
                         where recorrido=recorridos.recorrido
                 )`}
