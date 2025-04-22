@@ -8,7 +8,7 @@ export function provisorio_recepcion(context:TableContext):TableDefinition {
         name: 'provisorio_recepcion',
         elementName: 'provisorio_recepcion',
         allow:{
-            insert:false,
+            insert: context.forDump,
             delete:false,
             update:autorizado,
             import:false
