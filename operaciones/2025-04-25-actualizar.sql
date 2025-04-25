@@ -22,3 +22,8 @@ alter table "modos_dm" add constraint "modo_dm<>''" check ("modo_dm"<>'');
 alter table "modos_dm" add constraint "descripcion<>''" check ("descripcion"<>'');
 
 alter table "parametros" add constraint "parametros modos_dm REL" foreign key ("modo_dm_defecto") references "modos_dm" ("modo_dm")  on update cascade;
+
+alter table "usuarios" add column "muestra_encuestas_prod" boolean default true;
+alter table "usuarios" add column "muestra_encuestas_capa" boolean;
+
+alter table "usuarios" add constraint "muestra encuestas not false" check (muestra_encuestas_prod is not false and muestra_encuestas_capa is not false);

@@ -11,7 +11,8 @@ import { IdFormulario, RespuestasRaiz, ForPk, IdVariable, Formulario, Libre, IdU
     RespuestaLasUA,
     ForPkRaiz,
     IdEnc,
-    CasillerosImplementados
+    CasillerosImplementados,
+    toPlainForPk
 } from "dmencu/dist/unlogged/unlogged/tipos";
 import {getDatosByPass, persistirDatosByPass, setCalcularVariablesEspecificasOperativo, respuestasForPk, 
     registrarElemento, dispatchByPass, accion_registrar_respuesta, accion_abrir_formulario,
@@ -298,5 +299,11 @@ setCalcularVariablesEspecificasOperativo((resRaiz:RespuestasRaiz, forPk:ForPk)=>
             numberIfNullOrUndefined(resRaiz[cant44]),
             numberIfNullOrUndefined(resRaiz[cant54])
         ]);
+    }
+    if(forPk.formulario == 'F:RE_CIS' as IdFormulario || forPk.formulario == 'F:F2_CIS' as IdFormulario){
+        resRaiz['u8' as IdVariable] = (resRaiz.personas || []).filter(
+            (p,i)=>{
+                return p.anulado != 1 && (p.sc1 != null || p.sc_grupo != null || p.sc2 !=null || p.sc3 !=null || p.sc16 !=null || p.sc4 !=null)
+            }).length
     }
 })

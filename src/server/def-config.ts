@@ -58,7 +58,7 @@ install:
       - registrar_barrio_recorrido_tem.sql
       - configuracion_sorteo_repsic.sql  
 login:
-  infoFieldList: [usuario, rol, idper, recorrido]
+  infoFieldList: [usuario, rol, idper, recorrido, muestra_encuestas_prod, muestra_encuestas_capa]
   plus:
     maxAge-5-sec: 5000    
     maxAge: 864000000
