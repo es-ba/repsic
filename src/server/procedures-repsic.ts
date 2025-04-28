@@ -315,7 +315,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
             ).fetchUniqueRow();
             return `se agregó correctamente el área ${parameters.area} al recorrido ${parameters.recorrido}`;
         }
-    }
+    },
     {
         action:'encuesta_capa_a_prod_pasar',
         parameters:[
