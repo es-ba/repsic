@@ -15,6 +15,7 @@ export function personas(context:TableContext):TableDefinition {
             { name: "persona"       , label:'nro persona'                , typeName: 'integer' },
             { name: "p0"            , label:'sc0'                        , typeName: 'integer' },
             { name: "apertura"      , label:'contesta entrevista'        , typeName: 'integer' },
+            { name: "anulado"       , label:'cuestionario anulado'       , typeName: 'integer' },
             { name: "sc1"           , label:'nombre'                     , typeName: 'text'    },
             { name: "sc_grupo"      , label:'nro grupo'                  , typeName: 'integer' }, //paradores
             { name: "sc2"           , label:'parentesco'                 , typeName: 'integer' },
@@ -50,19 +51,14 @@ export function personas(context:TableContext):TableDefinition {
             { name: "sc19_3"        , label:'changas'                    , typeName: 'integer' },
             { name: "sc19_4"        , label:'pide dinero'                , typeName: 'integer' },            
             { name: "sc19_6"        , label:'otro'                       , typeName: 'integer' },
-            { name: "sc19_88"       , label:'NS'                         , typeName: 'integer' },
-            { name: "sc19_99"       , label:'NC'                         , typeName: 'integer' },
+            { name: "sc196_esp"     , label:'otro especifique'           , typeName: 'text'    },
             { name: "sc20_1"        , label:'jubilación pensión'         , typeName: 'integer' },
             { name: "sc20_2"        , label:'prog CP'                    , typeName: 'integer' },
             { name: "sc20_3"        , label:'AUH'                        , typeName: 'integer' },
             { name: "sc20_7"        , label:'sub habitacional'           , typeName: 'integer' },
             { name: "sc20_4"        , label:'sub o plan'                 , typeName: 'integer' },
             { name: "sc20_5"        , label:'otro'                       , typeName: 'integer' },
-            { name: "sc20_6"        , label:'No recibió ningún ingreso'  , typeName: 'integer' },
-            { name: "sc20_88"       , label:'NS'                         , typeName: 'integer' },
-            { name: "sc20_99"       , label:'NC'                         , typeName: 'integer' },
-
-                       
+            { name: "sc20_6"        , label:'No recibió ningún ingreso'  , typeName: 'integer' }               
 /* 
             { name: "sc6"           , label:'asiste est educ'            , typeName: 'integer' },
             { name: "sc7"           , label:'nivel'                      , typeName: 'integer' },
@@ -93,12 +89,17 @@ export function personas(context:TableContext):TableDefinition {
             { name: "sc19_4"        , label:'pide dinero'                , typeName: 'integer' },
             { name: "sc19_5"        , label:'relación dep'               , typeName: 'integer' },
             { name: "sc19_6"        , label:'otro'                       , typeName: 'integer' },
+            { name: "sc19_88"       , label:'NS'                         , typeName: 'integer' },
+            { name: "sc19_99"       , label:'NC'                         , typeName: 'integer' },
             { name: "sc20_1"        , label:'jubilación pensión'         , typeName: 'integer' },
             { name: "sc20_2"        , label:'prog CP'                    , typeName: 'integer' },
             { name: "sc20_3"        , label:'AUH'                        , typeName: 'integer' },
             { name: "sc20_4"        , label:'sub o plan'                 , typeName: 'integer' },
             { name: "sc20_5"        , label:'otro'                       , typeName: 'integer' },
             { name: "sc20_6"        , label:'No recibió ningún ingreso'  , typeName: 'integer' },
+            { name: "sc20_88"       , label:'NS'                         , typeName: 'integer' },
+            { name: "sc20_99"       , label:'NC'                         , typeName: 'integer' },
+
             */
         ],
         primaryKey: ['operativo','id_caso', 'persona'],
