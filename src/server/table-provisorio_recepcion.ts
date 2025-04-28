@@ -3,12 +3,12 @@
 import {TableDefinition, TableContext} from "./types-repsic";
 
 export function provisorio_recepcion(context:TableContext):TableDefinition {
-    var autorizado = context.user.rol === 'admin'||context.user.rol === 'coor_campo' ||context.user.rol === 'recepcionista';
+    var autorizado = context.user.rol === 'admin'||context.user.rol === 'coor_campo' ||context.user.rol === 'subcoor_campo'||context.user.rol === 'recepcionista';
     return {
         name: 'provisorio_recepcion',
         elementName: 'provisorio_recepcion',
         allow:{
-            insert:false,
+            insert: context.forDump,
             delete:false,
             update:autorizado,
             import:false

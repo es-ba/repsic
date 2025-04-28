@@ -6,7 +6,7 @@ import {provisorio_recepcion} from "./table-provisorio_recepcion"
 
 export function coordinacion(context:TableContext):TableDefinition {
     const provisorioRecepcionTableDef = provisorio_recepcion(context);
-    var autorizado = context.user.rol === 'admin'||context.user.rol === 'coor_campo';
+    var autorizado = context.user.rol === 'admin'||context.user.rol === 'coor_campo'||context.user.rol === 'subcoor_campo';
     return {
         name: 'coordinacion',
         elementName: 'coordinacion',

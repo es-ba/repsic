@@ -12,6 +12,21 @@ setGenerarIdEncFun((area:number,index:number)=>area.toString() + ((index<9)?'0':
 setMaxAgenerar(99);
 //setMaxEncPorArea(99);
 
+export const updateProvisorioQuery = `
+update provisorio_recepcion pr
+    set cues_dm = t.cues_dm, pers_dm = t.pers_dm
+    from (
+        select
+            operativo,
+            area, 
+            count(*) filter (where enc_autogenerado_dm is not null and coalesce((json_encuesta->>'u8')::integer,0) > 0 ) as cues_dm,
+            sum(coalesce((json_encuesta->>'u8')::integer,0)) filter (where enc_autogenerado_dm is not null and json_encuesta is not null) as pers_dm
+            from tem t 
+            group by operativo, area
+    ) as t
+    where pr.operativo = t.operativo and pr.area =  t.area
+`
+
 setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrincipal:IdUnidadAnalisis, permiteGenerarMuestra:boolean)=>{
     return `
     with ${context.be.db.quoteIdent(unidadAnalisisPrincipal)} as 
@@ -263,6 +278,61 @@ export const ProceduresRepsic : ProcedureDef[] = [
                 select recorrido from recorridos where orden is not null order by orden`,
                 []
             ).fetchAll()).rows;
+        }
+    },
+    {
+        action:'area_agregar',
+        parameters:[
+            {name:'operativo'   , typeName:'text', references:'operativos'   },
+            {name:'recorrido'   , typeName:'integer', references:'recorridos'},
+            {name:'area'        , typeName:'integer'                         },
+        ],
+        roles:['admin'],
+        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
+            await context.client.query(
+                `insert into areas (operativo, recorrido, area) 
+                    values ($1, $2, $3) 
+                    returning *`,
+                [parameters.operativo, parameters.recorrido, parameters.area]
+            ).fetchUniqueRow();
+            await context.client.query(
+                `insert into tareas_areas(operativo, tarea, area, asignado, recepcionista, obs_recepcion)
+                    select * 
+                        from (select a.operativo, t.tarea, area, case when tarea='encu' then encuestador else null end asignado, recepcionista, obs_recepcionista
+                            from areas a ,(select t.operativo, t.tarea 
+                                from tareas t join parametros p on unico_registro and t.operativo=p.operativo
+                            ) t
+                        ) n
+                        where not exists (select 1 from tareas_areas t where t.operativo= n.operativo and t.tarea=n.tarea and t.area=n.area)
+                    order by 1,2,3`,
+                []
+            ).execute();
+            await context.client.query(
+                `insert into provisorio_recepcion (operativo, area) 
+                    values ($1, $2) 
+                    returning *`,
+                [parameters.operativo, parameters.area]
+            ).fetchUniqueRow();
+            return `se agregó correctamente el área ${parameters.area} al recorrido ${parameters.recorrido}`;
+        }
+    }
+    {
+        action:'encuesta_capa_a_prod_pasar',
+        parameters:[
+            {name:'operativo'   , typeName:'text', references:'operativos'   },
+            {name:'enc'         , typeName:'text'},
+        ],
+        roles:['admin'],
+        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
+            (await context.client.query(
+                `update tem
+                    set enc_autogenerado_dm = enc_autogenerado_dm_capa, enc_autogenerado_dm_capa = null
+                    where operativo = $1 and enc = $2 and enc_autogenerado_dm_capa is not null
+                    returning *`,
+                [parameters.operativo, parameters.enc]
+            ).fetchUniqueRow()).row;
+            await context.client.query(updateProvisorioQuery,[]).fetchAll();
+            return `se movió la encuesta ${parameters.enc} a producción, se actualizó le provisorio`;
         }
     }
 /* */

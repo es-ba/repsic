@@ -13,9 +13,6 @@ export function provisorio_recorridos(context:TableContext):TableDefinition {
         fields: [
             { name: "operativo"          , typeName: "text"    }, 
             { name: "recorrido"          , typeName: "integer" },
-            { name: "relevador"          , typeName: "text"    },
-            { name: "nombre"             , typeName: "text"    },
-            { name: "apellido"           , typeName: "text"    },
             { name: "cues_dm"            , typeName: "integer" , aggregate:'sum'}, 
             { name: "pers_dm"            , typeName: "integer" , aggregate:'sum'},
             { name: "cues_papel"         , typeName: "integer" , aggregate:'sum'}, 
@@ -39,9 +36,6 @@ export function provisorio_recorridos(context:TableContext):TableDefinition {
             (select 
                 operativo,
                 recorrido,
-                relevador,
-                nombre,
-                apellido,
                 sum(cues_dm) as cues_dm,
                 sum(pers_dm) as pers_dm,
                 sum(cues_papel) as cues_papel,
@@ -56,9 +50,6 @@ export function provisorio_recorridos(context:TableContext):TableDefinition {
                 (${provisorioRecepcionTableDef.sql!.from}) aux
             group by operativo,
                 recorrido,
-                relevador,
-                nombre,
-                apellido,
                 tipo_recorrido,
                 comuna,
                 descripcion_barrio

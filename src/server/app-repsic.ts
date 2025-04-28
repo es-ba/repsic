@@ -1,7 +1,7 @@
 "use strict";
 
 import * as procesamiento from "procesamiento";
-import {ProceduresRepsic} from "./procedures-repsic";
+import {ProceduresRepsic, updateProvisorioQuery} from "./procedures-repsic";
 
 import {AppProcesamientoType, Response, TableContext} from "procesamiento";
 
@@ -40,7 +40,7 @@ import { Request } from "rel-enc";
 
 import * as cookieParser from 'cookie-parser';
 
-const APP_DM_VERSION="#25-04-09";
+const APP_DM_VERSION="#28-04-25";
 
 interface Context extends procesamiento.Context{
   puede:object
@@ -82,20 +82,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 var coreFunctionInterno = procDef.coreFunction;
                 procDef.coreFunction = async function(context:procesamiento.ProcedureContext, parameters:any){
                     var result = await coreFunctionInterno(context, parameters);
-                    var actualizadas = await context.client.query(`
-                        update provisorio_recepcion pr
-                            set cues_dm = t.cues_dm, pers_dm = t.pers_dm
-                            from (
-                                select
-                                    operativo,
-                                    area, 
-                                    count(*) filter (where enc_autogenerado_dm is not null and coalesce((json_encuesta->>'u8')::integer,0) > 0 ) as cues_dm,
-                                    sum(coalesce((json_encuesta->>'u8')::integer,0)) filter (where enc_autogenerado_dm is not null and json_encuesta is not null) as pers_dm
-                                    from tem t 
-                                    group by operativo, area
-                            ) as t
-                            where pr.operativo = t.operativo and pr.area =  t.area
-                    `,[]).fetchAll();
+                    var actualizadas = await context.client.query(updateProvisorioQuery,[]).fetchAll();
                     console.log(`se actualizó el provisorio, ${actualizadas.rowCount} areas actualizadas`)
                     return result;
                 }
@@ -344,6 +331,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
     getMenuVarios(context:Context){
         let menuVarios = super.getMenuVarios(context);
         menuVarios.menuContent = menuVarios.menuContent.filter((menuInfo)=>!['abrir_encuesta','hoja_ruta'].includes(menuInfo.name));
+        menuVarios.menuContent.push({menuType:'proc', name:'area_agregar', label: 'agregar area a un recorrido'})
         return menuVarios;
     }
     getMenuControles(context:Context){
