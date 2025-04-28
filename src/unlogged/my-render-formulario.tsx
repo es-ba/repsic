@@ -12,7 +12,8 @@ import { IdFormulario, RespuestasRaiz, ForPk, IdVariable, Formulario, Libre, IdU
     ForPkRaiz,
     IdEnc,
     CasillerosImplementados,
-    toPlainForPk
+    toPlainForPk,
+    ModoDM
 } from "dmencu/dist/unlogged/unlogged/tipos";
 import {getDatosByPass, persistirDatosByPass, setCalcularVariablesEspecificasOperativo, respuestasForPk, 
     registrarElemento, dispatchByPass, accion_registrar_respuesta, accion_abrir_formulario,
@@ -21,7 +22,8 @@ import {getDatosByPass, persistirDatosByPass, setCalcularVariablesEspecificasOpe
     getFeedbackRowValidator,
     calcularResumenVivienda,
     intentarBackup,
-    volcadoInicialElementosRegistrados
+    volcadoInicialElementosRegistrados,
+    MODO_DM_LOCALSTORAGE_KEY
 } from "dmencu/dist/unlogged/unlogged/bypass-formulario";
 import {setDesplegarCarga, setDesplegarLineaResumenUAPrincipal, resumidores, DesplegarTem, DesplegarCitaPactada, DesplegarCitaPactadaYSeleccionadoAnteriorTem, DesplegarLineaResumenUAPrincipal, Button} from "dmencu/dist/unlogged/unlogged/render-formulario";
 import { useEffect, useState } from "react";
@@ -59,6 +61,7 @@ setDesplegarCarga((props:{
         respuestas[estructura.uaPpal][numVivienda].u8 || 0
     ).array().reduce((accumulator, currentValue) => accumulator + currentValue,0);
     const cantCuesArea = likeAr(informacionHdr).filter((informacion, numVivienda)=>informacion.tem.carga==idCarga && respuestas[estructura.uaPpal][numVivienda].u8).array().length
+    const modoDM:ModoDM = my.getLocalVar(MODO_DM_LOCALSTORAGE_KEY);
     return <Paper className="carga" style={{marginBottom: '10px', padding: '10px'}}>
         <div className="informacion-carga">
             <div className="carga">Área: {idCarga} | cuestionarios: {cantCuesArea} | personas: {cantPerArea}
@@ -110,7 +113,7 @@ setDesplegarCarga((props:{
                         <TableCell colSpan={3}>
                             <Button
                                 variant="contained"
-                                color="primary"
+                                color={modoDM=="capa"?"success":"primary"}
                                 onClick={()=>
                                     crearEncuesta(idCarga,(forPkRaiz:ForPkRaiz)=>{
                                         dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:forPkRaiz, apilarVuelta:false}));
@@ -209,7 +212,7 @@ const numberIfNullOrUndefined = (value:Valor) => Number(value ?? 0)
 setCalcularVariablesEspecificasOperativo((resRaiz:RespuestasRaiz, forPk:ForPk)=>{
     var estructura = getEstructura();
     delete(resRaiz.vdominio);
-    if(forPk.formulario == 'F:F2' as IdFormulario){
+    if(forPk.formulario == 'F:F2' as IdFormulario || forPk.formulario == 'F:F2_CIS' as IdFormulario){
         let {respuestas} = respuestasForPk(forPk);
         respuestas['p0' as IdVariable] = forPk.persona;
     }

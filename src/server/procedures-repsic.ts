@@ -12,6 +12,21 @@ setGenerarIdEncFun((area:number,index:number)=>area.toString() + ((index<9)?'0':
 setMaxAgenerar(99);
 //setMaxEncPorArea(99);
 
+export const updateProvisorioQuery = `
+update provisorio_recepcion pr
+    set cues_dm = t.cues_dm, pers_dm = t.pers_dm
+    from (
+        select
+            operativo,
+            area, 
+            count(*) filter (where enc_autogenerado_dm is not null and coalesce((json_encuesta->>'u8')::integer,0) > 0 ) as cues_dm,
+            sum(coalesce((json_encuesta->>'u8')::integer,0)) filter (where enc_autogenerado_dm is not null and json_encuesta is not null) as pers_dm
+            from tem t 
+            group by operativo, area
+    ) as t
+    where pr.operativo = t.operativo and pr.area =  t.area
+`
+
 setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrincipal:IdUnidadAnalisis, permiteGenerarMuestra:boolean)=>{
     return `
     with ${context.be.db.quoteIdent(unidadAnalisisPrincipal)} as 
@@ -272,7 +287,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
             {name:'recorrido'   , typeName:'integer', references:'recorridos'},
             {name:'area'        , typeName:'integer'                         },
         ],
-        // encode:'JSON', no existe, cambiar después de la 212
+        roles:['admin'],
         coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
             await context.client.query(
                 `insert into areas (operativo, recorrido, area) 
@@ -299,6 +314,25 @@ export const ProceduresRepsic : ProcedureDef[] = [
                 [parameters.operativo, parameters.area]
             ).fetchUniqueRow();
             return `se agregó correctamente el área ${parameters.area} al recorrido ${parameters.recorrido}`;
+        }
+    }
+    {
+        action:'encuesta_capa_a_prod_pasar',
+        parameters:[
+            {name:'operativo'   , typeName:'text', references:'operativos'   },
+            {name:'enc'         , typeName:'text'},
+        ],
+        roles:['admin'],
+        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
+            (await context.client.query(
+                `update tem
+                    set enc_autogenerado_dm = enc_autogenerado_dm_capa, enc_autogenerado_dm_capa = null
+                    where operativo = $1 and enc = $2 and enc_autogenerado_dm_capa is not null
+                    returning *`,
+                [parameters.operativo, parameters.enc]
+            ).fetchUniqueRow()).row;
+            await context.client.query(updateProvisorioQuery,[]).fetchAll();
+            return `se movió la encuesta ${parameters.enc} a producción, se actualizó le provisorio`;
         }
     }
 /* */
