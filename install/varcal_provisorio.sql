@@ -57,9 +57,11 @@ create table "repsic_251_personas_calculada" (
 --grant all on "repsic_251_personas_calculada" to "repsic251_owner";
 
 create table "repsic_251_coordinacion_calculada" (
-  "recorrido" bigint, 
+  "operativo" text,
+  "recorrido" bigint,
+  "area" bigint,
   "cant_form" bigint
-, primary key ("recorrido")
+, primary key ("operativo","recorrido","area")
 );
 --grant select, insert, update, delete, references on "repsic_251_coordinacion_calculada" to "repsic251_admin";
 --grant all on "repsic_251_coordinacion_calculada" to "repsic251_owner";
@@ -73,11 +75,11 @@ alter table "repsic_251_personas_calculada" add constraint "id_caso<>''" check (
 -- FKs
 alter table "repsic_251_grupo_personas_calculada" add constraint  "repsic_251_grupo_personas_calculada grupo_personas REL" foreign key ("operativo", "id_caso") references "grupo_personas" ("operativo", "id_caso")  on delete cascade on update cascade;
 alter table "repsic_251_personas_calculada" add constraint  "repsic_251_personas_calculada personas REL" foreign key ("operativo", "id_caso", "persona") references "personas" ("operativo", "id_caso", "persona")  on delete cascade on update cascade;
---alter table "repsic_251_coordinacion_calculada" add constraint  "repsic_251_coordinacion_calculada coordinacion REL" foreign key ("recorrido") references "coordinacion" ("recorrido")  on delete cascade on update cascade;
+alter table "repsic_251_coordinacion_calculada" add constraint  "repsic_251_coordinacion_calculada coordinacion REL" foreign key ("operativo","recorrido","area") references "coordinacion" ("operativo","recorrido","area")  on delete cascade on update cascade;
 -- index
 create index "operativo,id_caso 4 repsic_251_grupo_personas_calculada IDX" ON "repsic_251_grupo_personas_calculada" ("operativo", "id_caso");
 create index "operativo,id_caso,persona 4 repsic_251_personas_calculada IDX" ON "repsic_251_personas_calculada" ("operativo", "id_caso", "persona");
-create index "recorrido 4 repsic_251_coordinacion_calculada IDX" ON "repsic_251_coordinacion_calculada" ("recorrido");
+create index "recorrido 4 repsic_251_coordinacion_calculada IDX" ON "repsic_251_coordinacion_calculada" ("operativo","recorrido","area");
 ----
 --mejora
             INSERT INTO "repsic_251_grupo_personas_calculada" ("operativo","id_caso") 
@@ -86,8 +88,8 @@ create index "recorrido 4 repsic_251_coordinacion_calculada IDX" ON "repsic_251_
             INSERT INTO "repsic_251_personas_calculada" ("operativo","id_caso","persona") 
               SELECT "operativo","id_caso","persona" FROM "personas";
 
-            INSERT INTO "repsic_251_coordinacion_calculada" ("recorrido") 
-              SELECT "recorrido" FROM "coordinacion";
+            INSERT INTO "repsic_251_coordinacion_calculada" ("operativo","recorrido","area") 
+              SELECT "operativo","recorrido","area" FROM "coordinacion";
 ----
 
 ----- SE CREA LA FUNCION PARA LLAMAR ANTES DE CADA CONSISTIR
@@ -116,8 +118,8 @@ BEGIN
       SELECT "operativo","id_caso" FROM "grupo_personas" WHERE operativo=p_operativo AND "id_caso"=p_id_caso ON CONFLICT DO NOTHING;
     INSERT INTO "repsic_251_personas_calculada" ("operativo","id_caso","persona") 
       SELECT "operativo","id_caso","persona" FROM "personas" WHERE operativo=p_operativo AND "id_caso"=p_id_caso ON CONFLICT DO NOTHING;
-    INSERT INTO "repsic_251_coordinacion_calculada" ("recorrido") 
-      SELECT "recorrido" FROM "coordinacion" WHERE recorrido=v_recorrido ON CONFLICT DO NOTHING;
+    INSERT INTO "repsic_251_coordinacion_calculada" ("operativo","recorrido","area") 
+      SELECT "operativo","recorrido","area" FROM "coordinacion"  ON CONFLICT DO NOTHING;
   ----
     UPDATE repsic_251_grupo_personas_calculada
       SET 
@@ -211,8 +213,11 @@ BEGIN
           FROM "grupo_personas" JOIN "repsic_251_grupo_personas_calculada" using ("operativo","id_caso")
           WHERE "coordinacion"."recorrido"="grupo_personas"."u1"
         ) as grupo_personas_agg
-      WHERE "coordinacion"."recorrido"="repsic_251_coordinacion_calculada"."recorrido" 
-        AND "coordinacion"."recorrido"=v_recorrido;
+      WHERE "coordinacion"."operativo"="repsic_251_coordinacion_calculada"."operativo" 
+        AND "coordinacion"."recorrido"="repsic_251_coordinacion_calculada"."recorrido" 
+        AND "coordinacion"."area"="repsic_251_coordinacion_calculada"."area" 
+        --AND "coordinacion"."recorrido"=v_recorrido
+        ;
 
   --
   RETURN 'OK';
