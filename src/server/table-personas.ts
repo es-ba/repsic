@@ -58,7 +58,8 @@ export function personas(context:TableContext):TableDefinition {
             { name: "sc20_7"        , label:'sub habitacional'           , typeName: 'integer' },
             { name: "sc20_4"        , label:'sub o plan'                 , typeName: 'integer' },
             { name: "sc20_5"        , label:'otro'                       , typeName: 'integer' },
-            { name: "sc20_6"        , label:'No recibió ningún ingreso'  , typeName: 'integer' }               
+            { name: "sc20_6"        , label:'No recibió ningún ingreso'  , typeName: 'integer' }, 
+            { name: "ob_1"          , label:'Observaciones personas'     , typeName: 'text'    }
 /* 
             { name: "sc6"           , label:'asiste est educ'            , typeName: 'integer' },
             { name: "sc7"           , label:'nivel'                      , typeName: 'integer' },
