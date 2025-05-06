@@ -39,7 +39,8 @@ create table "repsic_251_grupo_personas_calculada" (
   "cant_tot_tot" bigint, 
   "cant_tot_va" bigint, 
   "cant_per" bigint, 
-  "cant_refe" bigint
+  "cant_refe" bigint,
+  "cant_apertura_no" bigint
 , primary key ("operativo", "id_caso")
 );
 --grant select, insert, update, delete, references on "repsic_251_grupo_personas_calculada" to "repsic251_admin";
@@ -146,7 +147,8 @@ BEGIN
         cant_tot_mu = personas_agg.cant_tot_mu,
         cant_tot_no_obs = personas_agg.cant_tot_no_obs,
         cant_tot_va = personas_agg.cant_tot_va,
-        cant_refe = personas_agg.cant_refe
+        cant_refe = personas_agg.cant_refe,
+        cant_apertura_no= personas_agg.cant_apertura_no
       FROM "grupo_personas"  
         ,LATERAL (
           SELECT
@@ -173,9 +175,10 @@ BEGIN
           count(nullif(CASE WHEN "personas"."sc3"=2 THEN true ELSE NULL END,false)) as cant_tot_mu,
           count(nullif(CASE WHEN ("personas"."sc3"=88 or "personas"."sc3"=99 or "personas"."sc3"=777) THEN true ELSE NULL END,false)) as cant_tot_no_obs,
           count(nullif(CASE WHEN "personas"."sc3"=1 THEN true ELSE NULL END,false)) as cant_tot_va,
-          count(nullif(CASE WHEN "personas"."sc2"=1 THEN true ELSE NULL END,false)) as cant_refe
-            FROM "personas" JOIN "repsic_251_personas_calculada" using ("operativo","id_caso","persona")
-                WHERE "grupo_personas"."operativo"="personas"."operativo" AND "grupo_personas"."id_caso"="personas"."id_caso"
+          count(nullif(CASE WHEN "personas"."sc2"=1 THEN true ELSE NULL END,false)) as cant_refe,
+          count(nullif(CASE WHEN "personas"."apertura"=2 THEN true ELSE NULL END,false)) as cant_apertura_no
+          FROM "personas" JOIN "repsic_251_personas_calculada" using ("operativo","id_caso","persona")
+            WHERE "grupo_personas"."operativo"="personas"."operativo" AND "grupo_personas"."id_caso"="personas"."id_caso"
         ) as personas_agg
       WHERE "grupo_personas"."operativo"="repsic_251_grupo_personas_calculada"."operativo" AND "grupo_personas"."id_caso"="repsic_251_grupo_personas_calculada"."id_caso" AND "grupo_personas"."operativo"=p_operativo AND "grupo_personas"."id_caso"=p_id_caso;
     UPDATE repsic_251_grupo_personas_calculada
