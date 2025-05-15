@@ -13,9 +13,9 @@
     "unlogged"
   ],
   "dependencies": {
-    "yazl": "~2.5.1",
+    "dmencu": "^2.0.15",
     "guijarro": "^0.3.1",
-    "dmencu": "^2.0.13"
+    "yazl": "~2.5.1"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
