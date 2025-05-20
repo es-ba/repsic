@@ -34,6 +34,7 @@ import { provisorio_recorridos} from "./table-provisorio_recorridos";
 import { tipos_lugar         } from "./table-tipos_lugar";
 import { tipos_recorrido     } from "./table-tipos_recorrido";
 import { incompletas_dm_tem  } from "./table-incompletas_dm_tem";
+import { puntos_gps          } from "./table-puntos_gps";
 
 import {defConfig} from "./def-config"
 import { Request } from "rel-enc";
@@ -434,6 +435,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             , dicvar
             , dictra
             , incompletas_dm_tem
+            , puntos_gps
         }
         delete(this.getTableDefinition.viviendas);
         delete(this.getTableDefinition.personas_sup);
