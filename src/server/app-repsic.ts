@@ -386,6 +386,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                     menuDef.menu.push(
                         //{menuType:'mapa'  , name:'mapa'},
                         {menuType:'menu'  , name:'carto', label:'materiales carto', menuContent:[
+                            {menuType:'table', name:'puntos_gps'},
                             {menuType:'table', name:'barrios'},
                             {menuType:'table', name:'recorridos'},
                             {menuType:'table', name:'recorridos_barrios'},
