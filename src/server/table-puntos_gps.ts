@@ -19,9 +19,9 @@ export function puntos_gps(context:TableContext):TableDefinition {
             { name: "latitud"     , typeName: "decimal" },
             { name: "longitud"    , typeName: "decimal" },
             { name: "cprecision"  , typeName: "decimal" },
-            { name: "orden"       , typeName: "decimal"}
+            { name: "cuando"       , typeName: "timestamp"}
         ],
-        primaryKey: ['id_caso', 'orden'],
+        primaryKey: ['id_caso', 'cuando'],
         /*
         foreignKeys: [
             { references: 'recorridos', fields: ['recorrido'], displayAllFields:true},
@@ -49,7 +49,7 @@ export function puntos_gps(context:TableContext):TableDefinition {
                     select *,(u9elem_json#>>'{coords,accuracy}')::numeric cprecision
                         , (u9elem_json#>>'{coords,latitude}')::numeric latitud
                         , (u9elem_json#>>'{coords,longitude}')::numeric longitud
-                        ,(u9elem_json#>>'{timestamp}')::numeric as orden 
+                        ,to_timestamp((u9elem_json#>>'{timestamp}')::numeric/1000)::timestamp without time zone as cuando 
                         from x1 
                     order by id_caso,(u9elem_json#>>'{timestamp}')::numeric 
             )`
