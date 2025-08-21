@@ -49,7 +49,7 @@ export function provisorio_recepcion(context:TableContext):TableDefinition {
                     select array_agg(distinct comuna order by comuna)::text 
                         from (select comuna
                                 from recorridos_barrios 
-                                        left join barrios using (barrio) 
+                                        left join barrios using (comuna, barrio) 
                                 where recorrido=a.recorrido
                                 union 
                                 select comuna
@@ -57,10 +57,16 @@ export function provisorio_recepcion(context:TableContext):TableDefinition {
                                 where recorrido=a.recorrido
                         ) x
                     ) as comuna, (
-                    select string_agg(nombre,', ' order by barrio) 
-                        from recorridos_barrios 
-                            left join barrios using (barrio) 
-                        where recorrido=a.recorrido
+                        select string_agg(nombre,', ' order by barrio) 
+                            from (
+                                select barrio,nombre
+                                    from recorridos_barrios left join barrios using (comuna, barrio) 
+                                    where recorrido=recorridos.recorrido
+							    union
+                                select barrio, nombre
+                                    from lugares left join barrios using (comuna,barrio) 
+                                    where recorrido=recorridos.recorrido
+                            )
                     ) as descripcion_barrio,
                     --(select string_agg(coalesce(nullif(concat_ws(' ', nombre, apellido),''), usuario), ', ' order by usuario) 
                     --    from tareas_areas ta join usuarios u on (ta.asignado = u.idper and ta.area = a.area and ta.tarea = 'encu')
@@ -88,50 +94,6 @@ export function provisorio_recepcion(context:TableContext):TableDefinition {
                         --) using (area)
                             
             )`
-            /*fields:{
-                recorrido:{expr:`(
-                    select recorrido
-                        from areas
-                        where area=areas.area
-                )`},
-                tipo_recorrido:{expr:"recorridos.tipo_recorrido"},                
-                comuna:{
-                    expr:`(
-                            select array_agg(distinct comuna order by comuna)::text 
-                                from (select comuna
-                                        from recorridos_barrios 
-                                             left join barrios using (barrio) 
-                                        where recorrido=provisorio_recepcion.recorrido
-                                      union 
-                                      select comuna
-                                        from lugares 
-                                        where recorrido=provisorio_recepcion.recorrido
-                                ) x
-                    )`
-                },
-                descripcion_barrio:{
-                    expr:`(
-                        select string_agg(nombre,', ' order by barrio) 
-                                from recorridos_barrios 
-                                    left join barrios using (barrio) 
-                                where recorrido=provisorio_recepcion.recorrido
-                    )`
-                },
-                relevador:{
-                    expr:`(
-                        select string_agg(coalesce(nullif(concat_ws(' ', nombre, apellido),''), usuario), ', ' order by usuario) 
-                                from usuarios 
-                                where recorrido=provisorio_recepcion.recorrido
-                    )`
-                },
-                cues_total:{
-                    expr:`(
-                        select count(*) from tem where area in (select area
-                            from areas
-                            where recorrido=recorridos.recorrido)
-                    )`
-                }
-            }*/
         }
     };
 }

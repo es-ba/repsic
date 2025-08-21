@@ -16,7 +16,6 @@ import { NextFunction } from "express-serve-static-core";
 
 import { adjuntos            } from "./table-adjuntos";
 import { adjunto_categoria   } from "./table-adjunto_categoria";
-import { barrios             } from "./table-barrios";
 import { casos               } from "./table-casos";
 import { categorias_adjuntos } from "./table-categorias_adjuntos";
 import { diccionario         } from "./table-diccionario";
@@ -355,6 +354,30 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         :
             {menuType:'table', name:'recep_ingresador', label:'recepción', table:'ingresadores_asignados'}
     }
+
+    getMenuCarto(context:Context) {
+        if(context.puede?.campo?.administrar){
+            let menuCarto = super.getMenuCarto(context);
+            if(menuCarto){
+                menuCarto.menuContent.push(
+                    {menuType:'table', name:'puntos_gps'},
+                    {menuType:'table', name:'recorridos'},
+                    {menuType:'table', name:'recorridos_barrios'},
+                    {menuType:'table', name:'tipos_recorrido'},
+                    {menuType:'table', name:'lugares'},
+                    {menuType:'table', name:'tipos_lugar'},
+                    {menuType:'menu', name:'materiales', menuContent:[
+                        {menuType:'table', name:'adjuntos'           },
+                        {menuType:'table', name:'categorias_adjuntos', label:'categorías'},
+                        {menuType:'table', name:'adjunto_categoria'  , label:'adjunto-categoría'},
+                    ]}
+                )
+            }
+            return menuCarto
+        }
+        return null
+    }
+
     getMenu(context:Context){
         let menuDef:MenuDefinition = super.getMenu(context);
         if(this.config.server.policy=='web'){
@@ -383,7 +406,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                     menuPapel.menuContent.unshift(
                         {menuType:'table' , name:'coordinacion'         , label:'generar casos papel' },
                     );
-                    menuDef.menu.push(
+                    /*menuDef.menu.push(
                         //{menuType:'mapa'  , name:'mapa'},
                         {menuType:'menu'  , name:'carto', label:'materiales carto', menuContent:[
                             {menuType:'table', name:'puntos_gps'},
@@ -399,7 +422,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                                 {menuType:'table', name:'adjunto_categoria'  , label:'adjunto-categoría'},
                             ]}
                         ]},
-                    )
+                    )*/
                 }
             //usuario ingresador
             }else{
@@ -421,7 +444,6 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             , adjunto_categoria
             , tipos_lugar         
             , tipos_recorrido     
-            , barrios             
             , lugares             
             , personas            
             , recorridos          
@@ -539,6 +561,12 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 't."operativo",t."enc"',
                 't."operativo",t."enc",t."recorrido", t."tipo_recorrido", t."comuna_agrupada", t."barrios_agrupados"');
         });
+        be.appendToTableDefinition('barrios',function(tableDef){
+            tableDef.detailTables = tableDef.detailTables || [];
+            tableDef.detailTables.push(
+                {table:'recorridos_barrios',fields:['comuna','barrio'], abr:'R'}
+            );
+        })
     }
   }
 }

@@ -10,11 +10,12 @@ export function recorridos_barrios(context:TableContext):TableDefinition {
         editable: admin,
         fields: [
             { name: "recorrido" , typeName: "integer" },
-            { name: "barrio"    , typeName: "integer" },
+            { name: "comuna"    , typeName: "text" },
+            { name: "barrio"    , typeName: "text" },
         ],
-        primaryKey: ['recorrido','barrio'],
+        primaryKey: ['recorrido','comuna','barrio'],
         foreignKeys: [   
-            { references: 'barrios'      , fields: ['barrio']   , displayAllFields:true},    
+            { references: 'barrios'      , fields: ['comuna','barrio']   , displayAllFields:true},    
             { references: 'recorridos'   , fields: ['recorrido'], displayFields:['tipo_recorrido','observaciones','particion'] },    
         ],
     };

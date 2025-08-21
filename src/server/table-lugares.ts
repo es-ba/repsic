@@ -15,8 +15,8 @@ export function lugares(context:TableContext):TableDefinition {
             { name: "descripcion"       , typeName: "text"    , nullable:false},
             { name: "tipo_lugar"        , typeName: "integer" , nullable:false}, //parador, hospital o terminal
             { name: "tipo_pob"          , typeName: "text"    }, //hombres o mujeres
-            { name: "comuna"            , typeName: "integer" , nullable:false},
-            { name: "barrio"            , typeName: "integer" },
+            { name: "comuna"            , typeName: "text" , nullable:false},
+            { name: "barrio"            , typeName: "text" },
             { name: "recorrido"         , typeName: "integer" , nullable:false},
             { name: "orden_recorrido"   , typeName: "integer" },
             { name: "latitud"           , typeName: "decimal" },
@@ -25,8 +25,8 @@ export function lugares(context:TableContext):TableDefinition {
         primaryKey: ['lugar'],
         foreignKeys: [
             { references: 'recorridos' , fields: ['recorrido'] },
-            { references: 'barrios'    , fields: ['barrio']    , displayAllFields:true},
             { references: 'comunas'    , fields: ['comuna']    , displayAllFields:true},
+            { references: 'barrios'    , fields: ['comuna','barrio']    , displayAllFields:true},
             { references: 'tipos_lugar', fields: ['tipo_lugar'], displayAllFields:true},
         ],
     };

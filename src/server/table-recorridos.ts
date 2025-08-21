@@ -44,7 +44,7 @@ export function recorridos(context:TableContext):TableDefinition {
                             select array_agg(distinct comuna order by comuna)::text 
                                 from (select comuna
                                         from recorridos_barrios 
-                                             left join barrios using (barrio) 
+                                             left join barrios using (comuna, barrio) 
                                         where recorrido=recorridos.recorrido
                                       union 
                                       select comuna
@@ -56,9 +56,15 @@ export function recorridos(context:TableContext):TableDefinition {
                 descripcion_barrio:{
                     expr:`(
                         select string_agg(nombre,', ' order by barrio) 
-                                from recorridos_barrios 
-                                    left join barrios using (barrio) 
-                                where recorrido=recorridos.recorrido
+                            from (
+                                select barrio,nombre
+                                    from recorridos_barrios left join barrios using (comuna, barrio) 
+                                    where recorrido=recorridos.recorrido
+							    union
+                                select barrio, nombre
+                                    from lugares left join barrios using (comuna,barrio) 
+                                    where recorrido=recorridos.recorrido
+                            )
                     )`
                 },
                 mapa:{expr:'tipos_recorrido.abr'},

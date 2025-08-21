@@ -9,7 +9,7 @@ begin
     new.comuna_agrupada := (select array_agg(distinct comuna order by comuna)::text 
         from (select comuna
                 from recorridos_barrios 
-                        left join barrios using (barrio) 
+                        left join barrios using (comuna, barrio) 
                 where recorrido=new.recorrido
                 union 
                 select comuna
@@ -20,7 +20,7 @@ begin
     new.barrios_agrupados := (
         select string_agg(nombre,', ' order by barrio) 
             from recorridos_barrios 
-                left join barrios using (barrio) 
+                left join barrios using (comuna, barrio) 
             where recorrido=new.recorrido
     );
     return new;
