@@ -1,11 +1,11 @@
 ﻿set role postgres;
-ALTER TABLE IF EXISTS base.repsic_251_grupo_personas_calculada
-    OWNER to repsic251_admin;
-ALTER TABLE IF EXISTS base.repsic_251_personas_calculada
-    OWNER to repsic251_admin;
-ALTER TABLE IF EXISTS base.repsic_251_coordinacion_calculada
-    OWNER to repsic251_admin;
+ALTER TABLE IF EXISTS base.repsic_252_grupo_personas_calculada
+    OWNER to repsic252_admin;
+ALTER TABLE IF EXISTS base.repsic_252_personas_calculada
+    OWNER to repsic252_admin;
+ALTER TABLE IF EXISTS base.repsic_252_coordinacion_calculada
+    OWNER to repsic252_admin;
     
-GRANT ALL ON SCHEMA comun TO repsic251_admin;
-GRANT ALL ON SCHEMA comun TO repsic251_owner;
+GRANT ALL ON SCHEMA comun TO repsic252_admin;
+GRANT ALL ON SCHEMA comun TO repsic252_owner;
     

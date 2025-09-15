@@ -1,5 +1,5 @@
 set search_path=repsic, dbo, comun;
---set role repsic251_muleto_admin;
+--set role repsic252_muleto_admin;
 
 update variables set activa=false
   where clase='calculada';

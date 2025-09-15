@@ -3,13 +3,13 @@ do $SQL_DUMP$
 ----
 set search_path = repsic;
 ----
-drop table if exists "repsic251_supervision_calculada";
+drop table if exists "repsic252_supervision_calculada";
 ----
-drop table if exists "repsic251_personas_calculada";
+drop table if exists "repsic252_personas_calculada";
 ----
-drop table if exists "repsic251_grupo_personas_calculada";
+drop table if exists "repsic252_grupo_personas_calculada";
 ----
-create table "repsic251_grupo_personas_calculada" (
+create table "repsic252_grupo_personas_calculada" (
   "operativo" text, 
   "id_caso" text, 
   "cant_0a14_mu" bigint, 
@@ -40,62 +40,62 @@ create table "repsic251_grupo_personas_calculada" (
   "cant_refe" bigint
 , primary key ("operativo", "id_caso")
 );
-grant select, insert, update, references on "repsic251_grupo_personas_calculada" to repsic_user;
-grant all on "repsic251_grupo_personas_calculada" to repsic_owner;
+grant select, insert, update, references on "repsic252_grupo_personas_calculada" to repsic_user;
+grant all on "repsic252_grupo_personas_calculada" to repsic_owner;
 
 
 
-create table "repsic251_personas_calculada" (
+create table "repsic252_personas_calculada" (
   "operativo" text, 
   "id_caso" text, 
   "p0" bigint, 
   "sexor" bigint
 , primary key ("operativo", "id_caso", "p0")
 );
-grant select, insert, update, references on "repsic251_personas_calculada" to repsic_user;
-grant all on "repsic251_personas_calculada" to repsic_owner;
+grant select, insert, update, references on "repsic252_personas_calculada" to repsic_user;
+grant all on "repsic252_personas_calculada" to repsic_owner;
 
 
 
-create table "repsic251_supervision_calculada" (
+create table "repsic252_supervision_calculada" (
   "recorrido" bigint, 
   "cant_form" bigint
 , primary key ("recorrido")
 );
-grant select, insert, update, references on "repsic251_supervision_calculada" to repsic_user;
-grant all on "repsic251_supervision_calculada" to repsic_owner;
+grant select, insert, update, references on "repsic252_supervision_calculada" to repsic_user;
+grant all on "repsic252_supervision_calculada" to repsic_owner;
 
 
 
 -- conss
-alter table "repsic251_grupo_personas_calculada" add constraint "operativo<>''" check ("operativo"<>'');
-alter table "repsic251_grupo_personas_calculada" add constraint "id_caso<>''" check ("id_caso"<>'');
-alter table "repsic251_personas_calculada" add constraint "operativo<>''" check ("operativo"<>'');
-alter table "repsic251_personas_calculada" add constraint "id_caso<>''" check ("id_caso"<>'');
+alter table "repsic252_grupo_personas_calculada" add constraint "operativo<>''" check ("operativo"<>'');
+alter table "repsic252_grupo_personas_calculada" add constraint "id_caso<>''" check ("id_caso"<>'');
+alter table "repsic252_personas_calculada" add constraint "operativo<>''" check ("operativo"<>'');
+alter table "repsic252_personas_calculada" add constraint "id_caso<>''" check ("id_caso"<>'');
 -- FKs
-alter table "repsic251_grupo_personas_calculada" add constraint "repsic251_grupo_personas_calculada grupo_personas REL" foreign key ("operativo", "id_caso") references "grupo_personas" ("operativo", "id_caso")  on delete cascade on update cascade;
-alter table "repsic251_personas_calculada" add constraint "repsic251_personas_calculada personas REL" foreign key ("operativo", "id_caso", "p0") references "personas" ("operativo", "id_caso", "p0")  on delete cascade on update cascade;
-alter table "repsic251_supervision_calculada" add constraint "repsic251_supervision_calculada supervision REL" foreign key ("recorrido") references "supervision" ("recorrido")  on delete cascade on update cascade;
+alter table "repsic252_grupo_personas_calculada" add constraint "repsic252_grupo_personas_calculada grupo_personas REL" foreign key ("operativo", "id_caso") references "grupo_personas" ("operativo", "id_caso")  on delete cascade on update cascade;
+alter table "repsic252_personas_calculada" add constraint "repsic252_personas_calculada personas REL" foreign key ("operativo", "id_caso", "p0") references "personas" ("operativo", "id_caso", "p0")  on delete cascade on update cascade;
+alter table "repsic252_supervision_calculada" add constraint "repsic252_supervision_calculada supervision REL" foreign key ("recorrido") references "supervision" ("recorrido")  on delete cascade on update cascade;
 -- index
-create index "operativo,id_caso 4 repsic251_grupo_personas_calculada IDX" ON "repsic251_grupo_personas_calculada" ("operativo", "id_caso");
-create index "operativo,id_caso,p0 4 repsic251_personas_calculada IDX" ON "repsic251_personas_calculada" ("operativo", "id_caso", "p0");
-create index "recorrido 4 repsic251_supervision_calculada IDX" ON "repsic251_supervision_calculada" ("recorrido");
+create index "operativo,id_caso 4 repsic252_grupo_personas_calculada IDX" ON "repsic252_grupo_personas_calculada" ("operativo", "id_caso");
+create index "operativo,id_caso,p0 4 repsic252_personas_calculada IDX" ON "repsic252_personas_calculada" ("operativo", "id_caso", "p0");
+create index "recorrido 4 repsic252_supervision_calculada IDX" ON "repsic252_supervision_calculada" ("recorrido");
 -- functions
 
 ----
 do $SQL_ENANCE$
  begin
-PERFORM enance_table('repsic251_grupo_personas_calculada','operativo,id_caso');
-PERFORM enance_table('repsic251_personas_calculada','operativo,id_caso,p0');
-PERFORM enance_table('repsic251_supervision_calculada','recorrido');
+PERFORM enance_table('repsic252_grupo_personas_calculada','operativo,id_caso');
+PERFORM enance_table('repsic252_personas_calculada','operativo,id_caso,p0');
+PERFORM enance_table('repsic252_supervision_calculada','recorrido');
 end
 $SQL_ENANCE$;
 ----
-INSERT INTO "repsic251_grupo_personas_calculada" ("operativo","id_caso") SELECT "operativo","id_caso" FROM "grupo_personas";
+INSERT INTO "repsic252_grupo_personas_calculada" ("operativo","id_caso") SELECT "operativo","id_caso" FROM "grupo_personas";
 ----
-INSERT INTO "repsic251_personas_calculada" ("operativo","id_caso","p0") SELECT "operativo","id_caso","p0" FROM "personas";
+INSERT INTO "repsic252_personas_calculada" ("operativo","id_caso","p0") SELECT "operativo","id_caso","p0" FROM "personas";
 ----
-INSERT INTO "repsic251_supervision_calculada" ("recorrido") SELECT "recorrido" FROM "supervision";
+INSERT INTO "repsic252_supervision_calculada" ("recorrido") SELECT "recorrido" FROM "supervision";
 ----
 CREATE OR REPLACE FUNCTION repsic.gen_fun_var_calc() RETURNS TEXT
           LANGUAGE PLPGSQL
@@ -103,7 +103,7 @@ CREATE OR REPLACE FUNCTION repsic.gen_fun_var_calc() RETURNS TEXT
         $BODY$
         BEGIN
 
-      UPDATE repsic251_grupo_personas_calculada
+      UPDATE repsic252_grupo_personas_calculada
         SET 
             cant_0a14_mu = personas_agg.cant_0a14_mu,
   cant_0a14_no_obs = personas_agg.cant_0a14_no_obs,
@@ -156,12 +156,12 @@ CREATE OR REPLACE FUNCTION repsic.gen_fun_var_calc() RETURNS TEXT
             count(nullif(case when null2zero(personas.p2) = 1 then true else null end,false)) as cant_tot_va,
             count(nullif(case when null2zero(personas.p1) = 1 then true else null end,false)) as cant_refe
                        FROM "grupo_personas" JOIN "personas" ON "grupo_personas"."id_caso"="personas"."id_caso"
-                       WHERE repsic251_grupo_personas_calculada.PK = personas.fPK
+                       WHERE repsic252_grupo_personas_calculada.PK = personas.fPK
                    ) personas_agg
 
-    WHERE "grupo_personas"."id_caso"="repsic251_grupo_personas_calculada"."id_caso";
+    WHERE "grupo_personas"."id_caso"="repsic252_grupo_personas_calculada"."id_caso";
 
-      UPDATE repsic251_grupo_personas_calculada
+      UPDATE repsic252_grupo_personas_calculada
         SET 
             cant_tot_tot = personas_agg.cant_tot_tot,
   cant_per = personas_agg.cant_per
@@ -170,13 +170,13 @@ CREATE OR REPLACE FUNCTION repsic.gen_fun_var_calc() RETURNS TEXT
                          count(nullif(true,false)) as cant_tot_tot,
             count("p0") as cant_per
                        FROM "grupo_personas" join "personas"ON "grupo_personas"."id_caso"="personas"."id_caso"
-                       WHERE repsic251_grupo_personas_calculada.PK = "grupo_personas".PK
+                       WHERE repsic252_grupo_personas_calculada.PK = "grupo_personas".PK
 
                    ) personas_agg
             
-    WHERE "grupo_personas"."id_caso"="repsic251_grupo_personas_calculada"."id_caso";
+    WHERE "grupo_personas"."id_caso"="repsic252_grupo_personas_calculada"."id_caso";
 
-      UPDATE repsic251_personas_calculada
+      UPDATE repsic252_personas_calculada
         SET 
             sexor = null2zero(referente.p2)
             FROM "grupo_personas" JOIN "personas" ON "grupo_personas"."id_caso"="personas"."id_caso" LEFT JOIN (
@@ -184,20 +184,20 @@ CREATE OR REPLACE FUNCTION repsic.gen_fun_var_calc() RETURNS TEXT
                       FROM "personas" "referente"
                     ) "referente" ON "referente"."id_caso"="grupo_personas"."id_caso" AND "referente"."p0"='1'
             
-    WHERE "personas"."id_caso"="repsic251_personas_calculada"."id_caso" AND "personas"."p0"="repsic251_personas_calculada"."p0";
+    WHERE "personas"."id_caso"="repsic252_personas_calculada"."id_caso" AND "personas"."p0"="repsic252_personas_calculada"."p0";
 
-      UPDATE repsic251_supervision_calculada
+      UPDATE repsic252_supervision_calculada
         SET 
             cant_form = grupo_personas_agg.cant_form
             FROM (
                      SELECT
                          count(nullif(true,false)) as cant_form
                       FROM "grupo_personas"
-                      WHERE repsic251_supervision_calculada
+                      WHERE repsic252_supervision_calculada
                       
                    ) grupo_personas_agg        
 
-    WHERE "supervision"."recorrido"="repsic251_supervision_calculada"."recorrido";
+    WHERE "supervision"."recorrido"="repsic252_supervision_calculada"."recorrido";
           RETURN 'OK';
         END;
         $BODY$;
@@ -205,8 +205,8 @@ CREATE OR REPLACE FUNCTION repsic.gen_fun_var_calc() RETURNS TEXT
 perform gen_fun_var_calc();
 ----
 
-        UPDATE operativos SET calculada=now()::timestamp(0) WHERE operativo='repsic251';
-        UPDATE tabla_datos SET generada=now()::timestamp(0) WHERE operativo='repsic251' AND tipo='calculada';
+        UPDATE operativos SET calculada=now()::timestamp(0) WHERE operativo='repsic252';
+        UPDATE tabla_datos SET generada=now()::timestamp(0) WHERE operativo='repsic252' AND tipo='calculada';
 ----
 end
 $SQL_DUMP$--- generado: Wed Apr 17 2019 15:02:49 GMT-0300 (GMT-03:00)
