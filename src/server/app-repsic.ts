@@ -541,11 +541,10 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 }
             }
             tableDef.fields = tableDef.fields.filter((fieldDef:FieldDefinition)=>!forExclude.includes(fieldDef.name));
-        });
-        be.appendToTableDefinition('areas_asignacion_general', function (tableDef,context) {
             tableDef.fields.splice(1,0,
                 {name:'recorrido'  , typeName:'integer',  editable:false, inTable:false}
             );
+            tableDef.hiddenColumns = ['ausentes', 'otras_causas_hogar', 'otras_causas_vivienda', 'rechazos'];
             tableDef.foreignKeys=tableDef.foreignKeys || [];
             tableDef.softForeignKeys=tableDef.softForeignKeys || [];
             tableDef.softForeignKeys.push(
