@@ -499,6 +499,9 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             tableDef.fields.push(
                 {name:'recorrido'  , typeName:'integer',  editable:true}
             );
+            tableDef.fields.push(
+                {name:'dispositivo', typeName:'text', nullable: true, isName: true}
+            );
             tableDef.foreignKeys=tableDef.foreignKeys || [];
             tableDef.foreignKeys.push(
                 {references:'recorridos'    , fields: ['recorrido'] },
