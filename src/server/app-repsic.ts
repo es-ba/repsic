@@ -499,7 +499,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             tableDef.fields.push(
                 {name:'recorrido'  , typeName:'integer',  editable:true}
             );
-            tableDef.fields.push(
+            tableDef.fields.splice(7, 0,
                 {name:'dispositivo', typeName:'text', nullable: true, isName: true}
             );
             tableDef.foreignKeys=tableDef.foreignKeys || [];
@@ -544,12 +544,15 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             tableDef.fields.splice(1,0,
                 {name:'recorrido'  , typeName:'integer',  editable:false, inTable:false}
             );
-            tableDef.hiddenColumns = ['ausentes', 'otras_causas_hogar', 'otras_causas_vivienda', 'rechazos'];
+
             tableDef.foreignKeys=tableDef.foreignKeys || [];
             tableDef.softForeignKeys=tableDef.softForeignKeys || [];
             tableDef.softForeignKeys.push(
                 {references:'recorridos'    , fields: ['recorrido'] },
             )
+            
+            if (!tableDef.hiddenColumns) tableDef.hiddenColumns = [];
+            tableDef.hiddenColumns.push('ausentes', 'otras_causas_hogar', 'otras_causas_vivienda', 'rechazos');
         });
         be.appendToTableDefinition('tem', function (tableDef,context) {
             tableDef.fields.splice(9,0,
