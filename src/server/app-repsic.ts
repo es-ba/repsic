@@ -499,9 +499,6 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             tableDef.fields.push(
                 {name:'recorrido'  , typeName:'integer',  editable:true}
             );
-            tableDef.fields.splice(7, 0,
-                {name:'dispositivo', typeName:'text', nullable: true, isName: true}
-            );
             tableDef.foreignKeys=tableDef.foreignKeys || [];
             tableDef.foreignKeys.push(
                 {references:'recorridos'    , fields: ['recorrido'] },
@@ -538,6 +535,9 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             for(let t of ['recu', 'supe']){
                 for(let f of tableDef.tareasFields){
                     forExclude.push(`${f.prefijo}_${t}`);
+                    forExclude.push(`${f.prefijo}_${t}_nombre`);
+                    forExclude.push(`${f.prefijo}_${t}_apellido`);
+                    forExclude.push(`${f.prefijo}_${t}_dispositivo`);
                 }
             }
             tableDef.fields = tableDef.fields.filter((fieldDef:FieldDefinition)=>!forExclude.includes(fieldDef.name));
