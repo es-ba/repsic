@@ -22,7 +22,15 @@
             "program": "${workspaceFolder}/dist/server/server-repsic.js",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
-            ]
+            ],
+            "sourceMaps": true,
+            "runtimeArgs": [
+                "--watch",
+                "--watch-path=node_modules/varcal/src",
+                "--watch-path=node_modules/operativos/src",
+                "--preserve-symlinks"
+            ],
+            "restart": true
         },
         {
             "type": "node",
