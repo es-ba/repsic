@@ -30,7 +30,7 @@ update provisorio_recepcion pr
 setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrincipal:IdUnidadAnalisis, permiteGenerarMuestra:boolean)=>{
     return `
     with ${context.be.db.quoteIdent(unidadAnalisisPrincipal)} as 
-        (select t.enc, t.json_encuesta as respuestas, t.resumen_estado as "resumenEstado", 
+        (select t.operativo, t.enc, t.json_encuesta as respuestas, t.resumen_estado as "resumenEstado", 
             jsonb_build_object(
                 'recorrido'        , recorrido         ,
                 'tipo_recorrido'   , tipo_recorrido    ,
@@ -59,10 +59,11 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrin
                 'main_form', main_form
             ) as tarea,
             min(fecha_asignacion) as fecha_asignacion
-            from tem t left join tareas_tem tt on (t.operativo = tt.operativo and t.enc = tt.enc and t.tarea_actual = tt.tarea)
-                       left join tareas ta on t.tarea_actual = ta.tarea
+            from tem t 
+                left join tareas_tem tt on (t.operativo = tt.operativo and t.enc = tt.enc and t.tarea_actual = tt.tarea)
+                left join tareas ta on (t.operativo = ta.operativo and t.tarea_actual = ta.tarea)
             where t.habilitada and ${quotedCondViv}
-            group by t.enc, t.json_encuesta, t.resumen_estado, recorrido, tipo_recorrido, comuna_agrupada, barrios_agrupados, dominio, nomcalle,sector,edificio, entrada, nrocatastral, piso,departamento,habitacion,casa,reserva,tt.carga_observaciones, cita, t.area, tt.tarea, fecha_asignacion, asignado, main_form
+            group by t.operativo, t.enc, t.json_encuesta, t.resumen_estado, recorrido, tipo_recorrido, comuna_agrupada, barrios_agrupados, dominio, nomcalle,sector,edificio, entrada, nrocatastral, piso,departamento,habitacion,casa,reserva,tt.carga_observaciones, cita, t.area, tt.tarea, fecha_asignacion, asignado, main_form
         )
         select jsonb_build_object(
                 ${context.be.db.quoteLiteral(unidadAnalisisPrincipal)}, ${jsono(
@@ -72,14 +73,41 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrin
                 )}
             ) as respuestas,
             ${json(`
-                select a.area as carga, observaciones_hdr as observaciones, min(fecha_asignacion) as fecha, ta.recepcionista
-                    from ${context.be.db.quoteIdent(unidadAnalisisPrincipal)} aux inner join areas a using (area) inner join tareas_areas ta on (a.area = ta.area and aux.tarea->>'tarea' = ta.tarea)
-                    group by a.area, observaciones_hdr, ta.recepcionista 
+                select * from (
+                    select a.area as carga, observaciones_hdr as observaciones, min(fecha_asignacion) as fecha, ta.recepcionista, a.recorrido
+                        from ${context.be.db.quoteIdent(unidadAnalisisPrincipal)} aux 
+                            inner join areas a using (operativo, area) 
+                            inner join tareas_areas ta on (a.operativo = ta.operativo and a.area = ta.area and aux.tarea->>'tarea' = ta.tarea)
+                        group by a.area, observaciones_hdr, ta.recepcionista , a.recorrido
                 ${permiteGenerarMuestra?`
                     union -- este union permite visualizar areas asignadas sin encuestas generadas
-                    select area as carga, null as observaciones, null as fecha, recepcionista
-                        from tareas_areas where asignado = ${context.be.db.quoteLiteral(context.user.idper)} and tarea = 'encu'`:''}
-                `,'fecha')} as cargas,
+                    select area as carga, null as observaciones, null as fecha, ta.recepcionista, recorrido
+                        from tareas_areas ta inner join areas a using (operativo, area)
+                        where asignado = ${context.be.db.quoteLiteral(context.user.idper)} and tarea = 'encu') 
+                `:''} left join lateral 
+                    (select array_agg(distinct comuna order by comuna)::text as comuna_agrupada, recorrido
+                        from (
+                            select comuna, recorrido
+                                from recorridos_barrios
+                                    left join barrios using (comuna, barrio) 
+                            union 
+                            select comuna, recorrido 
+                                from lugares
+                        ) 
+                        group by recorrido) using (recorrido) 
+                    left join lateral
+                    (select string_agg(nombre,', ' order by barrio) as barrios_agrupados, recorrido
+                        from (
+                            select barrio,nombre, recorrido
+                                from recorridos_barrios left join barrios using (comuna, barrio) 
+                            union
+                            select barrio, nombre, recorrido
+                                from lugares left join barrios using (comuna,barrio) 
+                        ) 
+                        group by recorrido) using (recorrido)
+                    left join lateral
+                    (select recorrido, tipo_recorrido from recorridos) using (recorrido)
+            `,'fecha')} as cargas,
             ${jsono(
                 `select enc, jsonb_build_object('tem', tem, 'tarea', tarea) as otras from ${context.be.db.quoteIdent(unidadAnalisisPrincipal)}`,
                  'enc',

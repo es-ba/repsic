@@ -216,11 +216,12 @@ setCalcularVariablesEspecificasOperativo((resRaiz:RespuestasRaiz, forPk:ForPk)=>
         let {respuestas} = respuestasForPk(forPk);
         respuestas['p0' as IdVariable] = forPk.persona;
     }
-    let datosByPass = getDatosByPass();
-    resRaiz['u1' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem.recorrido;
-    resRaiz['u2' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem.tipo_recorrido;
-    resRaiz['u3' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem.comuna_agrupada;
-    resRaiz['u4' as IdVariable]=getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem.barrios_agrupados;
+    const datosByPassTem = getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem;
+    const datosByPassCargas = getDatosByPass().cargas;
+    resRaiz['u1' as IdVariable]=datosByPassTem.recorrido || datosByPassCargas[datosByPassTem.carga].recorrido;
+    resRaiz['u2' as IdVariable]=datosByPassTem.tipo_recorrido || datosByPassCargas[datosByPassTem.carga].tipo_recorrido;
+    resRaiz['u3' as IdVariable]=datosByPassTem.comuna_agrupada || datosByPassCargas[datosByPassTem.carga].comuna_agrupada;
+    resRaiz['u4' as IdVariable]=datosByPassTem.barrios_agrupados || datosByPassCargas[datosByPassTem.carga].barrios_agrupados;
 
     const cant11 = 'cant11' as IdVariable;
     const cant12 = 'cant12' as IdVariable;
