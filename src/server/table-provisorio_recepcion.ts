@@ -27,11 +27,12 @@ export function provisorio_recepcion(context:TableContext):TableDefinition {
             { name: "pers_papel"         , typeName: "integer" , aggregate:'sum', editable:autorizado, defaultDbValue:'0'},
             { name: "cues_total"         , typeName: "integer" , aggregate:'sum', editable:false, inTable: false}, 
             { name: "pers_total"         , typeName: "integer" , aggregate:'sum', editable:false, inTable: false}, 
-            { name: "verificado"         , typeName: "boolean" , editable:autorizado},
+            { name: "verificado"         , typeName: "boolean" , editable:autorizado, title:'verif'},
             { name: "observaciones"      , typeName: "text"    , editable:autorizado},
             { name: "salida"             , typeName: "interval", editable:autorizado},
             { name: "regreso"            , typeName: "interval", editable:autorizado},
-            { name: "tipo_recorrido"     , typeName: "integer" , editable:false, inTable: false}, 
+            { name: "tipo_recorrido"     , typeName: "integer" , editable:false, inTable: false, title:'tipo rec'}, 
+            { name: "descripcion"        , typeName: "text"    , editable:false, inTable: false}, 
             { name: "comuna"             , typeName: "text"    , editable:false, inTable: false},
             { name: "descripcion_barrio" , typeName: "text"    , editable:false, inTable: false},
         ],
@@ -45,7 +46,7 @@ export function provisorio_recepcion(context:TableContext):TableDefinition {
             "isReferable": true,
             isTable: true,
             from: `(
-                SELECT pr.*, a.recorrido, tr.tipo_recorrido, (
+                SELECT pr.*, a.recorrido, tr.tipo_recorrido, tr.descripcion, (
                     select array_agg(distinct comuna order by comuna)::text 
                         from (select comuna
                                 from recorridos_barrios 

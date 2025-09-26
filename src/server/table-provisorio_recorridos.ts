@@ -20,7 +20,8 @@ export function provisorio_recorridos(context:TableContext):TableDefinition {
             { name: "cues_total"         , typeName: "integer" , aggregate:'sum'}, 
             { name: "pers_total"         , typeName: "integer" , aggregate:'sum'}, 
             { name: "verificado"         , typeName: "boolean" },
-            { name: "tipo_recorrido"     , typeName: "integer" }, 
+            { name: "tipo_recorrido"     , typeName: "integer" , title:'tipo rec'}, 
+            { name: "descripcion"        , typeName: "text"    }, 
             { name: "comuna"             , typeName: "text"    },
             { name: "descripcion_barrio" , typeName: "text"    },
         ],
@@ -44,6 +45,7 @@ export function provisorio_recorridos(context:TableContext):TableDefinition {
                 sum(pers_total) as pers_total,
                 bool_and(case verificado when verificado then true else false end) as verificado,
                 tipo_recorrido,
+                descripcion,
                 comuna,
                 descripcion_barrio
             from
@@ -51,6 +53,7 @@ export function provisorio_recorridos(context:TableContext):TableDefinition {
             group by operativo,
                 recorrido,
                 tipo_recorrido,
+                descripcion,
                 comuna,
                 descripcion_barrio
             )`
