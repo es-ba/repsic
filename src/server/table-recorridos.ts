@@ -14,6 +14,8 @@ export function recorridos(context:TableContext):TableDefinition {
             { name: "areas"              , typeName: "text" , editable:false, inTable: false}, 
             { name: "apellido"           , typeName: "text"    },
             { name: "nombre"             , typeName: "text"    },
+            { name: "nombre_parador"     , typeName: "text"    },
+            { name: "direccion_parador"  , typeName: "text"    },
             { name: "observaciones"      , typeName: "text"    },
             { name: "particion"          , typeName: "text"    },
             { name: "comuna"             , typeName: "text"    , editable:false, inTable: false},
@@ -21,6 +23,7 @@ export function recorridos(context:TableContext):TableDefinition {
             { name: "orden"              , typeName: "bigint"  },
             { name: "mapa"               , typeName: "text"    , editable:false, inTable: false, clientSide:'openMap', serverSide:true, title:'🌎'},
         ],
+        hiddenColumns: ['nombre', 'apellido'],
         primaryKey: ['recorrido'],
         foreignKeys:[
             {references:'tipos_recorrido'    , fields: ['tipo_recorrido'] },
