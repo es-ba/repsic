@@ -520,8 +520,19 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         be.appendToTableDefinition('t_encu_areas', function (tableDef,context) {
             let fkAreas = tableDef.foreignKeys!.find((fk)=>fk.references=='areas')!;
             fkAreas.displayAllFields=false;
-            fkAreas.displayAfterFieldName='area';
+            fkAreas.displayAfterFieldName='operativo';
             fkAreas.displayFields=['recorrido'];
+            tableDef.fields.splice(2,0,
+                {name:'tipo_recorrido' , typeName:'text', editable: false, inTable: false}
+            )
+            tableDef.sql!.fields = tableDef.sql!.fields || {};
+            tableDef.sql!.fields.tipo_recorrido = {
+                expr: `(
+                    select (tipo_recorrido || ' ' || descripcion) as tipo_recorrido 
+                        from areas a join recorridos using (recorrido) join tipos_recorrido using (tipo_recorrido)  
+                        where tareas_areas.area = a.area
+                )`
+            };            
         });
         be.appendToTableDefinition('tareas_tem_ingreso', function (tableDef,context) {
             let domicilioFieldNames:string[] = getDomicilioFields().map((fieldDef)=>fieldDef.name);
@@ -553,6 +564,17 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             
             if (!tableDef.hiddenColumns) tableDef.hiddenColumns = [];
             tableDef.hiddenColumns.push('ausentes', 'otras_causas_hogar', 'otras_causas_vivienda', 'rechazos');
+            tableDef.fields.splice(2,0,
+                {name:'tipo_recorrido' , typeName:'text', editable: false, inTable: false}
+            )
+            tableDef.sql!.fields = tableDef.sql!.fields || {};
+            tableDef.sql!.fields.tipo_recorrido = {
+                expr: `(
+                    select (tipo_recorrido || ' ' || descripcion) as tipo_recorrido 
+                        from recorridos r join tipos_recorrido using (tipo_recorrido)  
+                        where r.recorrido = areas.recorrido
+                )`
+            };     
         });
         be.appendToTableDefinition('tem', function (tableDef,context) {
             tableDef.fields.splice(9,0,
@@ -571,7 +593,8 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             tableDef.detailTables.push(
                 {table:'recorridos_barrios',fields:['comuna','barrio'], abr:'R'}
             );
-        })
+        });
+        
     }
   }
 }
