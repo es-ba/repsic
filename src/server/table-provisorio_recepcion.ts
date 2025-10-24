@@ -67,7 +67,7 @@ export function provisorio_recepcion(context:TableContext):TableDefinition {
                                 select barrio, nombre
                                     from lugares left join barrios using (comuna,barrio) 
                                     where recorrido=recorridos.recorrido
-                            )
+                            ) y
                     ) as descripcion_barrio,
                     --(select string_agg(coalesce(nullif(concat_ws(' ', nombre, apellido),''), usuario), ', ' order by usuario) 
                     --    from tareas_areas ta join usuarios u on (ta.asignado = u.idper and ta.area = a.area and ta.tarea = 'encu')
