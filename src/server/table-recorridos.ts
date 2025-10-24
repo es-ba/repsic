@@ -67,7 +67,7 @@ export function recorridos(context:TableContext):TableDefinition {
                                 select barrio, nombre
                                     from lugares left join barrios using (comuna,barrio) 
                                     where recorrido=recorridos.recorrido
-                            )
+                            ) b
                     )`
                 },
                 mapa:{expr:'tipos_recorrido.abr'},
