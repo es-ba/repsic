@@ -94,7 +94,7 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrin
                             select comuna, recorrido 
                                 from lugares
                         ) 
-                        group by recorrido) using (recorrido) 
+                        group by recorrido) x using (recorrido) 
                     left join lateral
                     (select string_agg(nombre,', ' order by barrio) as barrios_agrupados, recorrido
                         from (
@@ -104,9 +104,9 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrin
                             select barrio, nombre, recorrido
                                 from lugares left join barrios using (comuna,barrio) 
                         ) 
-                        group by recorrido) using (recorrido)
+                        group by recorrido) y using (recorrido)
                     left join lateral
-                    (select recorrido, tipo_recorrido from recorridos) using (recorrido)
+                    (select recorrido, tipo_recorrido from recorridos) z using (recorrido)
             `,'fecha')} as cargas,
             ${jsono(
                 `select enc, jsonb_build_object('tem', tem, 'tarea', tarea) as otras from ${context.be.db.quoteIdent(unidadAnalisisPrincipal)}`,
