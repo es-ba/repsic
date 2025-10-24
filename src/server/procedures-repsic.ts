@@ -83,7 +83,7 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrin
                     union -- este union permite visualizar areas asignadas sin encuestas generadas
                     select area as carga, null as observaciones, null as fecha, ta.recepcionista, recorrido
                         from tareas_areas ta inner join areas a using (operativo, area)
-                        where asignado = ${context.be.db.quoteLiteral(context.user.idper)} and tarea = 'encu') 
+                        where asignado = ${context.be.db.quoteLiteral(context.user.idper)} and tarea = 'encu') ar
                 `:''} left join lateral 
                     (select array_agg(distinct comuna order by comuna)::text as comuna_agrupada, recorrido
                         from (
@@ -93,7 +93,7 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrin
                             union 
                             select comuna, recorrido 
                                 from lugares
-                        ) 
+                        ) x
                         group by recorrido) x using (recorrido) 
                     left join lateral
                     (select string_agg(nombre,', ' order by barrio) as barrios_agrupados, recorrido
@@ -103,7 +103,7 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrin
                             union
                             select barrio, nombre, recorrido
                                 from lugares left join barrios using (comuna,barrio) 
-                        ) 
+                        ) y
                         group by recorrido) y using (recorrido)
                     left join lateral
                     (select recorrido, tipo_recorrido from recorridos) z using (recorrido)
