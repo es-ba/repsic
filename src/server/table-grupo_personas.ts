@@ -17,13 +17,13 @@ export function grupo_personas(context:TableContext):TableDefinition {
             { name: "u2"            , label:'tipo'                  , typeName: 'integer' },
             { name: "u3"            , label:'comuna'                , typeName: 'text' },
             { name: "u4"            , label:'barrio'                , typeName: 'text'    },
-            { name: "lugar_nombre"  , label:'lugar'                 , typeName: 'text'    },
-            { name: "lugar_codigo"  , label:'cod lugar'             , typeName: 'integer' },
+            { name: "lugar_nombre"  , label:'lugar'                 , typeName: 'text'    }, //paradores
+            { name: "lugar_codigo"  , label:'cod lugar'             , typeName: 'integer' }, //paradores
             { name: "u5"            , label:'calle'                 , typeName: 'text'    },
             { name: "u6"            , label:'n°'                    , typeName: 'integer' },
             { name: "u7"            , label:'intersección'          , typeName: 'text'    },
             { name: "u8"            , label:'cant.per'              , typeName: 'integer' },
-            { name: "u9"            , label:'punto GPS'          , typeName: 'text'    },
+            { name: "u9"            , label:'punto GPS'             , typeName: 'text'    },
             { name: "u21"           , label:'cod.relev'             , typeName: 'integer' },
             { name: "u22"           , label:'nombre y ape'          , typeName: 'text'    },
             { name: "u23"           , label:'teléfono'              , typeName: 'text'    },  //paradores

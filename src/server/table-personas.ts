@@ -28,17 +28,24 @@ export function personas(context:TableContext):TableDefinition {
             { name: "sc21"          , label:'desde cuando'               , typeName: 'integer' },
             { name: "sc22"          , label:'cuatro o más noches'        , typeName: 'integer' },
             { name: "sc23"          , label:'quedarse en ciudad'         , typeName: 'integer' },
-            { name: "sc24"          , label:'lugar anterior'             , typeName: 'integer' },
-            { name: "sc25"          , label:'durmio parador'             , typeName: 'integer' }, //paradores
+            { name: "sc10"          , label:'tiempo sit calle'           , typeName: 'integer' },
+            { name: "sc10a"         , label:'desde que edad'             , typeName: 'integer' },
+            { name: "sc10a2_esp"    , label:'anios'                      , typeName: 'integer' },
+            { name: "sc10b"         , label:'donde vivía'                , typeName: 'integer' },
+            { name: "sc10b2_esp"    , label:'partido/localidad'          , typeName: 'text'    },
+            { name: "sc10c"         , label:'cuatro o más noches en CIS' , typeName: 'integer' },
+            { name: "sc10d"         , label:'cuanto tiempo en CIS'       , typeName: 'integer' },
+           // { name: "sc24"          , label:'lugar anterior'             , typeName: 'integer' },
+            { name: "sc25c"         , label:'durmió en parador'          , typeName: 'integer' },//paradores
+            { name: "sc25"          , label:'cuantos días'               , typeName: 'integer' }, //paradores
             { name: "sc25a"         , label:'pasó la noche'              , typeName: 'integer' }, //paradores
             { name: "sc9"           , label:'durmio calle'               , typeName: 'integer' }, //calle
             { name: "sc9a"          , label:'pasó la noche'              , typeName: 'integer' }, //calle
             { name: "sc9a1"         , label:'en un parador o cis'        , typeName: 'integer' },
-            { name: "sc9b"          , label:'en el mismo lugar'          , typeName: 'integer' },
-            { name: "sc10"          , label:'tiempo sit calle'           , typeName: 'integer' },
-            { name: "sc29"          , label:'mantuvo contacto'           , typeName: 'integer' },
+            { name: "sc9b"          , label:'en el mismo lugar'          , typeName: 'integer' },          
             { name: "sc30"          , label:'motivo '                    , typeName: 'integer' },
             { name: "sc30_esp"      , label:'otro motivo'                , typeName: 'text'    },
+            { name: "sc29"          , label:'mantuvo contacto'           , typeName: 'integer' },
             { name: "sc25b"         , label:'documentación'              , typeName: 'integer' },
             { name: "sc12"          , label:'dni argentino'              , typeName: 'integer' },
             { name: "sc26"          , label:'cuál'                       , typeName: 'text'    },
