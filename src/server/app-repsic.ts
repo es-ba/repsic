@@ -34,6 +34,8 @@ import { tipos_lugar         } from "./table-tipos_lugar";
 import { tipos_recorrido     } from "./table-tipos_recorrido";
 import { incompletas_dm_tem  } from "./table-incompletas_dm_tem";
 import { puntos_gps          } from "./table-puntos_gps";
+import { control_cantidades_area } from "./table-control_cantidades_area";
+import { control_cantidades_recorridos } from "./table-control_cantidades_recorridos";
 
 import {defConfig} from "./def-config"
 import { Request } from "rel-enc";
@@ -336,7 +338,10 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
     }
     getMenuControles(context:Context){
         let menuControles = super.getMenuControles(context);
-        menuControles.push({menuType:'table', name:'encuestas_incompletas_dm', table:'incompletas_dm_tem'},
+        menuControles.push(
+            {menuType:'table', name:'encuestas_incompletas_dm', table:'incompletas_dm_tem'},
+            {menuType:'table', name:'cantidades_area', table:'control_cantidades_area'},
+            {menuType:'table', name:'cantidades_recorridos', table:'control_cantidades_recorridos'}
         )
         return menuControles;
     }
@@ -459,6 +464,8 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             , dictra
             , incompletas_dm_tem
             , puntos_gps
+            , control_cantidades_area,
+            , control_cantidades_recorridos
         }
         delete(this.getTableDefinition.viviendas);
         delete(this.getTableDefinition.personas_sup);
