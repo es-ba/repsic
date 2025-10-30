@@ -39,8 +39,8 @@ export function control_cantidades_area(_context:TableContext):TableDefinition {
                     pers_dm,
                     cues_papel,
                     pers_papel,
-                    SUM(cues_dm + cues_papel) OVER () AS total_cues,
-                    SUM(pers_dm + pers_papel) OVER () AS total_pers,
+                    cues_dm + cues_papel AS total_cues,
+                    pers_dm + pers_papel AS total_pers,
                     comuna,
                     descripcion_barrio
                 FROM (
