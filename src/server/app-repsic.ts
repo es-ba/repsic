@@ -473,6 +473,11 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         delete(this.getTableDefinition.hogares_sup);
         delete(this.getTableDefinition.visitas);
         delete(this.getTableDefinition.visitas_sup);
+
+        be.appendToTableDefinition('areas_asignacion_general', function(tableDef, context){
+            const fieldVerificadoRec = tableDef.fields.find(field => field.name === 'verificado_rec');
+            if (fieldVerificadoRec) fieldVerificadoRec.visible = false;
+        });
         
         be.appendToTableDefinition('inconsistencias',function(tableDef, context){
             tableDef.sql={...tableDef.sql, isTable:true};
