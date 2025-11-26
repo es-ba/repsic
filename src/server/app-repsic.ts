@@ -80,12 +80,20 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         var parentProc = await super.getProcedures();
         var be = this;
         parentProc = parentProc.map(procDef=>{
-            if(['dm_sincronizar','dm_backup','dm_blanquear'].includes(procDef.action)){
+            if(['dm_sincronizar','dm_backup','dm_blanquear','encuesta_capa_a_prod_pasar'].includes(procDef.action)){
                 var coreFunctionInterno = procDef.coreFunction;
                 procDef.coreFunction = async function(context:procesamiento.ProcedureContext, parameters:any){
                     var result = await coreFunctionInterno(context, parameters);
                     var actualizadas = await context.client.query(updateProvisorioQuery,[]).fetchAll();
-                    console.log(`se actualizó el provisorio, ${actualizadas.rowCount} areas actualizadas`)
+
+                    const mensaje = `se actualizó el provisorio, ${actualizadas.rowCount} areas actualizadas`
+
+                    console.log(mensaje);
+
+                    if (typeof result === 'string') {
+                        result += '. ' + mensaje;
+                    }
+
                     return result;
                 }
             }
