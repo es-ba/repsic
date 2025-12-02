@@ -2,15 +2,13 @@
 
 import { ProcedureDef } from "./types-repsic";
 import { ProcedureContext, CoreFunctionParameters, UploadedFileInfo, OperativoGenerator } from "procesamiento";
-import {getOperativoActual, setGenerarIdEncFun, setMaxAgenerar, setHdrQuery} from "dmencu/dist/server/server/procedures-dmencu";
+import {getOperativoActual, setGenerarIdEncFun, setHdrQuery, setMaxEncPorArea} from "dmencu/dist/server/server/procedures-dmencu";
 import {json, jsono} from "pg-promise-strict";
 import { IdUnidadAnalisis } from "dmencu/dist/server/unlogged/tipos";
 var fs = require('fs-extra');
 var path = require('path');
 
-setGenerarIdEncFun((area:number,index:number)=>area.toString() + ((index<9)?'0':'') + (index+1).toString());
-setMaxAgenerar(99);
-//setMaxEncPorArea(99);
+setMaxEncPorArea(999);
 
 export const updateProvisorioQuery = `
 update provisorio_recepcion pr
@@ -154,7 +152,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
             let cantidad = (await context.client.query(`
                 select count(*) as cantidad
                     from tem
-                    where operativo = $1 and area = $2 and enc_autogenerado_dm is null
+                    where operativo = $1 and area = $2 and enc_autogenerado_dm is null and enc_autogenerado_dm_capa is null
             `,[OPERATIVO,area]).fetchUniqueValue()).value;
             await be.procedure.muestra_agregar.coreFunction(context, {
                 operativo: OPERATIVO, 
@@ -166,15 +164,29 @@ export const ProceduresRepsic : ProcedureDef[] = [
             await context.client.query(`
                 UPDATE tareas_tem tt
                     set recepcionista = $3, asignado = $4
-                    where operativo=$1 and tarea= $2 and recepcionista is null and asignado is null and
-					(select enc_autogenerado_dm from tem t where t.operativo = tt.operativo and t.enc = tt.enc) is null
+                    from tem t
+                    where 
+                        tt.operativo=$1 and 
+                        tt.tarea= $2 and 
+                        tt.recepcionista is null and 
+                        tt.asignado is null and
+                        tt.operativo = t.operativo and
+                        tt.enc = t.enc and
+                        t.enc_autogenerado_dm IS NULL and
+                        t.enc_autogenerado_dm_capa IS NULL
                     returning *
             `,[OPERATIVO, 'encu',context.user.idper,context.user.idper]).fetchAll();
             await context.client.query(`
                 UPDATE tareas_tem tt
                     set verificado = '1', estado = 'V'
-                    where operativo=$1 and tarea= $2 and
-					(select enc_autogenerado_dm from tem t where t.operativo = tt.operativo and t.enc = tt.enc) is null
+                    from tem t
+                    where 
+                        tt.operativo=$1 and 
+                        tt.tarea= $2 and
+                        tt.operativo = t.operativo and
+                        tt.enc = t.enc and
+        		    	t.enc_autogenerado_dm IS NULL and
+                        t.enc_autogenerado_dm_capa IS NULL
                     returning *
             `,[OPERATIVO, 'encu']).fetchAll();
             return "ok";

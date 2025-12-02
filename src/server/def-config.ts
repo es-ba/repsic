@@ -47,6 +47,7 @@ install:
       - ../node_modules/dmencu/install/asignar_desasignar_tareas_tem_trg.sql
       - ../node_modules/dmencu/install/desverificar_tarea_trg.sql
       - ../node_modules/dmencu/install/inicial_update_varcal_por_encuesta.sql
+      - ../node_modules/dmencu/install/obtener_siguiente_contador_area.sql
       - desintegrarpk.sql
       - comun_otras_fun.sql
       - ../node_modules/dmencu/install/actualizar_inconvar.sql
@@ -56,6 +57,7 @@ install:
       - agregar_adjunto_carto_trg.sql
       - registrar_barrio_recorrido_tem.sql
       - configuracion_sorteo_repsic.sql  
+
 login:
   infoFieldList: [usuario, rol, idper, recorrido, muestra_encuestas_prod, muestra_encuestas_capa]
   plus:

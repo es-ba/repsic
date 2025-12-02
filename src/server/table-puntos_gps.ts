@@ -39,7 +39,7 @@ export function puntos_gps(context:TableContext):TableDefinition {
                         from grupo_personas g
                         join tem t on t.enc=id_caso and resumen_estado is distinct from 'vacio'
                         , jsonb_array_elements(u9::jsonb) u9j
-                        where token_autogenerado_dm is not null
+                        where enc_autogenerado_dm is not null
                         order by 1
                 ), x1 as (
                     select *, (substr(u9elem_sin_escapado,2,length(u9elem_sin_escapado)-2))::jsonb u9elem_json
