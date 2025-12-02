@@ -356,25 +356,6 @@ export const ProceduresRepsic : ProcedureDef[] = [
             return `se agregó correctamente el área ${parameters.area} al recorrido ${parameters.recorrido}`;
         }
     },
-    {
-        action:'encuesta_capa_a_prod_pasar',
-        parameters:[
-            {name:'operativo'   , typeName:'text', references:'operativos'   },
-            {name:'enc'         , typeName:'text'},
-        ],
-        roles:['admin'],
-        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
-            (await context.client.query(
-                `update tem
-                    set enc_autogenerado_dm = enc_autogenerado_dm_capa, enc_autogenerado_dm_capa = null
-                    where operativo = $1 and enc = $2 and enc_autogenerado_dm_capa is not null
-                    returning *`,
-                [parameters.operativo, parameters.enc]
-            ).fetchUniqueRow()).row;
-            await context.client.query(updateProvisorioQuery,[]).fetchAll();
-            return `se movió la encuesta ${parameters.enc} a producción, se actualizó le provisorio`;
-        }
-    }
 /* */
 ];
 

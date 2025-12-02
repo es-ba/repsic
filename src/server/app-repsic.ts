@@ -80,12 +80,20 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         var parentProc = await super.getProcedures();
         var be = this;
         parentProc = parentProc.map(procDef=>{
-            if(['dm_sincronizar','dm_backup','dm_blanquear'].includes(procDef.action)){
+            if(['dm_sincronizar','dm_backup','dm_blanquear','encuesta_capa_a_prod_pasar'].includes(procDef.action)){
                 var coreFunctionInterno = procDef.coreFunction;
                 procDef.coreFunction = async function(context:procesamiento.ProcedureContext, parameters:any){
                     var result = await coreFunctionInterno(context, parameters);
                     var actualizadas = await context.client.query(updateProvisorioQuery,[]).fetchAll();
-                    console.log(`se actualizó el provisorio, ${actualizadas.rowCount} areas actualizadas`)
+
+                    const mensaje = `se actualizó el provisorio, ${actualizadas.rowCount} areas actualizadas`
+
+                    console.log(mensaje);
+
+                    if (typeof result === 'string') {
+                        result += '. ' + mensaje;
+                    }
+
                     return result;
                 }
             }
@@ -473,6 +481,11 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         delete(this.getTableDefinition.hogares_sup);
         delete(this.getTableDefinition.visitas);
         delete(this.getTableDefinition.visitas_sup);
+
+        be.appendToTableDefinition('areas_asignacion_general', function(tableDef, context){
+            const fieldVerificadoRec = tableDef.fields.find(field => field.name === 'verificado_rec');
+            if (fieldVerificadoRec) fieldVerificadoRec.visible = false;
+        });
         
         be.appendToTableDefinition('inconsistencias',function(tableDef, context){
             tableDef.sql={...tableDef.sql, isTable:true};
