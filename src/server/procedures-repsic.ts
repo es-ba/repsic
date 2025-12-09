@@ -357,19 +357,6 @@ export const ProceduresRepsic : ProcedureDef[] = [
             return `se agregó correctamente el área ${parameters.area} al recorrido ${parameters.recorrido}`;
         }
     },
-    {
-        action:'puntos_gps_indexados_obtener',
-        parameters:[],
-        coreFunction:async function(context:ProcedureContext, _parameters: CoreFunctionParameters){
-            const tableDef = puntos_gps(context);
-            return (await context.client.query(
-                `select ${jsono(`select ${tableDef.fields.map(field=>field.name).join(',')}  
-                    from (${getSqlFrom()}) as puntos_gps
-                    order by id_caso`,`id_caso`)}`,
-                []
-            ).fetchAll()).rows;
-        }
-    },
 /* */
 ];
 
