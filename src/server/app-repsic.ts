@@ -291,6 +291,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             {type:'js' , src:'lib/guijarro.js'  , module:'guijarro', ts:{url:'src', path:'../src'}},
             {type:'js' , src:'adjuntos.js'      },
             {type:'js' , src:'mapa.js'   },
+            {type:'js' , src:'mapa-recorrido.js'},
             {type:'js' , src:'client.js' },
             {type:'js' , src:'my-render-formulario.js' },
             {type:'js' , src:'my-bypass-formulario.js' },
@@ -350,6 +351,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             {menuType:'table', name:'encuestas_incompletas_dm', table:'incompletas_dm_tem'},
             {menuType:'table', name:'cantidades_area', table:'control_cantidades_area'},
             {menuType:'table', name:'cantidades_recorridos', table:'control_cantidades_recorridos'}
+            {menuType:'maps', name:'maps'},
         )
         return menuControles;
     }
