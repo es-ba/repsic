@@ -5,6 +5,7 @@ import { ProcedureContext, CoreFunctionParameters, UploadedFileInfo, OperativoGe
 import {getOperativoActual, setGenerarIdEncFun, setHdrQuery, setMaxEncPorArea} from "dmencu/dist/server/server/procedures-dmencu";
 import {json, jsono} from "pg-promise-strict";
 import { IdUnidadAnalisis } from "dmencu/dist/server/unlogged/tipos";
+import { getSqlFrom, puntos_gps } from "./table-puntos_gps";
 var fs = require('fs-extra');
 var path = require('path');
 
@@ -354,6 +355,19 @@ export const ProceduresRepsic : ProcedureDef[] = [
                 [parameters.operativo, parameters.area]
             ).fetchUniqueRow();
             return `se agregó correctamente el área ${parameters.area} al recorrido ${parameters.recorrido}`;
+        }
+    },
+    {
+        action:'puntos_gps_indexados_obtener',
+        parameters:[],
+        coreFunction:async function(context:ProcedureContext, _parameters: CoreFunctionParameters){
+            const tableDef = puntos_gps(context);
+            return (await context.client.query(
+                `select ${jsono(`select ${tableDef.fields.map(field=>field.name).join(',')}  
+                    from (${getSqlFrom()}) as puntos_gps
+                    order by id_caso`,`id_caso`)}`,
+                []
+            ).fetchAll()).rows;
         }
     },
 /* */
