@@ -362,12 +362,19 @@ export const ProceduresRepsic : ProcedureDef[] = [
         parameters:[],
         coreFunction:async function(context:ProcedureContext, _parameters: CoreFunctionParameters){
             const tableDef = puntos_gps(context);
-            return (await context.client.query(
-                `select ${jsono(`select ${tableDef.fields.map(field=>field.name).join(',')}  
-                    from (${getSqlFrom()}) as puntos_gps
-                    order by id_caso`,`id_caso`)}`,
+            const selectQuery = `select ${tableDef.fields.map(field=>field.name).join(',')}  
+                from (${getSqlFrom()}) as puntos_gps
+                order by id_caso
+            `;
+
+            const indexed = (await context.client.query(
+                `select ${jsono(selectQuery,`id_caso`)}`,
                 []
-            ).fetchAll()).rows;
+            ).fetchUniqueValue()).value;
+
+            const iterable = (await context.client.query(selectQuery).fetchAll()).rows;
+
+            return { indexed, iterable };
         }
     },
 /* */
