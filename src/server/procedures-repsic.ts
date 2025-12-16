@@ -6,6 +6,7 @@ import {getOperativoActual, setGenerarIdEncFun, setHdrQuery, setMaxEncPorArea} f
 import {json, jsono} from "pg-promise-strict";
 import { IdUnidadAnalisis } from "dmencu/dist/server/unlogged/tipos";
 import { ResultOneRow } from "backend-plus";
+import { getSqlFrom, puntos_gps } from "./table-puntos_gps";
 var fs = require('fs-extra');
 var path = require('path');
 
