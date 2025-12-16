@@ -5,6 +5,7 @@ import { ProcedureContext, CoreFunctionParameters, UploadedFileInfo, OperativoGe
 import {getOperativoActual, setGenerarIdEncFun, setHdrQuery, setMaxEncPorArea} from "dmencu/dist/server/server/procedures-dmencu";
 import {json, jsono} from "pg-promise-strict";
 import { IdUnidadAnalisis } from "dmencu/dist/server/unlogged/tipos";
+import { ResultOneRow } from "backend-plus";
 import { getSqlFrom, puntos_gps } from "./table-puntos_gps";
 var fs = require('fs-extra');
 var path = require('path');
@@ -162,6 +163,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
                 cant_encuestas: cant_encuestas - cantidad,
                 tarea_actual: 'ingr'
             });
+
             await context.client.query(`
                 UPDATE tareas_tem tt
                     set recepcionista = $3, asignado = $4
@@ -190,6 +192,24 @@ export const ProceduresRepsic : ProcedureDef[] = [
                         t.enc_autogenerado_dm_capa IS NULL
                     returning *
             `,[OPERATIVO, 'encu']).fetchAll();
+
+            const { row: { recepcionista, asignado } } = await context.client.query(`
+                SELECT recepcionista, asignado
+                FROM tareas_areas
+                WHERE operativo=$1 and area=$2 and tarea='ingr'
+            `,[OPERATIVO,area]).fetchUniqueRow();
+
+            const updateIdPerEnTareastem = (column: 'recepcionista'|'asignado', idPer: string) => context.client.query(`
+                UPDATE tareas_tem tt
+                    set ${context.be.db.quoteIdent(column)}=$4
+                    from tem t
+                    where tt.operativo=$1 and tt.tarea=$2 and t.area = $3 and tt.${context.be.db.quoteIdent(column)} is null
+                    and t.operativo = tt.operativo and t.enc = tt.enc and t.enc_autogenerado_dm is null
+            `,[OPERATIVO, 'ingr', area, idPer]).execute()
+
+            if (recepcionista != null) await updateIdPerEnTareastem('recepcionista', recepcionista);
+            if (asignado != null) await updateIdPerEnTareastem('asignado', asignado);
+
             return "ok";
         }
     },
