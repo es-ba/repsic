@@ -292,6 +292,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             {type:'js' , src:'adjuntos.js'      },
             {type:'js' , src:'mapa.js'   },
             {type:'js' , src:'mapa-recorrido.js'},
+            {type:'js' , src:'chart-provisorio.js' },
             {type:'js' , src:'client.js' },
             {type:'js' , src:'my-render-formulario.js' },
             {type:'js' , src:'my-bypass-formulario.js' },
@@ -350,7 +351,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         menuControles.push(
             {menuType:'table', name:'encuestas_incompletas_dm', table:'incompletas_dm_tem'},
             {menuType:'table', name:'cantidades_area', table:'control_cantidades_area'},
-            {menuType:'table', name:'cantidades_recorridos', table:'control_cantidades_recorridos'}
+            {menuType:'table', name:'cantidades_recorridos', table:'control_cantidades_recorridos'},
             {menuType:'maps', name:'maps'},
         )
         return menuControles;
@@ -413,6 +414,8 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 menuPapel.menuContent.unshift(this.getMenuAsignacion(context,'papel'));
                 menuPapel.menuContent.push(this.getMenuRecepcion(context,'papel'));
                 menuProvisorio.menuContent.push({menuType:'table' , name:'provisorio_recepcion', label:'subcoordinación' });
+                menuProvisorio.menuContent.push({menuType:'chart_personas' , name:'chart_personas', label:'gráfico de personas' });
+                menuProvisorio.menuContent.push({menuType:'chart_cuestionarios' , name:'chart_cuestionarios', label:'gráfico de cuestionarios' });
                 menuDef.menu.splice(1,0,menuProvisorio,menuDM,menuPapel);
                 if(context.puede?.campo?.administrar){
                     menuProvisorio.menuContent.unshift(
