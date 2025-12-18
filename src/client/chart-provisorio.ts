@@ -25,8 +25,20 @@ const buildChart = (modo: 'pers' | 'cues') => async function () {
             options: {
                 scale: { ticks: { precision: 0 } },
                 scales: {
-                    y: { stacked: true, },
-                    x: { stacked: true, },
+                    y: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: 'Cantidad de ' + (modo === 'pers' ? 'Personas' : 'Cuestionarios'),
+                        },
+                    },
+                    x: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: 'Recorridos',
+                        },
+                    },
                 }
             },
         });
