@@ -44,6 +44,8 @@ import * as cookieParser from 'cookie-parser';
 
 const APP_DM_VERSION="#19-10-24";
 
+const menuMaps = {menuType:'maps', name:'mapa_puntos_gps', label:'mapa de puntos gps'};
+
 interface Context extends procesamiento.Context{
   puede:object
   superuser?:true
@@ -352,7 +354,6 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             {menuType:'table', name:'encuestas_incompletas_dm', table:'incompletas_dm_tem'},
             {menuType:'table', name:'cantidades_area', table:'control_cantidades_area'},
             {menuType:'table', name:'cantidades_recorridos', table:'control_cantidades_recorridos'},
-            {menuType:'maps', name:'maps'},
         )
         return menuControles;
     }
@@ -377,6 +378,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             if(menuCarto){
                 menuCarto.menuContent.push(
                     {menuType:'table', name:'puntos_gps'},
+                    menuMaps,
                     {menuType:'table', name:'recorridos'},
                     {menuType:'table', name:'recorridos_barrios'},
                     {menuType:'table', name:'tipos_recorrido'},
@@ -405,6 +407,11 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 menuDef.menu.unshift({ menuType: 'table', name: 'general', label:'asignacion gral', table: 'areas_asignacion_general' });
             }
             let menuProvisorio: MenuInfo = {menuType:'menu'  , name:'provisorio', menuContent:[]};
+            let menuGraficosMaps: MenuInfo = {menuType:'menu'  , name:'graficos_maps', label:'gráficos y mapas', menuContent:[
+                menuMaps,
+                { menuType: 'chart_personas', name: 'chart_personas', label: 'gráfico de personas' },
+                { menuType: 'chart_cuestionarios', name: 'chart_cuestionarios', label: 'gráfico de cuestionarios' },
+            ]};
             let menuDM: MenuInfo = {menuType:'menu'  , name:'dm', menuContent:[]};
             let menuPapel: MenuInfo = {menuType:'menu'  , name:'papel', menuContent:[]};
             menuPapel.menuContent.push({menuType:'table' , name:'ingresar', label:'ingreso', table:'tareas_tem_ingreso', ff:{tarea:'ingr', asignado:context.user.idper }})
@@ -416,7 +423,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 menuProvisorio.menuContent.push({menuType:'table' , name:'provisorio_recepcion', label:'subcoordinación' });
                 menuProvisorio.menuContent.push({menuType:'chart_personas' , name:'chart_personas', label:'gráfico de personas' });
                 menuProvisorio.menuContent.push({menuType:'chart_cuestionarios' , name:'chart_cuestionarios', label:'gráfico de cuestionarios' });
-                menuDef.menu.splice(1,0,menuProvisorio,menuDM,menuPapel);
+                menuDef.menu.splice(1,0,menuProvisorio,menuGraficosMaps,menuDM,menuPapel);
                 if(context.puede?.campo?.administrar){
                     menuProvisorio.menuContent.unshift(
                         {menuType:'table' , name:'provisorio_recorridos', label:'recorridos resumen' },
