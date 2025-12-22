@@ -43,7 +43,7 @@ const buildChart = (modo: 'pers' | 'cues') => async function () {
             },
         });
 
-        const updateChartData = async () => {
+        const updateChartData = async ({ refresh }: { refresh: boolean }) => {
             const rows: Recorrido[] = await my.ajax.table_data({ table: 'provisorio_recorridos' });
             const recorridos: string[] = [];
             const total_dm: number[] = [];
@@ -55,25 +55,31 @@ const buildChart = (modo: 'pers' | 'cues') => async function () {
                 total_papel.push(modo === 'pers' ? row.pers_papel : row.cues_papel);
             });
 
-            chart.data = {
-                labels: recorridos,
-                datasets: [{
-                    label: modo === 'pers' ? 'Personas DM' : 'Cuestionarios DM',
-                    data: total_dm,
-                },{
-                    label: modo === 'pers' ? 'Personas Papel' : 'Cuestionarios Papel',
-                    data: total_papel,
-                }]
-            };
+            if (refresh) {
+                chart.data.datasets[0].data = total_dm;
+                chart.data.datasets[1].data = total_papel;
+            } else {
+                chart.data = {
+                    labels: recorridos,
+                    datasets: [{
+                        label: modo === 'pers' ? 'Personas DM' : 'Cuestionarios DM',
+                        data: total_dm,
+                    },{
+                        label: modo === 'pers' ? 'Personas Papel' : 'Cuestionarios Papel',
+                        data: total_papel,
+                    }]
+                };
+            }
+
             chart.update('none');
         }
 
-        updateChartData();
+        updateChartData({ refresh: false });
 
         const windowRefresh = window as any;
         if (windowRefresh.currentAutofrefresh) clearInterval(windowRefresh.currentAutofrefresh);
         windowRefresh.currentAutofrefresh = setInterval(() => {
-            updateChartData();
+            updateChartData({ refresh: true });
         }, 5000);
     }
     mainLayout.appendChild(script);
