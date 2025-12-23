@@ -421,8 +421,6 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 menuPapel.menuContent.unshift(this.getMenuAsignacion(context,'papel'));
                 menuPapel.menuContent.push(this.getMenuRecepcion(context,'papel'));
                 menuProvisorio.menuContent.push({menuType:'table' , name:'provisorio_recepcion', label:'subcoordinación' });
-                menuProvisorio.menuContent.push({menuType:'chart_personas' , name:'chart_personas', label:'gráfico de personas' });
-                menuProvisorio.menuContent.push({menuType:'chart_cuestionarios' , name:'chart_cuestionarios', label:'gráfico de cuestionarios' });
                 menuDef.menu.splice(1,0,menuProvisorio,menuGraficosMaps,menuDM,menuPapel);
                 if(context.puede?.campo?.administrar){
                     menuProvisorio.menuContent.unshift(
