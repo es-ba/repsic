@@ -626,7 +626,16 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 {table:'recorridos_barrios',fields:['comuna','barrio'], abr:'R'}
             );
         });
-        
+        be.appendToTableDefinition('tareas_tem_asignacion_encu', function(tableDef){
+            tableDef.sql!.where = `
+                (tem.enc_autogenerado_dm IS NOT NULL OR tem.enc_autogenerado_dm_capa IS NOT NULL)
+            `;
+        });
+        be.appendToTableDefinition('tareas_tem_asignacion_ingr', function(tableDef){
+            tableDef.sql!.where = `
+                (tem.enc_autogenerado_dm IS NULL AND tem.enc_autogenerado_dm_capa IS NULL)
+            `;
+        });
     }
   }
 }
