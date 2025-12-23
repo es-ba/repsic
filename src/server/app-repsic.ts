@@ -484,7 +484,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             , dictra
             , incompletas_dm_tem
             , puntos_gps
-            , control_cantidades_area,
+            , control_cantidades_area
             , control_cantidades_recorridos
         }
         delete(this.getTableDefinition.viviendas);
