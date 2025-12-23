@@ -1,0 +1,10 @@
+{
+  "version": "v1",
+  "packages": {
+    "dmencu": {
+      "signature": "6607f5a217ee321a5df4282d2c81cd78",
+      "file": true,
+      "replaced": "^2.1.3"
+    }
+  }
+}
