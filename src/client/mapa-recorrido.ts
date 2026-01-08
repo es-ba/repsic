@@ -34,6 +34,7 @@ myOwn.wScreens.maps = async function () {
             background-color: white;
             border: 1px solid black;
             padding: 5px;
+            border-color: #666;
             border-radius: 3px;
             width: max-content;
             transition: opacity 0.25s ease;
@@ -44,11 +45,20 @@ myOwn.wScreens.maps = async function () {
         }
         
         .map-popup-label {
-            
+            color: #666
         }
 
         .map-popup-value {
             margin-left: 5px;
+        }
+
+        button[type=button] {
+            background-color: #1976d2;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            margin: 1px;
+            cursor: pointer;
         }
     `;
     mainLayout.appendChild(style);
@@ -111,10 +121,10 @@ myOwn.wScreens.maps = async function () {
             image: new ol.style.Circle({
                 radius: 5,
                 fill: new ol.style.Fill({
-                    color: 'rgba(25, 175, 192, 0.74)'
+                    color: '#1976d2'
                 }),
                 stroke: new ol.style.Stroke({
-                    color: 'rgba(0, 0, 0, 0.5)',
+                    color: '#666',
                     width: 1
                 })
             })
