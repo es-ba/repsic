@@ -42,7 +42,7 @@ import { Request } from "rel-enc";
 
 import * as cookieParser from 'cookie-parser';
 
-const APP_DM_VERSION="#19-10-24";
+const APP_DM_VERSION="#31-04-09";
 
 const menuMaps = {menuType:'maps', name:'mapa_puntos_gps', label:'mapa de puntos gps'};
 
@@ -304,14 +304,23 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         ])
     }
 
-    createResourcesForCacheJson(parameters:Record<string,any>){
+    async createResourcesForCacheJson(parameters:Record<string,any>){
         var be = this;
-        var jsonResult:any = super.createResourcesForCacheJson(parameters);
+        var jsonResult:any = await super.createResourcesForCacheJson(parameters);
         jsonResult.version = APP_DM_VERSION;
         jsonResult.appName = 'repsic';
         jsonResult.cache=jsonResult.cache.concat([
             "my-render-formulario.js",
-            'my-bypass-formulario.js'
+            'my-bypass-formulario.js',
+            'lib/guijarro.js',
+            'adjuntos.js',
+            'mapa.js',
+            'mapa-recorrido.js',
+            'chart-provisorio.js',
+            'client.js',
+            'css/mapa.css',
+            'css/guijarro.css',
+            'css/repsic.css',
         ])
         return jsonResult
     }
