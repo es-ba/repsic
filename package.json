@@ -13,7 +13,7 @@
     "unlogged"
   ],
   "dependencies": {
-    "dmencu": "^2.1.20",
+    "dmencu": "^2.1.21",
     "guijarro": "^0.3.1",
     "yazl": "~2.5.1"
   },
