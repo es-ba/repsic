@@ -10,7 +10,7 @@ install:
   dump:
     #drop-his: true
   table-data-dir: 
-    - ../dmencu-data/repsic252
+    - ../dmencu-data/repsic261
     - ../dmencu-data/templates_app_final #no borrar, dejar último, chequea los tabs obligatorios al correr -- --dump-db
 login:
   plus:

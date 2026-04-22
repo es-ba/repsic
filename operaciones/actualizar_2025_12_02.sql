@@ -1,5 +1,5 @@
 set search_path = base;
-set role to repsic252_owner;
+set role to repsic261_owner;
 
 create table "area_enc_proximas" (
   "operativo" text, 
@@ -8,8 +8,8 @@ create table "area_enc_proximas" (
 , primary key ("operativo", "area")
 );
 
-grant select, insert, update, delete on "area_enc_proximas" to repsic252_admin;
-grant all on "area_enc_proximas" to repsic252_owner;
+grant select, insert, update, delete on "area_enc_proximas" to repsic261_admin;
+grant all on "area_enc_proximas" to repsic261_owner;
 
 alter table "area_enc_proximas" add constraint "operativo<>''" check ("operativo"<>'');
 alter table "area_enc_proximas" add constraint "area_enc_proximas areas REL" foreign key ("operativo", "area") references "areas" ("operativo", "area")  on update cascade;

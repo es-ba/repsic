@@ -1,5 +1,5 @@
 
-set role=repsic252_owner; --cambiar por el usuario que corresponda
+set role=repsic261_owner; --cambiar por el usuario que corresponda
 set search_path = base;
 
 alter table personas drop column  "sc24"; 

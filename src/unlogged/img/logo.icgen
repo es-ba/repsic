@@ -1,0 +1,73 @@
+{
+  "canvasWidth": 348,
+  "canvasHeight": 128,
+  "borderRadius": 8,
+  "colorBase": "#2f8b13",
+  "colorText": "#FFFFFF",
+  "elements": {
+    "el_1776794574760": {
+      "id": "el_1776794574760",
+      "name": "New Text",
+      "type": "text",
+      "text": "REPSIC",
+      "x": 172,
+      "y": 60,
+      "size": 94,
+      "font": "'Roboto', sans-serif",
+      "weight": 900,
+      "scaleX": 1.01,
+      "scaleY": 1.01,
+      "rotate": 0,
+      "visible": true,
+      "tLen": 315
+    },
+    "el_1776794605098": {
+      "id": "el_1776794605098",
+      "name": "New Text",
+      "type": "text",
+      "text": "261",
+      "x": 297,
+      "y": 110,
+      "size": 75,
+      "font": "'Roboto', sans-serif",
+      "weight": 900,
+      "scaleX": 0.44,
+      "scaleY": 0.44,
+      "rotate": 0,
+      "visible": true,
+      "tLen": 150
+    },
+    "el_1776794841567": {
+      "id": "el_1776794841567",
+      "name": "New Rect",
+      "type": "rect",
+      "w": 307,
+      "h": 150,
+      "x": 114,
+      "y": 160,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotate": 0,
+      "visible": false,
+      "isGrad": true,
+      "gradType": "v",
+      "rx": 0
+    },
+    "el_1776794882256": {
+      "id": "el_1776794882256",
+      "name": "New Text",
+      "type": "text",
+      "text": "PARADORES",
+      "x": 134,
+      "y": 111,
+      "size": 72,
+      "font": "'Roboto', sans-serif",
+      "weight": 900,
+      "scaleX": 0.48,
+      "scaleY": 0.48,
+      "rotate": 0,
+      "visible": false,
+      "tLen": 505
+    }
+  }
+}
