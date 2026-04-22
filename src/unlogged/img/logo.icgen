@@ -2,7 +2,7 @@
   "canvasWidth": 348,
   "canvasHeight": 128,
   "borderRadius": 8,
-  "colorBase": "#2f8b13",
+  "colorBase": "#138EE5",
   "colorText": "#FFFFFF",
   "elements": {
     "el_1776794574760": {
@@ -10,32 +10,31 @@
       "name": "New Text",
       "type": "text",
       "text": "REPSIC",
-      "x": 172,
-      "y": 60,
-      "size": 94,
+      "x": 171,
+      "y": 54,
+      "size": 69,
       "font": "'Roboto', sans-serif",
       "weight": 900,
-      "scaleX": 1.01,
-      "scaleY": 1.01,
+      "scaleX": 1.21,
+      "scaleY": 1.21,
       "rotate": 0,
       "visible": true,
-      "tLen": 315
+      "tLen": 268
     },
     "el_1776794605098": {
       "id": "el_1776794605098",
       "name": "New Text",
       "type": "text",
       "text": "261",
-      "x": 297,
-      "y": 110,
-      "size": 75,
+      "x": 303,
+      "y": 106,
+      "size": 72,
       "font": "'Roboto', sans-serif",
       "weight": 900,
       "scaleX": 0.44,
       "scaleY": 0.44,
       "rotate": 0,
-      "visible": true,
-      "tLen": 150
+      "visible": true
     },
     "el_1776794841567": {
       "id": "el_1776794841567",
@@ -48,7 +47,7 @@
       "scaleX": 1,
       "scaleY": 1,
       "rotate": 0,
-      "visible": false,
+      "visible": true,
       "isGrad": true,
       "gradType": "v",
       "rx": 0
@@ -66,7 +65,7 @@
       "scaleX": 0.48,
       "scaleY": 0.48,
       "rotate": 0,
-      "visible": false,
+      "visible": true,
       "tLen": 505
     }
   }
