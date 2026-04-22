@@ -62,6 +62,7 @@ export function grupo_personas(context:TableContext):TableDefinition {
             { name: "o4"            , label:'entrev. real.'         , typeName: 'integer' },
             { name: "o5"            , label:'razon no real'         , typeName: 'integer' },
             { name: "o5_esp"        , label:'otra'                  , typeName: 'text'    },
+            { name: "o6_esp"        , label:'otra vez relevado'     , typeName: 'text'    },
             { name: "totalpers"     , label:'total personas'        , typeName: 'integer' },
             { name: "obs"           , label:'observaciones'         , typeName: 'text'    },
             { name: "estado"        , label:'estado'                , typeName: 'text'    , defaultValue: 'en_ingreso'},
