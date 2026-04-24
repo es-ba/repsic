@@ -4,7 +4,7 @@
 
 drop table if exists "repsic_261_grupo_personas_calculada";
 drop table if exists "repsic_261_personas_calculada";
-drop table if exists "repsic_261_coordinacion_calculada";
+--drop table if exists "repsic_261_coordinacion_calculada";
 DROP FUNCTION if exists gen_fun_var_calc();
 DROP FUNCTION if exists update_varcal(text);
 DROP FUNCTION if exists update_varcal_por_encuesta(text,text);
@@ -57,6 +57,7 @@ create table "repsic_261_personas_calculada" (
 --grant select, insert, update, delete, references on "repsic_261_personas_calculada" to "repsic261_admin";
 --grant all on "repsic_261_personas_calculada" to "repsic261_owner";
 
+/*
 create table "repsic_261_coordinacion_calculada" (
   "operativo" text,
   "recorrido" bigint,
@@ -66,7 +67,7 @@ create table "repsic_261_coordinacion_calculada" (
 );
 --grant select, insert, update, delete, references on "repsic_261_coordinacion_calculada" to "repsic261_admin";
 --grant all on "repsic_261_coordinacion_calculada" to "repsic261_owner";
-
+*/
 -- conss
 alter table "repsic_261_grupo_personas_calculada" add constraint "operativo<>''" check ("operativo"<>'');
 alter table "repsic_261_grupo_personas_calculada" add constraint "id_caso<>''" check ("id_caso"<>'');
@@ -76,11 +77,11 @@ alter table "repsic_261_personas_calculada" add constraint "id_caso<>''" check (
 -- FKs
 alter table "repsic_261_grupo_personas_calculada" add constraint  "repsic_261_grupo_personas_calculada grupo_personas REL" foreign key ("operativo", "id_caso") references "grupo_personas" ("operativo", "id_caso")  on delete cascade on update cascade;
 alter table "repsic_261_personas_calculada" add constraint  "repsic_261_personas_calculada personas REL" foreign key ("operativo", "id_caso", "persona") references "personas" ("operativo", "id_caso", "persona")  on delete cascade on update cascade;
-alter table "repsic_261_coordinacion_calculada" add constraint  "repsic_261_coordinacion_calculada coordinacion REL" foreign key ("operativo","recorrido","area") references "coordinacion" ("operativo","recorrido","area")  on delete cascade on update cascade;
+--alter table "repsic_261_coordinacion_calculada" add constraint  "repsic_261_coordinacion_calculada coordinacion REL" foreign key ("operativo","recorrido","area") references "coordinacion" ("operativo","recorrido","area")  on delete cascade on update cascade;
 -- index
 create index "operativo,id_caso 4 repsic_261_grupo_personas_calculada IDX" ON "repsic_261_grupo_personas_calculada" ("operativo", "id_caso");
 create index "operativo,id_caso,persona 4 repsic_261_personas_calculada IDX" ON "repsic_261_personas_calculada" ("operativo", "id_caso", "persona");
-create index "recorrido 4 repsic_261_coordinacion_calculada IDX" ON "repsic_261_coordinacion_calculada" ("operativo","recorrido","area");
+--create index "recorrido 4 repsic_261_coordinacion_calculada IDX" ON "repsic_261_coordinacion_calculada" ("operativo","recorrido","area");
 ----
 --mejora
             INSERT INTO "repsic_261_grupo_personas_calculada" ("operativo","id_caso") 
@@ -89,8 +90,8 @@ create index "recorrido 4 repsic_261_coordinacion_calculada IDX" ON "repsic_261_
             INSERT INTO "repsic_261_personas_calculada" ("operativo","id_caso","persona") 
               SELECT "operativo","id_caso","persona" FROM "personas";
 
-            INSERT INTO "repsic_261_coordinacion_calculada" ("operativo","recorrido","area") 
-              SELECT "operativo","recorrido","area" FROM "coordinacion";
+            --INSERT INTO "repsic_261_coordinacion_calculada" ("operativo","recorrido","area") 
+            --  SELECT "operativo","recorrido","area" FROM "coordinacion";
 ----
 
 ----- SE CREA LA FUNCION PARA LLAMAR ANTES DE CADA CONSISTIR
@@ -119,8 +120,8 @@ BEGIN
       SELECT "operativo","id_caso" FROM "grupo_personas" WHERE operativo=p_operativo AND "id_caso"=p_id_caso ON CONFLICT DO NOTHING;
     INSERT INTO "repsic_261_personas_calculada" ("operativo","id_caso","persona") 
       SELECT "operativo","id_caso","persona" FROM "personas" WHERE operativo=p_operativo AND "id_caso"=p_id_caso ON CONFLICT DO NOTHING;
-    INSERT INTO "repsic_261_coordinacion_calculada" ("operativo","recorrido","area") 
-      SELECT "operativo","recorrido","area" FROM "coordinacion"  ON CONFLICT DO NOTHING;
+    --INSERT INTO "repsic_261_coordinacion_calculada" ("operativo","recorrido","area") 
+    --  SELECT "operativo","recorrido","area" FROM "coordinacion"  ON CONFLICT DO NOTHING;
   ----
     UPDATE repsic_261_grupo_personas_calculada
       SET 
@@ -206,6 +207,7 @@ BEGIN
         ) referente ON referente.id_caso=personas.id_caso AND referente.operativo=personas.operativo
     WHERE "personas"."operativo"="repsic_261_personas_calculada"."operativo" AND "personas"."id_caso"="repsic_261_personas_calculada"."id_caso" AND "personas"."persona"="repsic_261_personas_calculada"."persona" 
       AND "personas"."operativo"=p_operativo AND "personas"."id_caso"=p_id_caso;
+    /*  
     UPDATE repsic_261_coordinacion_calculada
       SET 
           cant_form = grupo_personas_agg.cant_form
@@ -221,7 +223,7 @@ BEGIN
         AND "coordinacion"."area"="repsic_261_coordinacion_calculada"."area" 
         --AND "coordinacion"."recorrido"=v_recorrido
         ;
-
+      */
   --
   RETURN 'OK';
 END;

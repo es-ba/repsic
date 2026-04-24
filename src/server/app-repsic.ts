@@ -364,6 +364,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             {menuType:'table', name:'cantidades_area', table:'control_cantidades_area'},
             {menuType:'table', name:'cantidades_recorridos', table:'control_cantidades_recorridos'},
         )
+        menuControles= menuControles.filter((menuInfo)=>!['resumen','dominio','zona','comuna','área'].includes(menuInfo.name));
         return menuControles;
     }
     getMenuAsignacion(context:Context, modo:'papel'|'dm'){
