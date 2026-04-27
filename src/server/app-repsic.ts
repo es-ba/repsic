@@ -42,7 +42,7 @@ import { Request } from "rel-enc";
 
 import * as cookieParser from 'cookie-parser';
 
-const APP_DM_VERSION="#26-04-17";
+const APP_DM_VERSION="#26-04-27";
 
 const menuMaps = {menuType:'maps', name:'mapa_puntos_gps', label:'mapa de puntos gps'};
 
