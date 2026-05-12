@@ -2,7 +2,6 @@ export const defConfig=`
 server:
   port: 3055
   base-url: /repsic261
-  session-store: memory
 db:
   motor: postgresql
   host: localhost
