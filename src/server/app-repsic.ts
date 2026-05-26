@@ -644,6 +644,13 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 (tem.enc_autogenerado_dm IS NULL AND tem.enc_autogenerado_dm_capa IS NULL)
             `;
         });
+        //['t_encu_areas','t_ingr_areas'].forEach(function(tableName){
+        //    be.appendToTableDefinition(tableName, function(tableDef){
+        //        let displayFields = tableDef.foreignKeys?.find((fk)=>fk.references=='usuarios' && fk.alias=='asignado')?.displayFields!;
+        //        displayFields.push('usuario');
+        //    });
+        //});        
+        //no refresca bien ver BP y su PR
     }
   }
 }
