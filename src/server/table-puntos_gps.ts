@@ -50,6 +50,9 @@ with json_enc_carto as(
                 u9 text ,
                 obs text
             )
+            where enc_autogenerado_dm is not null
+                and resumen_estado is distinct from 'vacio'
+                and comun.con_dato(u9)
     ) 
     ,x as(
         select g.* 
@@ -59,10 +62,7 @@ with json_enc_carto as(
                 , value u9elem_json
             from json_enc_carto g
                 , jsonb_array_elements(u9_limpio::jsonb) u9j
-            where enc_autogenerado_dm is not null
-                and resumen_estado is distinct from 'vacio'
-                and u9 is not null
-                and value?'coords'
+            where value?'coords'
             order by 1
 )
     select *,(u9elem_json#>>'{coords,accuracy}')::numeric cprecision
