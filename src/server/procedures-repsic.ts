@@ -74,14 +74,19 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrin
             ) as respuestas,
             ${json(`
                 select * from (
-                    select a.area as carga, observaciones_hdr as observaciones, min(fecha_asignacion) as fecha, ta.recepcionista, a.recorrido
+                    select a.area as carga, observaciones_hdr as observaciones, min(fecha_asignacion) as fecha, ta.recepcionista, 
+                    ${permiteGenerarMuestra?`case
+                        when ta.asignado = ${context.be.db.quoteLiteral(context.user.idper)}
+                        then true
+                        else false
+                    end`:`false`} as puede_autogenerar, a.recorrido
                         from ${context.be.db.quoteIdent(unidadAnalisisPrincipal)} aux 
                             inner join areas a using (operativo, area) 
                             inner join tareas_areas ta on (a.operativo = ta.operativo and a.area = ta.area and aux.tarea->>'tarea' = ta.tarea)
-                        group by a.area, observaciones_hdr, ta.recepcionista , a.recorrido
+                        group by a.area, observaciones_hdr, ta.recepcionista , puede_autogenerar, a.recorrido
                 ${permiteGenerarMuestra?`
                     union -- este union permite visualizar areas asignadas sin encuestas generadas
-                    select area as carga, null as observaciones, null as fecha, ta.recepcionista, recorrido
+                    select area as carga, null as observaciones, null as fecha, ta.recepcionista, true as puede_autogenerar, recorrido
                         from tareas_areas ta inner join areas a using (operativo, area)
                         where asignado = ${context.be.db.quoteLiteral(context.user.idper)} and tarea = 'encu') ar
                 `:''} left join lateral 

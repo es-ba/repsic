@@ -108,7 +108,7 @@ setDesplegarCarga((props:{
                         respuestas={respuestas[estructura.uaPpal][numVivienda] as RespuestasRaiz}
                     />
                 ).array()}
-                {estructura.permiteGenerarMuestra?
+                {carga.puede_autogenerar?
                     <TableRow className="tr-carga-nuevo">
                         <TableCell colSpan={3}>
                             <Button
@@ -120,7 +120,7 @@ setDesplegarCarga((props:{
                                     })
                                 }
                             >
-                                <ICON.Add/>
+                                <ICON.Add/> Nuevo cuestionario
                             </Button>
                         </TableCell>
                     </TableRow>
