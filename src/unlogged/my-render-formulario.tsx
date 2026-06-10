@@ -3,8 +3,6 @@ import { IdFormulario, RespuestasRaiz, ForPk, IdVariable, Formulario, Libre, IdU
     Estructura,
     PlainForPk,
     IdFin,
-    CasoState,
-    CampoPkRaiz,
     Carga,
     IdCarga,
     InformacionHdr,
@@ -12,35 +10,31 @@ import { IdFormulario, RespuestasRaiz, ForPk, IdVariable, Formulario, Libre, IdU
     ForPkRaiz,
     IdEnc,
     CasillerosImplementados,
-    toPlainForPk,
     ModoDM
 } from "dmencu/dist/unlogged/unlogged/tipos";
-import {getDatosByPass, persistirDatosByPass, setCalcularVariablesEspecificasOperativo, respuestasForPk, 
-    registrarElemento, dispatchByPass, accion_registrar_respuesta, accion_abrir_formulario,
+import {getDatosByPass, setCalcularVariablesEspecificasOperativo, respuestasForPk, 
+    registrarElemento,
     getEstructura,
     crearEncuesta,
-    getFeedbackRowValidator,
+    ,
     calcularResumenVivienda,
     intentarBackup,
     volcadoInicialElementosRegistrados,
-    MODO_DM_LOCALSTORAGE_KEY
 } from "dmencu/dist/unlogged/unlogged/bypass-formulario";
 import {setDesplegarCarga, setDesplegarLineaResumenUAPrincipal, resumidores, DesplegarTem, DesplegarCitaPactada, DesplegarCitaPactadaYSeleccionadoAnteriorTem, DesplegarLineaResumenUAPrincipal, Button} from "dmencu/dist/unlogged/unlogged/render-formulario";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux"; 
-import { dispatchers, getCacheVersion, gotoSincronizar } from "dmencu/dist/unlogged/unlogged/redux-formulario";
+import { useDispatch } from "react-redux"; 
+import { dispatchers } from "dmencu/dist/unlogged/unlogged/redux-formulario";
 import { FormStructureState } from "row-validator";
 import likeAr = require("like-ar");
 import React = require("react");
 import {
-    AppBar,
-    IconButton,
     Chip,
-    Paper, Table, TableBody, TableCell, TableHead, TableRow,
-    Toolbar,
-    Typography
+    Paper, Table, TableBody, TableCell, TableHead, TableRow
 } from "@mui/material";
 import { ICON } from "dmencu/dist/unlogged/unlogged/render-general";
+import { getFormularioConfig } from "dmencu/dist/unlogged/unlogged/render-config";
+
 
 setDesplegarCarga((props:{
     carga:Carga, 
@@ -61,7 +55,7 @@ setDesplegarCarga((props:{
         respuestas[estructura.uaPpal][numVivienda].u8 || 0
     ).array().reduce((accumulator, currentValue) => accumulator + currentValue,0);
     const cantCuesArea = likeAr(informacionHdr).filter((informacion, numVivienda)=>informacion.tem.carga==idCarga && respuestas[estructura.uaPpal][numVivienda].u8).array().length
-    const modoDM:ModoDM = my.getLocalVar(MODO_DM_LOCALSTORAGE_KEY);
+    const modoDM:ModoDM = getFormularioConfig().getModoDM()!;
     return <Paper className="carga" style={{marginBottom: '10px', padding: '10px'}}>
         <div className="informacion-carga">
             <div className="carga">Área: {idCarga} | cuestionarios: {cantCuesArea} | personas: {cantPerArea}
