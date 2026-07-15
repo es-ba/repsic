@@ -16,7 +16,6 @@ import {getDatosByPass, setCalcularVariablesEspecificasOperativo, respuestasForP
     registrarElemento,
     getEstructura,
     crearEncuesta,
-    ,
     calcularResumenVivienda,
     intentarBackup,
     volcadoInicialElementosRegistrados,
@@ -33,7 +32,7 @@ import {
     Paper, Table, TableBody, TableCell, TableHead, TableRow
 } from "@mui/material";
 import { ICON } from "dmencu/dist/unlogged/unlogged/render-general";
-import { getFormularioConfig } from "dmencu/dist/unlogged/unlogged/render-config";
+import { getFormRenderer } from "dmencu/dist/unlogged/unlogged/render-config";
 
 
 setDesplegarCarga((props:{
@@ -55,7 +54,7 @@ setDesplegarCarga((props:{
         respuestas[estructura.uaPpal][numVivienda].u8 || 0
     ).array().reduce((accumulator, currentValue) => accumulator + currentValue,0);
     const cantCuesArea = likeAr(informacionHdr).filter((informacion, numVivienda)=>informacion.tem.carga==idCarga && respuestas[estructura.uaPpal][numVivienda].u8).array().length
-    const modoDM:ModoDM = getFormularioConfig().getModoDM()!;
+    const modoDM:ModoDM = getFormRenderer().getModoDM()!;
     return <Paper className="carga" style={{marginBottom: '10px', padding: '10px'}}>
         <div className="informacion-carga">
             <div className="carga">Área: {idCarga} | cuestionarios: {cantCuesArea} | personas: {cantPerArea}

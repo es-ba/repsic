@@ -27,7 +27,7 @@ update provisorio_recepcion pr
     where pr.operativo = t.operativo and pr.area =  t.area
 `
 
-setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrincipal:IdUnidadAnalisis, permiteGenerarMuestra:boolean)=>{
+setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrincipal:IdUnidadAnalisis, permiteGenerarMuestra:boolean, idper:string)=>{
     return `
     with ${context.be.db.quoteIdent(unidadAnalisisPrincipal)} as 
         (select t.operativo, t.enc, t.json_encuesta as respuestas, t.resumen_estado as "resumenEstado", 
@@ -76,7 +76,7 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrin
                 select * from (
                     select a.area as carga, observaciones_hdr as observaciones, min(fecha_asignacion) as fecha, ta.recepcionista, 
                     ${permiteGenerarMuestra?`case
-                        when ta.asignado = ${context.be.db.quoteLiteral(context.user.idper)}
+                        when ta.asignado = ${context.be.db.quoteLiteral(idper)}
                         then true
                         else false
                     end`:`false`} as puede_autogenerar, a.recorrido
@@ -88,7 +88,7 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrin
                     union -- este union permite visualizar areas asignadas sin encuestas generadas
                     select area as carga, null as observaciones, null as fecha, ta.recepcionista, true as puede_autogenerar, recorrido
                         from tareas_areas ta inner join areas a using (operativo, area)
-                        where asignado = ${context.be.db.quoteLiteral(context.user.idper)} and tarea = 'encu') ar
+                        where asignado = ${context.be.db.quoteLiteral(idper)} and tarea = 'encu') ar
                 `:''} left join lateral 
                     (select array_agg(distinct comuna order by comuna)::text as comuna_agrupada, recorrido
                         from (
