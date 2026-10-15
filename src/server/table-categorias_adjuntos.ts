@@ -14,7 +14,7 @@ export function categorias_adjuntos(context:TableContext):TableDefinition {
         ],
         primaryKey:['categoria'],
         detailTables:[
-            {table:'adjunto_categoria' , fields:['categoria'], abr:'A', title:'Archivos'},
+            {table:'adjunto_categoria' , fields:['categoria'], abr:'A', label:'Archivos'},
         ],
     };
 }

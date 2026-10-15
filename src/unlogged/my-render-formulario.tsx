@@ -12,6 +12,7 @@ import { IdFormulario, RespuestasRaiz, ForPk, IdVariable, Formulario, Libre, IdU
     CasillerosImplementados,
     ModoDM
 } from "dmencu/dist/unlogged/unlogged/tipos";
+import { RespuestasRepsic, RespuestaLasUARepsic, RespuestasRaizRepsic, TEMRepsic, CargaRepsic } from "./tipos-repsic";
 import {getDatosByPass, setCalcularVariablesEspecificasOperativo, respuestasForPk, 
     registrarElemento,
     getEstructura,
@@ -40,7 +41,7 @@ setDesplegarCarga((props:{
     idCarga:IdCarga, 
     posicion:number,
     informacionHdr:InformacionHdr, 
-    respuestas: RespuestaLasUA,
+    respuestas: RespuestaLasUARepsic,
     feedbackRowValidator:{
         [formulario in PlainForPk]:FormStructureState<IdVariable, Valor, IdFin> 
     }
@@ -51,9 +52,9 @@ setDesplegarCarga((props:{
     let cantLineasResumen = likeAr(informacionHdr).filter((informacion)=>informacion.tem.carga==idCarga).array().length;
     const dispatch = useDispatch();
     const cantPerArea = likeAr(informacionHdr).filter((informacion)=>informacion.tem.carga==idCarga).map((_informacion, numVivienda)=>
-        respuestas[estructura.uaPpal][numVivienda].u8 || 0
+        Number(respuestas[estructura.uaPpal][numVivienda].u8 || 0)
     ).array().reduce((accumulator, currentValue) => accumulator + currentValue,0);
-    const cantCuesArea = likeAr(informacionHdr).filter((informacion, numVivienda)=>informacion.tem.carga==idCarga && respuestas[estructura.uaPpal][numVivienda].u8).array().length
+    const cantCuesArea = likeAr(informacionHdr).filter((informacion, numVivienda)=>informacion.tem.carga==idCarga && !!respuestas[estructura.uaPpal][numVivienda].u8).array().length
     const modoDM:ModoDM = getFormRenderer().getModoDM()!;
     return <Paper className="carga" style={{marginBottom: '10px', padding: '10px'}}>
         <div className="informacion-carga">
@@ -140,13 +141,13 @@ setDesplegarLineaResumenUAPrincipal((props:{
     numVivienda:IdEnc,
     formPrincipal:IdFormulario,
     tarea: string,
-    respuestas:RespuestasRaiz,
+    respuestas:RespuestasRaizRepsic,
 })=>{
     const {numVivienda, respuestas, formPrincipal, tarea} = props;
     const id='viv-'+numVivienda;
     const estructura = getEstructura();
     const forPk:ForPk={formulario:formPrincipal, [estructura.pkAgregadaUaPpal]:Number(numVivienda) as IdEnc} as ForPk; //no quitar el casteo porque viene como texto y necesito que sea número
-    var tem = getDatosByPass().informacionHdr[numVivienda].tem;
+    var tem:TEMRepsic = getDatosByPass().informacionHdr[numVivienda].tem;
     const dispatch = useDispatch();
     useEffect(()=>{
         volcadoInicialElementosRegistrados(forPk);
@@ -204,17 +205,19 @@ const numberIfNullOrUndefined = (value:Valor) => Number(value ?? 0)
 
 setCalcularVariablesEspecificasOperativo((resRaiz:RespuestasRaiz, forPk:ForPk)=>{
     var estructura = getEstructura();
-    delete(resRaiz.vdominio);
+    const resRaizParcial: Partial<RespuestasRaizRepsic> = resRaiz;
+    delete(resRaizParcial.vdominio);
     if(forPk.formulario == 'F:F2' as IdFormulario || forPk.formulario == 'F:F2_CIS' as IdFormulario){
         let {respuestas} = respuestasForPk(forPk);
-        respuestas['p0' as IdVariable] = forPk.persona;
+        respuestas['p0' as IdVariable] = forPk.persona ?? null;
     }
-    const datosByPassTem = getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem;
-    const datosByPassCargas = getDatosByPass().cargas;
-    resRaiz['u1' as IdVariable]=datosByPassTem.recorrido || datosByPassCargas[datosByPassTem.carga].recorrido;
-    resRaiz['u2' as IdVariable]=datosByPassTem.tipo_recorrido || datosByPassCargas[datosByPassTem.carga].tipo_recorrido;
-    resRaiz['u3' as IdVariable]=datosByPassTem.comuna_agrupada || datosByPassCargas[datosByPassTem.carga].comuna_agrupada;
-    resRaiz['u4' as IdVariable]=datosByPassTem.barrios_agrupados || datosByPassCargas[datosByPassTem.carga].barrios_agrupados;
+    const datosByPassTem: TEMRepsic = getDatosByPass().informacionHdr[forPk[estructura.pkAgregadaUaPpal]].tem;
+    const datosByPassCargas: Record<IdCarga, CargaRepsic> = getDatosByPass().cargas;
+    const cargaTem = datosByPassCargas[datosByPassTem.carga as IdCarga];
+    resRaiz['u1' as IdVariable]=(datosByPassTem.recorrido || cargaTem.recorrido) ?? null;
+    resRaiz['u2' as IdVariable]=(datosByPassTem.tipo_recorrido || cargaTem.tipo_recorrido) ?? null;
+    resRaiz['u3' as IdVariable]=(datosByPassTem.comuna_agrupada || cargaTem.comuna_agrupada) ?? null;
+    resRaiz['u4' as IdVariable]=(datosByPassTem.barrios_agrupados || cargaTem.barrios_agrupados) ?? null;
 
     const cant11 = 'cant11' as IdVariable;
     const cant12 = 'cant12' as IdVariable;
@@ -298,8 +301,9 @@ setCalcularVariablesEspecificasOperativo((resRaiz:RespuestasRaiz, forPk:ForPk)=>
         ]);
     }
     if(forPk.formulario == 'F:RE_CIS' as IdFormulario || forPk.formulario == 'F:F2_CIS' as IdFormulario){
-        resRaiz['u8' as IdVariable] = (resRaiz.personas || []).filter(
-            (p,i)=>{
+        const personas: RespuestasRepsic[] = likeAr(resRaiz.personas || []).array();
+        resRaiz['u8' as IdVariable] = personas.filter(
+            (p)=>{
                 return p.anulado != 1 && (p.sc1 != null || p.sc_grupo != null || p.sc2 !=null || p.sc3 !=null || p.sc16 !=null || p.sc4 !=null)
             }).length
     }

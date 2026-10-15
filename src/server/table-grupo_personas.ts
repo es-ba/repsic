@@ -3,7 +3,7 @@
 import {TableDefinition, TableContext} from "./types-repsic";
 
 export function grupo_personas(context:TableContext):TableDefinition {
-    let permitidoeditar= context.user.rol === 'admin'||context.puede.encuestas.ingresar;
+    let permitidoeditar= context.user.rol === 'admin'||context.puede?.encuestas?.ingresar;
     let def: TableDefinition = {
         name: 'grupo_personas',
         elementName: 'vivienda',
@@ -74,7 +74,7 @@ export function grupo_personas(context:TableContext):TableDefinition {
             {references:'recorridos'    , fields: [{source:'u1',target:'recorrido'}], displayFields:[]},
         ],
         detailTables:[
-            {table:'personas', fields:['operativo', 'id_caso'], abr:'P', title:'personas'},
+            {table:'personas', fields:['operativo', 'id_caso'], abr:'P', label:'personas'},
         ],
         sql:{
             fields:{},

@@ -6,8 +6,6 @@ import {OperativoGenerator, emergeAppVarCal, emergeAppDatosExt, emergeAppConsist
 
 OperativoGenerator.mainTD = 'grupo_personas';
 OperativoGenerator.mainTDPK = 'id_caso'; // TODO: hacer esto dinámico en paquete consistencias
-OperativoGenerator.orderedIngresoTDNames = [OperativoGenerator.mainTD, 'grupo_personas_calculada', 'personas', 'personas_calculada'];
-OperativoGenerator.orderedReferencialesTDNames = ['coordinacion', 'recorridos','supervision_calculada'];
 
 var AppRepsic = emergeAppRepsic(
     emergeAppDmEncu(

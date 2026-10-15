@@ -135,7 +135,8 @@ myOwn.wScreens.maps = async function () {
                 geometry: new ol.geom.Point(ol.proj.fromLonLat([row.longitud, row.latitud]))
             });
             feature.setStyle(styleMarker);
-            feature.setId(row.id_caso);
+            // no se usa id_caso como id: una misma encuesta tiene varios puntos y OpenLayers descarta los ids repetidos
+            feature.set('punto', row);
 
             return feature;
         }
@@ -170,7 +171,7 @@ myOwn.wScreens.maps = async function () {
             const feature = e.selected[0];
 
             if (feature) {
-                const punto = puntos_gps.find(p => p.id_caso === feature.getId())!;
+                const punto: PuntoGPS = feature.get('punto');
 
                 overlay.setPosition(feature.getGeometry().getCoordinates());
                 overlay.getElement()!.style.opacity = '1';

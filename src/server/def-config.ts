@@ -1,16 +1,16 @@
 export const defConfig=`
 server:
   port: 3055
-  base-url: /repsic261
+  base-url: /repsic262
 db:
   motor: postgresql
   host: localhost
-  database: repsic261_db
-  user: repsic261_admin
+  database: repsic262_db
+  user: repsic262_admin
 install:
   dump:
     db:
-      owner: repsic261_owner
+      owner: repsic262_owner
       apply-generic-user-replaces: true
     admin-can-create-tables: true
     enances: inline
@@ -84,10 +84,10 @@ login:
     lockedFail: el usuario se encuentra bloqueado
     inactiveFail: es usuario está marcado como inactivo
 client-setup:
-  title: repsic261
+  title: repsic262
   cursors: true
   lang: es
   menu: true
-  operativo: repsic261
+  operativo: repsic262
   background-img: ../img/background-test.png
 `

@@ -2,7 +2,7 @@
   "canvasWidth": 512,
   "canvasHeight": 512,
   "borderRadius": 80,
-  "colorBase": "#FFC107",
+  "colorBase": "#D81B60",
   "colorText": "#FFFFFF",
   "elements": {
     "guardaEntorno": {
@@ -26,7 +26,7 @@
       "id": "entorno",
       "name": "Texto Modo",
       "type": "text",
-      "text": "TEST",
+      "text": "CAPA",
       "x": 258,
       "y": 42,
       "size": 50,
@@ -90,7 +90,7 @@
       "id": "onda",
       "name": "Onda",
       "type": "text",
-      "text": "261",
+      "text": "262",
       "x": 373,
       "y": 433,
       "size": 72,

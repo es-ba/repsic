@@ -1,6 +1,6 @@
 import * as formStructure from "rel-enc/dist/client/form-structure";
 import {html} from "js-to-html";
-import * as myOwn from "myOwn";
+import { expected } from "cast-error";
 import * as TypedControls from "typed-controls";
 import {sleep} from "best-globals"
 
@@ -50,7 +50,7 @@ myOwn.clientSides.parseIDPapel={
 }
 
 myOwn.clientSides.generarRelevamiento={
-    update:function(depot:myOwn.Depot, fieldName:string){
+    update:function(){
     },
     prepare:function(depot:myOwn.Depot, fieldName:string){
         var my=myOwn;
@@ -70,7 +70,7 @@ myOwn.clientSides.generarRelevamiento={
                 });
                 boton.textContent='ok'
             }catch(err){
-                alertPromise(err.message)
+                alertPromise(expected(err).message)
                 throw err;
             }finally{
                 depot.manager.retrieveRowAndRefresh(depot)
@@ -119,7 +119,7 @@ myOwn.clientSides.consistir = {
             }, function (err) {
                 boton.textContent = 'error';
                 boton.style.backgroundColor = '#FF8';
-                alertPromise(err.message);
+                alertPromise(expected(err).message);
             })
         }
         //if ((depot.row.consistido==null  && depot.row.rea!=null) || depot.row.modificado!=null && depot.row.consistido!=null && depot.row.modificado >depot.row.consistido){
@@ -149,7 +149,7 @@ myOwn.clientSides.borrarEncuesta = {
                 history.replaceState(null, '', `${location.origin+location.pathname}/../menu#menuType=proc&name=encuesta_borrar_previsualizar&i=varios,encuesta_borrar_previsualizar&up=${JSON.stringify(up)}`);
                 location.reload();   
             }catch(err){
-                alertPromise(err.message)
+                alertPromise(expected(err).message)
                 throw err;
             }finally{
                 depot.manager.retrieveRowAndRefresh(depot)

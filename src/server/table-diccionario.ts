@@ -9,13 +9,13 @@ export function diccionario(context:TableContext):TableDefinition {
         elementName: 'diccionario',
         editable: permitidoeditar,
         fields: [
-            { name: "dic_dic"     , typeName: "text"    , nullable:false  },
-            { name: "dic_completo", typeName: "boolean"                   },
+            { name: "diccionario", typeName: "text"    , nullable:false  },
+            { name: "completo"   , typeName: "boolean"                   },
         ],
-        primaryKey: ['dic_dic'],
+        primaryKey: ['diccionario'],
         detailTables:[
-            {table:'dicvar', fields:[{source:'dic_dic', target:'dicvar_dic'}], abr:'V', title:'Dicc. Variables' },
-            {table:'dictra', fields:[{source:'dic_dic', target:'dictra_dic'}], abr:'T', title:'Dicc. Traducción'}
+            {table:'dicvar', fields:[{source:'diccionario', target:'diccionario'}], abr:'V', label:'Dicc. Variables' },
+            {table:'dictra', fields:[{source:'diccionario', target:'diccionario'}], abr:'T', label:'Dicc. Traducción'}
         ]
     };
 }

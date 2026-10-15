@@ -9,14 +9,14 @@ export function dictra(context:TableContext):TableDefinition {
         elementName: 'dictra',
         editable: permitidoeditar,
         fields: [
-            { name: "dictra_dic"     , typeName: "text"     , nullable:false  },
-            { name: "dictra_ori"     , typeName: "text"     , nullable:false  },
-            { name: "dictra_des"     , typeName: "integer"                    },
+            { name: "diccionario"    , typeName: "text"     , nullable:false  },
+            { name: "origen"         , typeName: "text"     , nullable:false  },
+            { name: "destino"        , typeName: "integer"                    },
             { name: "dictra_texto"   , typeName: "text"                       },
         ], 
-        primaryKey: ['dictra_dic', 'dictra_ori'],
+        primaryKey: ['diccionario', 'origen'],
         foreignKeys:[
-            {references:'diccionario'    , fields: [{source:'dictra_dic',target:'dic_dic'}],displayFields:[]},
+            {references:'diccionario'    , fields: [{source:'diccionario',target:'diccionario'}],displayFields:[]},
         ],
         /*
         constraints:[
@@ -27,8 +27,8 @@ export function dictra(context:TableContext):TableDefinition {
             },
             {   
                 constraintType:'check', 
-                consName:'texto invalido en dictra_ori de tabla dictra', 
-                expr:"(comun.cadena_valida(dictra_ori, 'castellano'::text)),"
+                consName:'texto invalido en origen de tabla dictra', 
+                expr:"(comun.cadena_valida(origen, 'castellano'::text)),"
             },
         ]
        */

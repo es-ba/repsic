@@ -2,10 +2,34 @@
 
 import {TableDefinition, TableContext} from "./types-repsic";
 
-import {provisorio_recepcion} from "./table-provisorio_recepcion"
+import {sqlProvisorioRecepcion} from "./table-provisorio_recepcion"
 
-export function provisorio_recorridos(context:TableContext):TableDefinition {
-    const provisorioRecepcionTableDef = provisorio_recepcion(context);
+export const sqlProvisorioRecorridos = `
+            (select 
+                operativo,
+                recorrido,
+                sum(cues_dm) as cues_dm,
+                sum(pers_dm) as pers_dm,
+                sum(cues_papel) as cues_papel,
+                sum(pers_papel) as pers_papel,
+                sum(cues_total) as cues_total,
+                sum(pers_total) as pers_total,
+                bool_and(case verificado when verificado then true else false end) as verificado,
+                tipo_recorrido,
+                descripcion,
+                comuna,
+                descripcion_barrio
+            from
+                (${sqlProvisorioRecepcion}) aux
+            group by operativo,
+                recorrido,
+                tipo_recorrido,
+                descripcion,
+                comuna,
+                descripcion_barrio
+            )`;
+
+export function provisorio_recorridos(_context:TableContext):TableDefinition {
     return {
         name: 'provisorio_recorridos',
         elementName: 'provisorio_recorridos',
@@ -33,30 +57,7 @@ export function provisorio_recorridos(context:TableContext):TableDefinition {
         refrescable:true,
         sql:{
             isTable: false,
-            from: `
-            (select 
-                operativo,
-                recorrido,
-                sum(cues_dm) as cues_dm,
-                sum(pers_dm) as pers_dm,
-                sum(cues_papel) as cues_papel,
-                sum(pers_papel) as pers_papel,
-                sum(cues_total) as cues_total,
-                sum(pers_total) as pers_total,
-                bool_and(case verificado when verificado then true else false end) as verificado,
-                tipo_recorrido,
-                descripcion,
-                comuna,
-                descripcion_barrio
-            from
-                (${provisorioRecepcionTableDef.sql!.from}) aux
-            group by operativo,
-                recorrido,
-                tipo_recorrido,
-                descripcion,
-                comuna,
-                descripcion_barrio
-            )`
+            from: sqlProvisorioRecorridos
         }
     };
 }

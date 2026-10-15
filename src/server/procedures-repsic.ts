@@ -122,6 +122,25 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrin
 ` 
 })
 
+// puntos de los recorridos agrupados por sesión y tanda; los pide el mapa con puntos_traer
+export function sqlPuntosTraer(quoteLiteral:(valor:number)=>string, recorrido:number|null, timestampDesde:number|null):string {
+    let whereCond = recorrido?`where recorrido = ` + quoteLiteral(recorrido):` `;
+    return `
+                select recorrido, 
+                    session, 
+                    id_punto/(select gra_tx_puntos from parametros where unico_registro) as grupo, 
+                    min(timestamp) as start, 
+                    max(timestamp)-min(timestamp) as duracion, 
+                    count(*) as cantidad, 
+                    json_agg(json_build_object('p_latitud', p_latitud, 'p_longitud', p_longitud, 'c_latitud', c_latitud, 'c_longitud', c_longitud, 'more_info', more_info) order by timestamp) as puntos
+                from recorridos_puntos ` +
+                whereCond + ` 
+                group by recorrido, session, grupo 
+                ${timestampDesde?' having min(timestamp) > '+ quoteLiteral(timestampDesde):' '}
+                order by start, 1,2,3;
+            `;
+}
+
 export const ProceduresRepsic : ProcedureDef[] = [
     {
         action:'generar_formularios',
@@ -129,7 +148,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
             {name:'area'            , typeName:'integer'},
             {name:'cant_encuestas'  , typeName:'integer'}
         ],
-        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
+        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters<{area:number, cant_encuestas:number}>){
             var be=context.be;
             const {area, cant_encuestas} = parameters;
             const OPERATIVO = await getOperativoActual(context);
@@ -149,7 +168,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
             {name:'area'            , typeName:'integer'},
             {name:'cant_encuestas'  , typeName:'integer'}
         ],
-        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
+        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters<{area:number, cant_encuestas:number}>){
             if(!context.user.idper){
                 throw Error ('debe configurar un idper para su usuario')
             }
@@ -289,19 +308,18 @@ export const ProceduresRepsic : ProcedureDef[] = [
             {name:'puntos'          , typeName:'jsonb'                           },
         ],
         // encode:'JSON', no existe, cambiar después de la 212
-        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
+        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters<{recorrido:number, puntos:object[]}>){
             console.log('xxxxxxxxxxxxx')
             console.log(parameters)
             console.log(typeof parameters.puntos)
             console.log(JSON.stringify(parameters.puntos))
-            var be=context.be;
             let result = await context.client.query(
                 `insert into recorridos_puntos (recorrido, session, secuencial, p_latitud, p_longitud, timestamp, c_latitud, c_longitud, more_info)
                    select $1 as recorrido, $2 as session, p.*
                      from jsonb_to_recordset($3 :: jsonb) 
                        as p(secuencial integer, p_latitud decimal, p_longitud decimal, timestamp bigint, c_latitud decimal, c_longitud decimal, more_info jsonb);
                 `,
-                [parameters.recorrido, context.session.install||be.getMachineId(), JSON.stringify(parameters.puntos)]
+                [parameters.recorrido, context.session.install, JSON.stringify(parameters.puntos)]
             ).fetchAll();
             return result.rowCount;
         }
@@ -313,24 +331,10 @@ export const ProceduresRepsic : ProcedureDef[] = [
             {name:'timestamp_desde' , typeName:'bigint' }
         ],
         progress:true,
-        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
+        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters<{recorrido:number, timestamp_desde:number|null}>){
             let be=context.be;
-            let whereCond = parameters.recorrido?`where recorrido = ` + be.db.quoteLiteral(parameters.recorrido):` `;
-            await context.client.query(`
-                select recorrido, 
-                    session, 
-                    id_punto/(select gra_tx_puntos from parametros where unico_registro) as grupo, 
-                    min(timestamp) as start, 
-                    max(timestamp)-min(timestamp) as duracion, 
-                    count(*) as cantidad, 
-                    json_agg(json_build_object('p_latitud', p_latitud, 'p_longitud', p_longitud, 'c_latitud', c_latitud, 'c_longitud', c_longitud, 'more_info', more_info) order by timestamp) as puntos
-                from recorridos_puntos ` +
-                whereCond + ` 
-                group by recorrido, session, grupo 
-                ${parameters.timestamp_desde?' having min(timestamp) > '+ be.db.quoteLiteral(parameters.timestamp_desde):' '}
-                order by start, 1,2,3;
-            `).onRow(function(row){
-                context.informProgress({row:row});
+            await context.client.query(sqlPuntosTraer(be.db.quoteLiteral, parameters.recorrido, parameters.timestamp_desde)).onRow(async function(row){
+                context.informProgress({data:{row:row}});
             })
             return 'ok';
         }
@@ -339,7 +343,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
         action:'recorridos_controlables',
         parameters:[],
         progress:true,
-        coreFunction:async function(context:ProcedureContext, _parameters: CoreFunctionParameters){
+        coreFunction:async function(context:ProcedureContext, _parameters: CoreFunctionParameters<{}>){
             return (await context.client.query(`
                 select recorrido from recorridos where orden is not null order by orden`,
                 []
@@ -354,7 +358,7 @@ export const ProceduresRepsic : ProcedureDef[] = [
             {name:'area'        , typeName:'integer'                         },
         ],
         roles:['admin'],
-        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters){
+        coreFunction:async function(context:ProcedureContext, parameters: CoreFunctionParameters<{operativo:string, recorrido:number, area:number}>){
             await context.client.query(
                 `insert into areas (operativo, recorrido, area) 
                     values ($1, $2, $3) 

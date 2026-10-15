@@ -1,7 +1,3 @@
-import { Respuestas, IdUnidadAnalisis, IdVariable, } from "dmencu/dist/unlogged/unlogged/tipos";
-import {setCalculoReaNoRea, buscarNoReaEnRespuestas, getEstructura} from "dmencu/dist/unlogged/unlogged/bypass-formulario";
-import { strict as likeAr, beingArray } from "like-ar";
-
 //COPIADO DE ESEDE
 //var esNoRea = (respuestas:Respuestas)=>{
 //    //TODO GENERALIZAR

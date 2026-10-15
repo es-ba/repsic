@@ -9,7 +9,7 @@ export function adjuntos(context:TableContext):TableDefinition {
         elementName:'archivo',
         editable:admin,
         fields:[
-            {name:'id_adjunto'      , typeName:'integer'   , visible:false  , nullable:true, sequence:{name:'adjunto_seq'}},
+            {name:'id_adjunto'      , typeName:'integer'   , visible:false  , nullable:true, sequence:{name:'adjunto_seq', firstValue:1}},
             {name:'nombre'          , typeName:'text'      , nullable:false , isName:true  },
             {name:'nombre_original' , typeName:'text'      , editable:false                },
             {name:'ext'             , typeName:'text'      , editable:false , isName:true  },
@@ -17,7 +17,7 @@ export function adjuntos(context:TableContext):TableDefinition {
             {name:'subir'           , typeName:'text'      , editable:false, clientSide:'subirAdjunto'},
             {name:'bajar'           , typeName:'text'      , editable:false, clientSide:'bajarAdjunto'},
             {name:'fecha'           , typeName:'date'      , editable:false },
-            {name:'hora'            , typeName:'interval'  , editable:false , timeUnit:'hours'},
+            {name:'hora'            , typeName:'interval'  , editable:false },
             {name:'recorrido'       , typeName:'integer'   },
             {name:'estilo'          , typeName:'text'     },
         ],
@@ -29,7 +29,7 @@ export function adjuntos(context:TableContext):TableDefinition {
             {constraintType:'unique', fields:['nombre', 'ext']},
         ],
         detailTables:[
-            {table:'adjunto_categoria' , fields:['id_adjunto'], abr:'C', title:'Categorías del adjunto'},
+            {table:'adjunto_categoria' , fields:['id_adjunto'], abr:'C', label:'Categorías del adjunto'},
         ],
     };
 };

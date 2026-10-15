@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION dbo.dic_tradu(
     LANGUAGE 'sql'
     STABLE 
 AS $BODY$
-  select dictra_des from dictra where dictra_dic=p_dic and dictra_ori=comun.cadena_normalizar(p_origen)
+  select destino from dictra where diccionario=p_dic and origen=comun.cadena_normalizar(p_origen)
 $BODY$;
 
 CREATE OR REPLACE FUNCTION dbo.dic_parte(
@@ -22,7 +22,7 @@ CREATE OR REPLACE FUNCTION dbo.dic_parte(
     STABLE 
 AS $BODY$
   select p_origen ~* 
-    ('(\m' || coalesce((select string_agg(dictra_ori, '\M|\m') 
+    ('(\m' || coalesce((select string_agg(origen, '\M|\m') 
       from dictra
-      where dictra_dic=p_dic and dictra_des=p_destino),'')|| '\M)' )
+      where diccionario=p_dic and destino=p_destino),'')|| '\M)' )
 $BODY$;

@@ -4,19 +4,26 @@ import "dialog-promise";
 
 import {html} from "js-to-html";
 
-import * as myOwn from "myOwn";
-
 import {coalesce, changing} from "best-globals";
 
 import {guijarro, Nodo, GuijarroOpts} from "guijarro";
 
 var my = myOwn;
 
-interface AddrParams extends myOwn.AddrParams{
-    fullscreen?:boolean
-    recorrido?:number
-    position?:string
-    zoom?:number
+type AddrParams = myOwn.AddrParamsMapa;
+
+type DatosRecorrido = {
+    lugares?:{latitud:number, longitud:number, tipo_lugar_descripcion:string, lugar:string}[]
+    adjuntos?:{id_adjunto:number, estilo:string}[]
+}
+
+type PuntoTraido = {
+    p_latitud:number, p_longitud:number, c_latitud:number, c_longitud:number
+    timestamp:number, more_info?:any
+}
+
+function parsearDatosRecorrido(resultJson:string):DatosRecorrido{
+    return JSON.parse(resultJson);
 }
 
 var loadOpenLayer=function(){
@@ -29,8 +36,8 @@ var loadOpenLayer=function(){
             script.id=ID_OPENLAYER_SCRIPT;
             script.src='https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js'
             script.onload=resolve;
-            script.onerror=function(event:Event|UIEvent|ErrorEvent){
-                if('error' in event){
+            script.onerror=function(event:Event|string){
+                if(typeof event!='string' && 'error' in event){
                     reject(event.error);
                 }else{
                     reject(event);
@@ -43,20 +50,21 @@ var loadOpenLayer=function(){
 
 myOwn.wScreens.mapa = async function(addrParams:AddrParams){
     var idLayout;
-    let layout = document.getElementById('main_layout');
+    var inputRecorrido!:HTMLInputElement;
+    let layout = document.getElementById('main_layout')!;
     layout.style.margin='0px';
     layout.innerHTML="";
-    var mapLayout;
+    var mapLayout:HTMLElement;
     if(addrParams.fullscreen){
         idLayout = 'total-layout';
-        layout = document.getElementById('total-layout');
+        layout = document.getElementById('total-layout')!;
         layout.style.height='100%';
     }else{
         var recorridosArr:{recorrido:number}[] = await myOwn.ajax.recorridos_controlables({});
         var indiceRecorridoActual = recorridosArr.findIndex((rec)=>rec.recorrido == addrParams.recorrido || 0);
         idLayout='map-layout';
         let buttonCambiar=html.button({id:'cambiar'},'cambiar').create();
-        var inputRecorrido=html.input({style:'width:40px',id:'recorrido',type:'number',value:addrParams.recorrido||0}).create();
+        inputRecorrido=html.input({style:'width:40px',id:'recorrido',type:'number',value:addrParams.recorrido||0}).create();
         var refreshMap = function refreshMap(keepPositionAndZoom: boolean){
             if(keepPositionAndZoom){
                 location.href='menu#w=mapa&recorrido='+inputRecorrido.value+"&position="+JSON.stringify(mapa.getCenter())+"&zoom="+mapa.getZoom();
@@ -187,9 +195,8 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         layout.appendChild(barLayout);
         layout.appendChild(mapLayout);
     }
-    //TODO backend-plus para que setup se prefije
-    let isTestEnvironment = JSON.parse(localStorage.getItem('setup')).config['test-environment']
-    mapLayout=document.getElementById(idLayout);
+    let isTestEnvironment = my.getLocalVar('setup').config['test-environment']
+    mapLayout=document.getElementById(idLayout)!;
     mapLayout.setAttribute('mapa-test', isTestEnvironment?'si':'no');
     if(isTestEnvironment){
         mapLayout!.appendChild(html.div({id:'cartel-test'}, 'TEST').create());
@@ -198,12 +205,12 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
     mapLayout.appendChild(imgLoading);
     await loadOpenLayer();
     imgLoading.style.display='none';
-    var leaveTrace = addrParams.fullscreen;
+    var leaveTrace = !!addrParams.fullscreen;
     var granularidadPuntos;
     if(addrParams.fullscreen){
         granularidadPuntos = 10;
     }else{
-        window.onbeforeunload = function(e) {
+        window.onbeforeunload = function() {
             my.setSessionVar('zoom', mapa.getZoom());
             my.setSessionVar('position', mapa.getCenter());
           };
@@ -214,7 +221,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         parametros = parametros[0];
         granularidadPuntos = (parseInt(inputRecorrido.value) || 0)?parametros['gra_puntos_por_recorrido']:parametros['gra_puntos_todos_recorridos'];
     }
-    let myPosition=coalesce(my.getSessionVar('position'),JSON.parse(addrParams.position||null));
+    let myPosition=coalesce(my.getSessionVar('position'),JSON.parse(addrParams.position||'null'));
     let myZoom=coalesce(my.getSessionVar('zoom'),addrParams.zoom,null);
     my.removeSessionVar('position');
     my.removeSessionVar('zoom');
@@ -232,12 +239,12 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         opts.currentZoom=myZoom;
     }
     let mapa = await guijarro(idLayout,leaveTrace,opts);
-    function recorrido(addrParams:AddrParams){
-        return AjaxBestPromise.get({
+    function recorrido(addrParams:AddrParams):Promise<DatosRecorrido>{
+        return AjaxBestPromise.get<{recorrido:number}, string>({
             url:'datos/recorrido',
             data:{recorrido:addrParams.recorrido||0}
         }).then(function(resultJson:string){
-            return JSON.parse(resultJson);
+            return parsearDatosRecorrido(resultJson);
         })
     }
     let datosRecorrido= await recorrido(addrParams);
@@ -246,7 +253,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
             mapa.addMark(lugar.latitud, lugar.longitud, lugar.tipo_lugar_descripcion[0], lugar.lugar);
         });
     }
-    const styles={
+    const styles:Record<string, ol.style.Style>={
         ['contorno']: new ol.style.Style({
             fill: new ol.style.Fill({
                 color: 'rgba(239, 172, 44, 0.3)'
@@ -316,7 +323,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
         setInterval(function(){
             setTimeout(async function(){
                 let transmitirHasta=mapa.posiciones.length;
-                let tiraPuntos=mapa.posiciones.slice(transmitidoDesde,transmitirHasta).map(function(nodo: Nodo, i){
+                let tiraPuntos=mapa.posiciones.slice(transmitidoDesde,transmitirHasta).map(function(nodo: Nodo, i:number){
                     return {
                         p_latitud :nodo.posicion[1],
                         p_longitud:nodo.posicion[0],
@@ -346,7 +353,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                     var obsInput = html.input({id:'observaciones', type:'text'}).create();
                     var saveButton={
                         label:'guardar',
-                        attributes:{id:'save-point-button','save-point-button':true, 'enter-clicks':true}
+                        attributes:{id:'save-point-button','save-point-button':'true', 'enter-clicks':'true'}
                     };
                     Object.defineProperty(saveButton, 'value', { get: function(){ 
                         return {cantCues:cantCuesInput.value, cantPer:cantPerInput.value, obs: obsInput.value}; 
@@ -364,7 +371,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
                             obsInput,
                             html.br({}).create(),
                             saveButton,
-                            {label:'cancelar', value:false, attributes:{id: 'cancel-button', delete:true, 'enter-clicks':true}}
+                            {label:'cancelar', value:false, attributes:{id: 'cancel-button', delete:'true', 'enter-clicks':'true'}}
                         ],
                         reject:false, 
                         withCloseButton: true
@@ -403,12 +410,12 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
             var executionSec = 0;
             var lastTimestamp:number|null = null;
             var traerPuntos = async ()=>{
-                await myOwn.ajax.puntos_traer({recorrido:miRecorrido, timestamp_desde:lastTimestamp}, {informProgress: function(received){
+                await myOwn.ajax.puntos_traer({recorrido:miRecorrido, timestamp_desde:lastTimestamp}, {informProgress: function(received:{data:{row:{puntos:PuntoTraido[]}}}){
                     executionSec++;
-                    var {row}=received; 
+                    var {row}=received.data; 
                     //lastTimestamp=row.start;
-                    var ultimoNodo:Nodo=null;
-                    row.puntos.forEach(function(punto:any, i){
+                    var ultimoNodo:Nodo|null=null;
+                    row.puntos.forEach(function(punto:PuntoTraido){
                         let nodo:Nodo = {
                             posicion: [punto.p_longitud, punto.p_latitud],
                             coordinates: [punto.c_longitud, punto.c_latitud],
@@ -437,7 +444,7 @@ myOwn.wScreens.mapa = async function(addrParams:AddrParams){
 }
 
 myOwn.clientSides.openMap = {
-    update:function(depot:myOwn.Depot, fieldName:string):void{
+    update:function():void{
     },
     prepare:function(depot:myOwn.Depot, fieldName:string):void{
         let td=depot.rowControls[fieldName];
@@ -457,7 +464,7 @@ window.addEventListener('load',function(){
         my.removeSessionVar('backend-plus-hash-redirect');
         if(newHash){
             // alert(location.origin+location.pathname+location.search+newHash)
-            history.replaceState(null, null, location.origin+location.pathname+location.search+newHash);
+            history.replaceState(null, '', location.origin+location.pathname+location.search+newHash);
         }
     }
 });

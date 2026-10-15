@@ -3,7 +3,7 @@
 import {TableDefinition, TableContext} from "./types-repsic";
 
 export function tipos_recorrido(context: TableContext):TableDefinition {
-    var admin = context.user.rol === 'admin'||context.puede.configurar.editar;
+    var admin = context.user.rol === 'admin'||context.puede?.configurar?.editar;
     return {
         name: 'tipos_recorrido',
         elementName: 'tipo de recorrido',

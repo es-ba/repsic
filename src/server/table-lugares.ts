@@ -3,7 +3,7 @@
 import {TableDefinition, TableContext} from "./types-repsic";
 
 export function lugares(context:TableContext):TableDefinition {
-    var admin = context.user.rol === 'admin'||context.puede.configurar.editar;
+    var admin = context.user.rol === 'admin'||context.puede?.configurar?.editar;
     return {
         name: 'lugares',
         elementName: 'lugar',

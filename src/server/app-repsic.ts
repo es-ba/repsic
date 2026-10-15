@@ -1,18 +1,24 @@
+/// <reference types="express-session" />
 "use strict";
 
 import * as procesamiento from "procesamiento";
+import * as dmencu from "dmencu";
 import {ProceduresRepsic, updateProvisorioQuery} from "./procedures-repsic";
 
-import {AppProcesamientoType, Response, TableContext} from "procesamiento";
+import { FieldDefinition, MenuInfoBase, getDomicilioFields, TableContext, Context, ProcedureContext, OptsClientPage, carpetaDelPaquete } from "dmencu";
+import { Request as RequestBackendPlus, ExpressPlus } from "backend-plus";
+import * as express from "express";
+import { Response } from "express";
 
-import { FieldDefinition, MenuInfoBase, getDomicilioFields } from "dmencu";
+import { unexpected } from "cast-error";
 
 import * as pg from "pg-promise-strict";
 import * as miniTools from "mini-tools";
 import * as fs from "fs-extra";
+import * as path from "path";
 
 import * as yazl from "yazl";
-import { NextFunction } from "express-serve-static-core";
+import { NextFunction } from "express";
 
 import { adjuntos            } from "./table-adjuntos";
 import { adjunto_categoria   } from "./table-adjunto_categoria";
@@ -38,29 +44,33 @@ import { control_cantidades_area } from "./table-control_cantidades_area";
 import { control_cantidades_recorridos } from "./table-control_cantidades_recorridos";
 
 import {defConfig} from "./def-config"
-import { Request } from "rel-enc";
+import { sqlDatosDeRecorrido, sqlDatosDeTodosLosRecorridos } from "./datos-mapa";
 
 import * as cookieParser from 'cookie-parser';
+
+// express entrega su request; user y session son opcionales para poder registrar los middlewares (backend-plus los declara obligatorios)
+type Request = express.Request & Partial<RequestBackendPlus>;
+
+declare module "express-session" {
+    interface SessionData {
+        recorrido: number;
+    }
+}
+
+declare module "backend-plus" {
+    interface AppConfigClientSetup {
+        'test-environment'?: boolean;
+    }
+}
 
 const APP_DM_VERSION="#26-07-01a";
 
 const menuMaps = {menuType:'maps', name:'mapa_puntos_gps', label:'mapa de puntos gps'};
 
-interface Context extends procesamiento.Context{
-  puede:object
-  superuser?:true
-}
-
-type MenuInfoMapa = {
-  menuType:'mapa'
-} & procesamiento.MenuInfoBase;
-
-type MenuInfo = procesamiento.MenuInfo | MenuInfoMapa 
-     | {menuType:'ingresarFormulario', label?:string, name:string} | {menuType:'menu', label?:string, name:string, menuContent:MenuInfo[]};
-type MenuDefinition = {menu:MenuInfo[]}
+type MenuInfo = MenuInfoBase;
 
 export type Constructor<T> = new(...args: any[]) => T;
-export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Base:T){
+export function emergeAppRepsic<T extends Constructor<dmencu.AppAppDmEncuType>>(Base:T){
   return class AppRepsic extends Base{
     /*myProcedures: procesamiento.ProcedureDef[] = ProceduresRepsic;
     permisosRol:{superuser?:boolean, [key:string]:any}
@@ -84,7 +94,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         parentProc = parentProc.map(procDef=>{
             if(['dm_sincronizar','dm_backup','dm_blanquear','encuesta_capa_a_prod_pasar'].includes(procDef.action)){
                 var coreFunctionInterno = procDef.coreFunction;
-                procDef.coreFunction = async function(context:procesamiento.ProcedureContext, parameters:any){
+                procDef.coreFunction = async function(context:ProcedureContext, parameters:any){
                     var result = await coreFunctionInterno(context, parameters);
                     var actualizadas = await context.client.query(updateProvisorioQuery,[]).fetchAll();
 
@@ -109,20 +119,18 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         console.log('req.user',req.user)
         console.log('req.session.recorrido',(req.session||{}).recorrido,req.session);
         if(!req.user && (!req.session || !req.session.recorrido)){
-            var err=new Error("Unauthorized");
-            err.code=401;
-            throw err;
+            throw Object.assign(new Error("Unauthorized"), {code:401});
         }
         if(req.session && req.session.recorrido){
             return Number(req.session.recorrido);
         }
         return Number(req.query.recorrido);
     }
-    addSchrödingerServices(mainApp:procesamiento.Express, baseUrl:string){
+    addSchrödingerServices(mainApp:ExpressPlus, baseUrl:string){
         let be=this;
         super.addSchrödingerServices(mainApp, baseUrl);
         mainApp.use(cookieParser());
-        mainApp.use(function(req:Request,res:Response, next:NextFunction){
+        mainApp.use(function(req:Request,_res:Response, next:NextFunction){
             if(req.session && !req.session.install){
                 req.session.install=Math.random().toString().replace('.','');
             }
@@ -134,29 +142,18 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 console.log('recorrido obtenido',recorrido)
                 let row = await be.inDbClient(req, async function(client:pg.Client){
                     if(recorrido){
-                        let result = await client.query(
-                            `SELECT r.*, 
-                                (SELECT jsonb_agg(to_jsonb(x.*)) FROM (SELECT l.*, tl.descripcion as tipo_lugar_descripcion FROM lugares l INNER JOIN tipos_lugar tl USING(tipo_lugar) WHERE l.recorrido = r.recorrido )x) as lugares,
-                                (SELECT jsonb_agg(to_jsonb(a.*)) FROM adjuntos a INNER JOIN adjunto_categoria ca USING (id_adjunto) WHERE a.recorrido = r.recorrido AND ca.categoria = 'carto') as adjuntos
-                            FROM recorridos r 
-                            WHERE recorrido = $1
-                            `,
-                            [recorrido]
-                        ).fetchOneRowIfExists();
+                        let result = await client.query(sqlDatosDeRecorrido, [recorrido])
+                        .fetchOneRowIfExists();
                         return result.row;
                     }else{
-                        let result = await client.query(
-                            `SELECT 
-                                (SELECT jsonb_agg(to_jsonb(x.*)) FROM (SELECT l.*, tl.descripcion as tipo_lugar_descripcion FROM lugares l INNER JOIN tipos_lugar tl USING(tipo_lugar) )x) as lugares,
-                                (SELECT jsonb_agg(to_jsonb(a.*)) FROM adjuntos a INNER JOIN adjunto_categoria ca USING (id_adjunto) WHERE ca.categoria = 'carto') as adjuntos
-                            `
-                        ).fetchUniqueRow();
+                        let result = await client.query(sqlDatosDeTodosLosRecorridos)
+                        .fetchUniqueRow();
                         return result.row;
                     }
                 });
                 miniTools.serveJson(row)(req,res,next);
             }catch(err){
-                miniTools.serveErr(req,res,next)(err)
+                miniTools.serveErr(req,res,next)(unexpected(err))
             }
         });
         mainApp.get(baseUrl+'/token/recorrido', async function(req:Request, res:Response, next:NextFunction){
@@ -174,7 +171,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 res.send('ok')
                 res.end()
             }catch(err){
-                miniTools.serveErr(req,res,next)(err)
+                miniTools.serveErr(req,res,next)(unexpected(err))
             }
         });
         mainApp.get(baseUrl+'/token/limpiar', async function(req:Request, res:Response, next:NextFunction){
@@ -188,7 +185,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 res.send('ok')
                 res.end()
             }catch(err){
-                miniTools.serveErr(req,res,next)(err)
+                miniTools.serveErr(req,res,next)(unexpected(err))
             }
         });
     }
@@ -206,7 +203,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 }
                 miniTools.serveFile('dist/client/mapa.html',{})(req,res);
             }catch(err){
-                miniTools.serveErr(req,res,next)(err)
+                miniTools.serveErr(req,res,next)(unexpected(err))
             }
         });
         this.app.get('/file', async function(req:Request,res:Response){
@@ -230,7 +227,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             await Promise.all(files.map(async function(fileName){
                 var path = base+'/'+fileName;
                 var stat = await fs.stat(path);
-                if(stat.isFile){
+                if(stat.isFile()){
                     zip.addFile(path,fileName);
                 }
             }));
@@ -275,11 +272,11 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                       FROM permisos p
                 `).fetchUniqueValue()
             ]).then(function(results){
-                be.permisosRol=results[0].value;
-                be.permisosRolSoloTrue=results[1].value;
-                be.permisosSuperuser=results[2].value;
-                console.dir(be.permisosRolSoloTrue,{depth:9});
-                console.dir(be.permisosSuperuser,{depth:9});
+                be.caches.permisosRol=results[0].value;
+                be.caches.permisosRolSoloTrue=results[1].value;
+                be.caches.permisosSuperuser=results[2].value;
+                console.dir(be.caches.permisosRolSoloTrue,{depth:9});
+                console.dir(be.caches.permisosSuperuser,{depth:9});
             });
         });
     }
@@ -288,8 +285,16 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         this.setStaticConfig(defConfig);
     }
 
-    clientIncludes(req:Request, hideBEPlusInclusions?:boolean){
-        return super.clientIncludes(req, hideBEPlusInclusions).concat([
+    // temas de ayuda propios de repsic: se suman a los de dmencu (ver docs/ayuda-online.md de dmencu)
+    getAyudaFuentes(){
+        return [
+            ...super.getAyudaFuentes(),
+            { origen: 'repsic', carpeta: path.join(carpetaDelPaquete(__dirname), 'ayuda') },
+        ];
+    }
+
+    clientIncludes(req:Request, opts:OptsClientPage){
+        return super.clientIncludes(req, opts).concat([
             {type:'js' , src:'lib/guijarro.js'  , module:'guijarro', ts:{url:'src', path:'../src'}},
             {type:'js' , src:'adjuntos.js'      },
             {type:'js' , src:'mapa.js'   },
@@ -304,9 +309,9 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         ])
     }
 
-    async createResourcesForCacheJson(parameters:Record<string,any>){
+    async createResourcesForCacheJson(){
         var be = this;
-        var jsonResult:any = await super.createResourcesForCacheJson(parameters);
+        var jsonResult = await super.createResourcesForCacheJson();
         jsonResult.version = APP_DM_VERSION;
         jsonResult.appName = 'repsic';
         jsonResult.cache=jsonResult.cache.concat([
@@ -343,17 +348,17 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         var be = this;
         var fatherContext = super.getContext(req);
         if(fatherContext.user){
-            if(req.user && be.permisosRol[req.user.rol].superuser){
-                return {superuser:true, puede: be.permisosSuperuser, ...fatherContext}
+            if(be.caches.permisosRol[fatherContext.user.rol].superuser){
+                return {superuser:true, puede: be.caches.permisosSuperuser, ...fatherContext}
             }else{
-                return {puede: be.permisosRol[req.user.rol].puede, ...fatherContext}
+                return {puede: be.caches.permisosRol[fatherContext.user.rol].puede, ...fatherContext}
             }
         }
         return {puede:{}, ...fatherContext};
     }
     getMenuVarios(context:Context){
         let menuVarios = super.getMenuVarios(context);
-        menuVarios.menuContent = menuVarios.menuContent.filter((menuInfo)=>!['abrir_encuesta','hoja_ruta'].includes(menuInfo.name));
+        menuVarios.menuContent = menuVarios.menuContent.filter((menuInfo:MenuInfoBase)=>!['abrir_encuesta','hoja_ruta'].includes(menuInfo.name));
         menuVarios.menuContent.push({menuType:'proc', name:'area_agregar', label: 'agregar area a un recorrido'})
         return menuVarios;
     }
@@ -364,10 +369,10 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             {menuType:'table', name:'cantidades_area', table:'control_cantidades_area'},
             {menuType:'table', name:'cantidades_recorridos', table:'control_cantidades_recorridos'},
         )
-        menuControles= menuControles.filter((menuInfo)=>!['resumen','dominio','zona','comuna','área'].includes(menuInfo.name));
+        menuControles= menuControles.filter((menuInfo:MenuInfoBase)=>!['resumen','dominio','zona','comuna','área'].includes(menuInfo.name));
         return menuControles;
     }
-    getMenuAsignacion(context:Context, modo:'papel'|'dm'){
+    getMenuAsignacionPorModo(context:Context, modo:'papel'|'dm'){
         let filtroRecepcionista = context.user.rol=='recepcionista' ? {recepcionista: context.user.idper} : {};
         return modo=='dm'?
                 { menuType: 'table', name: 'asig_encuestador', label:'asignacion', table: 't_encu_areas', ff: { tarea: 'encu', ...filtroRecepcionista } }
@@ -375,7 +380,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 { menuType: 'table', name: 'asig_ingresador', label:'asignacion', table: 't_ingr_areas', ff: { tarea: 'ingr', ...filtroRecepcionista } }
     }
         
-    getMenuRecepcion(context:Context, modo:'papel'|'dm'){
+    getMenuRecepcionPorModo(_context:Context, modo:'papel'|'dm'){
         return modo=='dm'?
             {menuType:'table', name:'recep_encuestador', label:'recepción/subcordinación', table:'encuestadores_asignados'}
         :
@@ -406,13 +411,18 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         return null
     }
 
-    getMenu(context:Context){
-        let menuDef:MenuDefinition = super.getMenu(context);
+    // el getMenu() sin argumentos que declara operativos exige menuType de una unión cerrada; los menús de repsic usan menuType abiertos (como dmencu)
+    // @ts-expect-error
+    getMenu(context?:Context):{menu:procesamiento.MenuInfoBase[]}{
+        if(context==null){
+            throw new Error('getMenu de repsic requiere el context para armar el menú según los permisos');
+        }
+        let menuDef = super.getMenu(context);
         if(this.config.server.policy=='web'){
             //menuDef.menu.push({menuType:'mapa', name:'mapa'});
         }else{
             //oculto menu de asignacion y recepcion para redefinirlo en repsic
-            menuDef.menu = menuDef.menu.filter((menuInfo:MenuInfo)=>!['supervision','asig_encuestador','asig_ingresador','recep_encuestador','recep_ingresador'].includes(menuInfo.name));
+            menuDef.menu = menuDef.menu.filter((menuInfo:MenuInfo)=>!['supervision','asignacion','recepcion','asig_encuestador','asig_ingresador','recep_encuestador','recep_ingresador'].includes(menuInfo.name));
             if (context.puede?.campo?.administrar) {
                 menuDef.menu.unshift({ menuType: 'table', name: 'general', label:'asignacion gral', table: 'areas_asignacion_general' });
             }
@@ -426,10 +436,10 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             let menuPapel: MenuInfo = {menuType:'menu'  , name:'papel', menuContent:[]};
             menuPapel.menuContent.push({menuType:'table' , name:'ingresar', label:'ingreso', table:'tareas_tem_ingreso', ff:{tarea:'ingr', asignado:context.user.idper }})
             if(context.puede?.campo?.editar){
-                menuDM.menuContent.push(this.getMenuAsignacion(context,'dm'));
-                menuDM.menuContent.push(this.getMenuRecepcion(context,'dm'));
-                menuPapel.menuContent.unshift(this.getMenuAsignacion(context,'papel'));
-                menuPapel.menuContent.push(this.getMenuRecepcion(context,'papel'));
+                menuDM.menuContent.push(this.getMenuAsignacionPorModo(context,'dm'));
+                menuDM.menuContent.push(this.getMenuRecepcionPorModo(context,'dm'));
+                menuPapel.menuContent.unshift(this.getMenuAsignacionPorModo(context,'papel'));
+                menuPapel.menuContent.push(this.getMenuRecepcionPorModo(context,'papel'));
                 menuProvisorio.menuContent.push({menuType:'table' , name:'provisorio_recepcion', label:'subcoordinación' });
                 menuDef.menu.splice(1,0,menuProvisorio,menuGraficosMaps,menuDM,menuPapel);
                 if(context.puede?.campo?.administrar){
@@ -502,7 +512,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
         delete(this.getTableDefinition.visitas);
         delete(this.getTableDefinition.visitas_sup);
 
-        be.appendToTableDefinition('areas_asignacion_general', function(tableDef, context){
+        be.appendToTableDefinition('areas_asignacion_general', function(tableDef){
             const fieldVerificadoRec = tableDef.fields.find(field => field.name === 'verificado_rec');
             if (fieldVerificadoRec) fieldVerificadoRec.visible = false;
         });
@@ -512,7 +522,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
             tableDef.fields.splice(2,0,
                 {name:'id_caso', typeName:'text'   , label:'caso'   , editable: false},
             );
-            tableDef.editable=tableDef.editable || (<TableContext>context).puede.encuestas.justificar;
+            tableDef.editable=tableDef.editable || (<TableContext>context).puede?.encuestas?.justificar;
 
             tableDef.fields=tableDef.fields.filter(f=>![/*'vivienda',*/'hogar','visita'].includes(f.name ))
             tableDef.fields.forEach(function(field){
@@ -523,19 +533,19 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                     field.visible=false;
                 }
                 if(field.name=='justificacion'){
-                    field.editable=(<TableContext>context).forDump || (<TableContext>context).puede.encuestas.justificar;
+                    field.editable=(<TableContext>context).forDump || (<TableContext>context).puede?.encuestas?.justificar;
                 }
             })
         })
         be.appendToTableDefinition('parametros',function(tableDef){
             tableDef.fields.push(
-                {name:'gra_tx_puntos'                 , typeName:'integer'   , label:'granularidad transmision puntos'      , editable: true, nullable: false, defaultDbValue:1000},
-                {name:'gra_puntos_por_recorrido'      , typeName:'integer'   , label:'granularidad puntos por recorrido'    , editable: true, nullable: false, defaultDbValue:75  },
-                {name:'gra_puntos_todos_recorridos'   , typeName:'integer'   , label:'granularidad puntos todos recorridos' , editable: true, nullable: false, defaultDbValue:1000 },
-                {name:'velocidad_animacion_puntos_ms' , typeName:'integer'   , label:'vel. animación puntos (ms)'           , editable: true, nullable: false, defaultDbValue:10  }
+                {name:'gra_tx_puntos'                 , typeName:'integer'   , label:'granularidad transmision puntos'      , editable: true, nullable: false, defaultDbValue:'1000'},
+                {name:'gra_puntos_por_recorrido'      , typeName:'integer'   , label:'granularidad puntos por recorrido'    , editable: true, nullable: false, defaultDbValue:'75'  },
+                {name:'gra_puntos_todos_recorridos'   , typeName:'integer'   , label:'granularidad puntos todos recorridos' , editable: true, nullable: false, defaultDbValue:'1000' },
+                {name:'velocidad_animacion_puntos_ms' , typeName:'integer'   , label:'vel. animación puntos (ms)'           , editable: true, nullable: false, defaultDbValue:'10'  }
             );
         })
-        be.appendToTableDefinition('usuarios', function (tableDef,context) {
+        be.appendToTableDefinition('usuarios', function (tableDef) {
             tableDef.fields.push(
                 {name:'recorrido'  , typeName:'integer',  editable:true}
             );
@@ -544,7 +554,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 {references:'recorridos'    , fields: ['recorrido'] },
             )
         });
-        be.appendToTableDefinition('areas', function (tableDef,context) {
+        be.appendToTableDefinition('areas', function (tableDef) {
             tableDef.fields.splice(2,0,
                 {name:'recorrido'  , typeName:'integer',  editable:true, nullable: false}
             );
@@ -557,7 +567,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 {constraintType:'unique', fields:['operativo', 'recorrido','area']},
             )
         });
-        be.appendToTableDefinition('t_encu_areas', function (tableDef,context) {
+        be.appendToTableDefinition('t_encu_areas', function (tableDef) {
             let fkAreas = tableDef.foreignKeys!.find((fk)=>fk.references=='areas')!;
             fkAreas.displayAllFields=false;
             fkAreas.displayAfterFieldName='operativo';
@@ -574,17 +584,17 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 )`
             };            
         });
-        be.appendToTableDefinition('tareas_tem_ingreso', function (tableDef,context) {
+        be.appendToTableDefinition('tareas_tem_ingreso', function (tableDef) {
             let domicilioFieldNames:string[] = getDomicilioFields().map((fieldDef)=>fieldDef.name);
             tableDef.fields.splice(2,0,
                 { name: "id_caso_papel" , label:'id papel'              , typeName: "text"    , editable:false, inTable:false, clientSide:"parseIDPapel"       },
             );
             tableDef.hiddenColumns = tableDef.hiddenColumns?.concat([...domicilioFieldNames,'telefono']);
         });
-        be.appendToTableDefinition('areas_asignacion_general', function (tableDef,context) {
+        be.appendToTableDefinition('areas_asignacion_general', function (tableDef) {
             let forExclude: string[] = [];
             for(let t of ['recu', 'supe']){
-                for(let f of tableDef.tareasFields){
+                for(let f of (<dmencu.TableDefinition>tableDef).tareasFields!){
                     forExclude.push(`${f.prefijo}_${t}`);
                     forExclude.push(`${f.prefijo}_${t}_nombre`);
                     forExclude.push(`${f.prefijo}_${t}_apellido`);
@@ -616,7 +626,7 @@ export function emergeAppRepsic<T extends Constructor<AppProcesamientoType>>(Bas
                 )`
             };     
         });
-        be.appendToTableDefinition('tem', function (tableDef,context) {
+        be.appendToTableDefinition('tem', function (tableDef) {
             tableDef.fields.splice(9,0,
                 {name:'recorrido'        , typeName:'integer',  editable:false},
                 {name:'tipo_recorrido'   , typeName:'integer',  editable:false},

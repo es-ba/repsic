@@ -3,7 +3,7 @@
 import {TableDefinition, TableContext} from "./types-repsic";
 
 export function personas(context:TableContext):TableDefinition {
-    let permitidoeditar= context.user.rol === 'admin'||context.puede.encuestas.ingresar;
+    let permitidoeditar= context.user.rol === 'admin'||context.puede?.encuestas?.ingresar;
     let def:TableDefinition = {
         name: 'personas',
         elementName: 'persona',

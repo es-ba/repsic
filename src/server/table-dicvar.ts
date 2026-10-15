@@ -9,12 +9,12 @@ export function dicvar(context:TableContext):TableDefinition {
         elementName: 'dicvar',
         editable: permitidoeditar,
         fields: [
-            { name: "dicvar_dic"     , typeName: "text"     , nullable:false  },
-            { name: "dicvar_var"     , typeName: "text"     , nullable:false  }
+            { name: "diccionario"    , typeName: "text"     , nullable:false  },
+            { name: "variable"       , typeName: "text"     , nullable:false  }
         ], 
-        primaryKey: ['dicvar_dic', 'dicvar_var'],
+        primaryKey: ['diccionario', 'variable'],
         foreignKeys:[
-            {references:'diccionario' , fields: [{source:'dicvar_dic',target:'dic_dic'}],displayFields:[]},
+            {references:'diccionario' , fields: [{source:'diccionario',target:'diccionario'}],displayFields:[]},
         ]
     };
 }

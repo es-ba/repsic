@@ -4,8 +4,6 @@ import "dialog-promise";
 
 import {html} from "js-to-html";
 
-import * as myOwn from "myOwn";
-
 var my = myOwn;
 
 myOwn.clientSides.subirAdjunto = {
