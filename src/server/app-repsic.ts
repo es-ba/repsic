@@ -61,6 +61,9 @@ declare module "backend-plus" {
     interface AppConfigClientSetup {
         'test-environment'?: boolean;
     }
+    interface AppConfigServer {
+        paradores?: boolean;
+    }
 }
 
 const APP_DM_VERSION="#26-07-01a";
@@ -125,6 +128,28 @@ export function emergeAppRepsic<T extends Constructor<dmencu.AppAppDmEncuType>>(
             return Number(req.session.recorrido);
         }
         return Number(req.query.recorrido);
+    }
+    // @ts-expect-error la base lo declara como propiedad; el método de repsic se registra antes que el de BP para que gane su ruta de imagenes
+    addUnloggedServices(mainApp:ExpressPlus, baseUrl:string){
+        // antes que BP: en paradores sirve las imágenes de su set (las pedidas desde cualquier página, y el favicon) si el archivo está ahí; si no sigue con las de BP
+        let be=this;
+        let set = be.config.server.paradores ? 'paradores' : null;
+        if(set){
+            let carpetaImagenes = path.join(__dirname, '..', 'unlogged', 'img', 'sets', set);
+            mainApp.use(function(req:Request, res:Response, next:NextFunction){
+                let imagen = /\/img\/([^/]+)$/.exec(req.path);
+                let archivo = imagen ? imagen[1] : (/\/favicon\.ico$/.test(req.path) ? 'logo-128.png' : null);
+                if(req.method!='GET' || !archivo){
+                    return next();
+                }
+                res.sendFile(path.join(carpetaImagenes, path.basename(archivo)), function(err:Error|null){
+                    if(err){
+                        next();
+                    }
+                });
+            });
+        }
+        super.addUnloggedServices(mainApp, baseUrl);
     }
     addSchrödingerServices(mainApp:ExpressPlus, baseUrl:string){
         let be=this;
@@ -391,9 +416,10 @@ export function emergeAppRepsic<T extends Constructor<dmencu.AppAppDmEncuType>>(
         if(context.puede?.campo?.administrar){
             let menuCarto = super.getMenuCarto(context);
             if(menuCarto){
+                if(!this.config.server.paradores){
+                    menuCarto.menuContent.push({menuType:'table', name:'puntos_gps'}, menuMaps);
+                }
                 menuCarto.menuContent.push(
-                    {menuType:'table', name:'puntos_gps'},
-                    menuMaps,
                     {menuType:'table', name:'recorridos'},
                     {menuType:'table', name:'recorridos_barrios'},
                     {menuType:'table', name:'tipos_recorrido'},
@@ -427,8 +453,9 @@ export function emergeAppRepsic<T extends Constructor<dmencu.AppAppDmEncuType>>(
                 menuDef.menu.unshift({ menuType: 'table', name: 'general', label:'asignacion gral', table: 'areas_asignacion_general' });
             }
             let menuProvisorio: MenuInfo = {menuType:'menu'  , name:'provisorio', menuContent:[]};
-            let menuGraficosMaps: MenuInfo = {menuType:'menu'  , name:'graficos_maps', label:'gráficos y mapas', menuContent:[
-                menuMaps,
+            let sinMapas = !!this.config.server.paradores;
+            let menuGraficosMaps: MenuInfo = {menuType:'menu'  , name:'graficos_maps', label:sinMapas?'gráficos':'gráficos y mapas', menuContent:[
+                ...(sinMapas?[]:[menuMaps]),
                 { menuType: 'chart_personas', name: 'chart_personas', label: 'gráfico de personas' },
                 { menuType: 'chart_cuestionarios', name: 'chart_cuestionarios', label: 'gráfico de cuestionarios' },
             ]};
